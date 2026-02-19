@@ -14,8 +14,11 @@ export interface Event {
   lineup: string[];
   features: string[];
   isPast: boolean;
+  isLive?: boolean;
   ticketUrl?: string;
+  ticketLink?: string;
   gallery?: string[];
+  accentColor?: string;
 }
 
 export const events: Event[] = [

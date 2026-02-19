@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-type Tab = "dashboard" | "events" | "messages" | "promos" | "settings" | "content" | "venues" | "faq";
+type Tab = "dashboard" | "events" | "messages" | "promos" | "settings" | "content" | "venues" | "faq" | "support";
 
 interface AnalyticsData {
   totalVisits: number;
@@ -80,12 +80,29 @@ interface HeroContent {
   ctaText: string;
 }
 
+interface SupportConversation {
+  userId: string;
+  messageCount: number;
+  lastMessageAt: string;
+  unreadCount: number;
+}
+
+interface SupportMessage {
+  id: string;
+  userId: string;
+  text: string;
+  sender: "user" | "support";
+  timestamp: string;
+  isRead: boolean;
+}
+
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "dashboard", label: "Дашборд", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
   { id: "events", label: "События", icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
   { id: "venues", label: "Площадки", icon: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" },
   { id: "content", label: "Контент", icon: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" },
   { id: "faq", label: "FAQ", icon: "M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+  { id: "support", label: "Поддержка", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
   { id: "messages", label: "Сообщения", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
   { id: "promos", label: "Промокоды", icon: "M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" },
   { id: "settings", label: "Настройки", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
@@ -161,6 +178,10 @@ export default function AdminDashboard() {
     subheading: "Организуем тусовки, которые ты запомнишь навсегда. Москва. Лучшие площадки. Невероятная атмосфера.",
     ctaText: "БЛИЖАЙШИЕ СОБЫТИЯ",
   });
+  const [supportConversations, setSupportConversations] = useState<SupportConversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
+  const [supportReply, setSupportReply] = useState("");
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
 
@@ -214,7 +235,69 @@ export default function AdminDashboard() {
   // === SETTINGS ===
   const saveSettings = async () => { if (!settings) return; const res = await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }); if (res.ok) showToast("Настройки сохранены"); };
 
+  // === SUPPORT ===
+  const loadSupportConversations = async () => {
+    try {
+      const res = await fetch("/api/admin/support");
+      if (res.ok) {
+        const data = await res.json();
+        setSupportConversations(data.conversations || []);
+      }
+    } catch (err) {
+      console.error("Error loading support conversations:", err);
+    }
+  };
+
+  const loadConversationMessages = async (userId: string) => {
+    try {
+      const res = await fetch(`/api/admin/support?userId=${userId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSupportMessages(data.messages || []);
+        setSelectedConversation(userId);
+      }
+    } catch (err) {
+      console.error("Error loading conversation messages:", err);
+    }
+  };
+
+  const sendSupportReply = async () => {
+    if (!supportReply.trim() || !selectedConversation) return;
+    try {
+      const res = await fetch("/api/admin/support", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: selectedConversation, text: supportReply }),
+      });
+      if (res.ok) {
+        setSupportReply("");
+        await loadConversationMessages(selectedConversation);
+        await loadSupportConversations();
+        showToast("Ответ отправлен");
+      }
+    } catch (err) {
+      console.error("Error sending reply:", err);
+      showToast("Ошибка отправки");
+    }
+  };
+
+  useEffect(() => {
+    if (tab === "support") {
+      loadSupportConversations();
+      const interval = setInterval(loadSupportConversations, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [tab]);
+
+  useEffect(() => {
+    if (selectedConversation) {
+      const interval = setInterval(() => loadConversationMessages(selectedConversation), 3000);
+      return () => clearInterval(interval);
+    }
+  }, [selectedConversation]);
+
   const unreadCount = messages.filter(m => !m.read).length;
+  const supportUnreadCount = supportConversations.reduce((sum, c) => sum + c.unreadCount, 0);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-bg-dark">
@@ -256,6 +339,7 @@ export default function AdminDashboard() {
               <svg className="w-[18px] h-[18px] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d={t.icon} /></svg>
               <span className="truncate">{t.label}</span>
               {t.id === "messages" && unreadCount > 0 && <span className="ml-auto w-5 h-5 rounded-full bg-accent text-[10px] font-bold flex items-center justify-center flex-shrink-0">{unreadCount}</span>}
+              {t.id === "support" && supportUnreadCount > 0 && <span className="ml-auto w-5 h-5 rounded-full bg-accent text-[10px] font-bold flex items-center justify-center flex-shrink-0">{supportUnreadCount}</span>}
             </button>
           ))}
         </nav>
@@ -458,6 +542,107 @@ export default function AdminDashboard() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* === SUPPORT === */}
+          {tab === "support" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Поддержка</h1>
+                <p className="text-text-muted text-sm mt-1">{supportConversations.length} диалогов · {supportUnreadCount} непрочитанных</p>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                {/* Conversations list */}
+                <div className="lg:col-span-1 space-y-2">
+                  {supportConversations.length === 0 ? (
+                    <div className="text-center py-12 text-text-muted rounded-xl bg-bg-card border border-border">
+                      <svg className="w-10 h-10 mx-auto mb-3 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                      <p className="text-sm">Нет обращений</p>
+                    </div>
+                  ) : (
+                    supportConversations.map(conv => (
+                      <button
+                        key={conv.userId}
+                        onClick={() => loadConversationMessages(conv.userId)}
+                        className={`w-full text-left p-4 rounded-xl border transition-all ${
+                          selectedConversation === conv.userId
+                            ? "bg-primary/10 border-primary/20"
+                            : "bg-bg-card border-border hover:border-border-light"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-bold text-sm truncate" style={{ fontFamily: "var(--font-mono)" }}>{conv.userId.substring(0, 20)}...</span>
+                          {conv.unreadCount > 0 && <span className="w-5 h-5 rounded-full bg-accent text-[10px] font-bold flex items-center justify-center flex-shrink-0">{conv.unreadCount}</span>}
+                        </div>
+                        <div className="text-text-muted text-xs">
+                          {conv.messageCount} сообщений · {new Date(conv.lastMessageAt).toLocaleString("ru", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
+
+                {/* Chat window */}
+                <div className="lg:col-span-2 rounded-xl bg-bg-card border border-border overflow-hidden flex flex-col" style={{ height: "600px" }}>
+                  {!selectedConversation ? (
+                    <div className="flex-1 flex items-center justify-center text-text-muted">
+                      <div className="text-center">
+                        <svg className="w-16 h-16 mx-auto mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        <p className="text-sm">Выберите диалог</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      {/* Header */}
+                      <div className="p-4 border-b border-border bg-bg-dark/50">
+                        <div className="font-bold text-sm" style={{ fontFamily: "var(--font-mono)" }}>{selectedConversation}</div>
+                        <div className="text-text-muted text-xs mt-0.5">{supportMessages.length} сообщений</div>
+                      </div>
+
+                      {/* Messages */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-bg-dark">
+                        {supportMessages.map(msg => (
+                          <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-start" : "justify-end"}`}>
+                            <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
+                              msg.sender === "user"
+                                ? "bg-white/5 text-white/90 border border-white/10"
+                                : "bg-gradient-to-br from-primary to-accent text-white"
+                            }`}>
+                              <p className="text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>
+                              <p className="text-[10px] mt-1 opacity-60">
+                                {new Date(msg.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Input */}
+                      <div className="p-4 border-t border-border">
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={supportReply}
+                            onChange={(e) => setSupportReply(e.target.value)}
+                            onKeyPress={(e) => e.key === "Enter" && sendSupportReply()}
+                            placeholder="Напишите ответ..."
+                            className="flex-1 bg-bg-dark border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary/30 transition-colors"
+                          />
+                          <button
+                            onClick={sendSupportReply}
+                            disabled={!supportReply.trim()}
+                            className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+                          >
+                            <span className="relative z-10">ОТПРАВИТЬ</span>
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 

@@ -39,3 +39,5 @@ windsurf_deployment.yaml
 
 .vercel
 .env*.local
+
+.vercel

@@ -3,15 +3,15 @@
 import { useState } from "react";
 
 const venues = [
-  { id: "arbat-hall", name: "ARBAT HALL", address: "Новый Арбат, 21", type: "Концертный зал", capacity: "1500+", coords: { x: 38, y: 35 } },
-  { id: "izi", name: "IZI", address: "Басманный пер., 8, стр. 1", type: "Клуб", capacity: "800+", coords: { x: 55, y: 42 } },
-  { id: "anima", name: "ANIMA", address: "Сущёвская ул., 21", type: "Клуб", capacity: "1000+", coords: { x: 45, y: 28 } },
-  { id: "vibe", name: "VIBE", address: "Бутырская ул., 46, стр. 1", type: "Клуб", capacity: "800+", coords: { x: 42, y: 22 } },
-  { id: "base", name: "BASE", address: "ул. Орджоникидзе, 11, стр. 1", type: "Клуб", capacity: "1200+", coords: { x: 45, y: 62 } },
-  { id: "vk-stadium", name: "VK STADIUM", address: "Ленинградский пр-т, 80, корп. 17", type: "Стадион", capacity: "7000+", coords: { x: 35, y: 18 } },
-  { id: "castle-hall", name: "CASTLE HALL", address: "м. Тушинская", type: "Концертный зал", capacity: "500+", coords: { x: 22, y: 15 } },
-  { id: "pravda", name: "PRAVDA", address: "ул. Правды, 24, стр. 3", type: "Клуб", capacity: "700+", coords: { x: 40, y: 30 } },
-  { id: "atmosphere", name: "ATMOSPHERE", address: "Шмитовский пр-д, 32А, стр. 1", type: "Концертный зал", capacity: "7000+", coords: { x: 28, y: 35 } },
+  { id: "vk-stadium", name: "VK STADIUM", address: "Ленинградский пр-т 31 стр 4", type: "стадион", capacity: "12.000+", coords: { x: 35, y: 18 } },
+  { id: "atmosphere", name: "ATMOSPHERE MOSCOW", address: "Шмитовский проезд 32А, стр 1", type: "концертный зал", capacity: "3.500+", coords: { x: 28, y: 35 } },
+  { id: "base", name: "BASE", address: "Пресненская наб. 6 стр 2", type: "концертный зал", capacity: "3.000+", coords: { x: 32, y: 40 } },
+  { id: "arbat-hall", name: "ARBAT HALL", address: "ул. Новый Арбат 21", type: "концертный зал", capacity: "2.000+", coords: { x: 38, y: 35 } },
+  { id: "izi", name: "IZI", address: "Берсеневская наб. 6 стр 3", type: "клуб", capacity: "1.500+", coords: { x: 42, y: 45 } },
+  { id: "anima", name: "ANIMA", address: "Космодамианская наб. 2", type: "клуб", capacity: "1.200+", coords: { x: 48, y: 48 } },
+  { id: "pravda", name: "PRAVDA", address: "ул. Правды 24 стр 2", type: "концертный зал", capacity: "1.100+", coords: { x: 45, y: 25 } },
+  { id: "vibe", name: "VIBE", address: "Рочдельская ул. 15 стр 25", type: "клуб", capacity: "900+", coords: { x: 52, y: 30 } },
+  { id: "castle-hall", name: "CASTLE HALL", address: "Ул. Бутырская 62", type: "клуб", capacity: "800+", coords: { x: 48, y: 20 } },
 ];
 
 export default function VenueMap() {
