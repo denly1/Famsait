@@ -1,0 +1,26 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Deploy to server
+      uses: appleboy/ssh-action@master
+      with:
+        host: 5.129.250.86
+        username: root
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          cd /var/www/family-events
+          git pull origin master
+          npm install --production
+          npm run build
+          pm2 restart family-events || pm2 start npm --name "family-events" -- start
