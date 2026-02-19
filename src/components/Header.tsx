@@ -46,7 +46,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="relative z-50 select-none" onClick={() => setIsMenuOpen(false)}>
               <img 
-                src="/Familylogo_text(1).png" 
+                src="/Familylogo.png" 
                 alt="FAMILY" 
                 draggable="false"
                 className={`w-auto object-contain transition-all duration-300 select-none ${
