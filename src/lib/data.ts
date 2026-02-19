@@ -14,8 +14,11 @@ export interface Event {
   lineup: string[];
   features: string[];
   isPast: boolean;
+  isLive?: boolean;
   ticketUrl?: string;
+  ticketLink?: string;
   gallery?: string[];
+  accentColor?: string;
 }
 
 export const events: Event[] = [
@@ -31,11 +34,14 @@ export const events: Event[] = [
     price: 0,
     currency: "₽",
     image: "/афишафэмэли.jpg",
-    description: "Открываем весну концертом на котором вы услышите ваши любимые треки 🎵\n\nВыход артиста после 20:00\n\nПромокод — FAMILY\n\nПри себе иметь документ удостоверяющий личность\n\nFC/DC 16+ (Рекомендация)",
+    description: "Открываем весну концертом на котором вы услышите ваши любимые треки \n\nВыход артиста после 20:00\n\nПромокод — FAMILY\n\nПри себе иметь документ удостоверяющий личность\n\nFC/DC 16+ (Рекомендация)",
     lineup: ["UGLYSTEPHAN"],
     features: ["LIVE CONCERT", "ПРОМОКОД FAMILY"],
     isPast: false,
+    isLive: false,
     ticketUrl: "https://moscow.qtickets.events/210374-uglystephan",
+    ticketLink: "https://moscow.qtickets.events/210374-uglystephan",
+    accentColor: "#8B5CF6",
   },
   {
     id: "tinder-party-feb",
@@ -72,6 +78,8 @@ export const events: Event[] = [
     features: ["UV ZONE", "NEON BODY ART", "PHOTO BOOTH", "COCKTAIL BAR", "LIVE VOCAL"],
     isPast: false,
     ticketUrl: "#",
+    ticketLink: "#",
+    accentColor: "#F59E0B",
   },
   {
     id: "family-vibes-march",
@@ -90,6 +98,8 @@ export const events: Event[] = [
     features: ["3 ТАНЦПОЛА", "LIVE ВЫСТУПЛЕНИЯ", "ФОТОЗОНА", "МЕРЧ КОРНЕР", "FOOD COURT"],
     isPast: false,
     ticketUrl: "#",
+    ticketLink: "#",
+    accentColor: "#10B981",
   },
   {
     id: "underground-session",
@@ -108,6 +118,8 @@ export const events: Event[] = [
     features: ["DARK ROOM", "VINYL SET", "SMOKE MACHINE", "LASER SHOW"],
     isPast: false,
     ticketUrl: "#",
+    ticketLink: "#",
+    accentColor: "#3B82F6",
   },
   {
     id: "summer-rooftop-2025",
