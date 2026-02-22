@@ -20,7 +20,6 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <Header />
       <main className="flex-1 relative z-10">{children}</main>
       <Footer />
-      <SupportChat />
     </>
   );
 }

@@ -12,18 +12,18 @@ export default function EventTimeline({ events }: { events: Event[] }) {
             className="text-2xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            БЛИЖАЙШИЕ СОБЫТИЯ
+            БЛИЖАЙШИЕ МЕРОПРИЯТИЯ
           </h2>
           <p className="text-white/80 text-sm sm:text-base mt-2 sm:mt-3">
             Не пропусти самые горячие события
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        <div className="flex gap-4 sm:gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
           {events.map((event) => (
             <div
               key={event.id}
-              className="group bg-white/[0.04] border border-white/[0.08] rounded-2xl overflow-hidden hover:border-white/20 transition-colors"
+              className="group bg-white/[0.04] border border-white/[0.08] rounded-2xl overflow-hidden hover:border-white/20 transition-colors flex-shrink-0 w-[280px] sm:w-[320px] lg:w-[360px] snap-start"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img

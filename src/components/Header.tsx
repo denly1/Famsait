@@ -46,11 +46,11 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="relative z-50 select-none" onClick={() => setIsMenuOpen(false)}>
               <img 
-                src="/Familylogo.png" 
+                src="/Familylogo_text.png" 
                 alt="FAMILY" 
                 draggable="false"
                 className={`w-auto object-contain transition-all duration-300 select-none ${
-                  scrolled ? "h-20 sm:h-24 md:h-28" : "h-32 sm:h-40 md:h-48"
+                  scrolled ? "h-30 sm:h-35 md:h-40" : "h-40 sm:h-50 md:h-60"
                 }`}
               />
             </Link>

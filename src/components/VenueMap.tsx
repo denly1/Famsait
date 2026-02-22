@@ -3,15 +3,18 @@
 import { useState } from "react";
 
 const venues = [
-  { id: "vk-stadium", name: "VK STADIUM", address: "Ленинградский пр-т 31 стр 4", type: "стадион", capacity: "12.000+", coords: { x: 35, y: 18 } },
-  { id: "atmosphere", name: "ATMOSPHERE MOSCOW", address: "Шмитовский проезд 32А, стр 1", type: "концертный зал", capacity: "3.500+", coords: { x: 28, y: 35 } },
-  { id: "base", name: "BASE", address: "Пресненская наб. 6 стр 2", type: "концертный зал", capacity: "3.000+", coords: { x: 32, y: 40 } },
-  { id: "arbat-hall", name: "ARBAT HALL", address: "ул. Новый Арбат 21", type: "концертный зал", capacity: "2.000+", coords: { x: 38, y: 35 } },
-  { id: "izi", name: "IZI", address: "Берсеневская наб. 6 стр 3", type: "клуб", capacity: "1.500+", coords: { x: 42, y: 45 } },
-  { id: "anima", name: "ANIMA", address: "Космодамианская наб. 2", type: "клуб", capacity: "1.200+", coords: { x: 48, y: 48 } },
-  { id: "pravda", name: "PRAVDA", address: "ул. Правды 24 стр 2", type: "концертный зал", capacity: "1.100+", coords: { x: 45, y: 25 } },
-  { id: "vibe", name: "VIBE", address: "Рочдельская ул. 15 стр 25", type: "клуб", capacity: "900+", coords: { x: 52, y: 30 } },
-  { id: "castle-hall", name: "CASTLE HALL", address: "Ул. Бутырская 62", type: "клуб", capacity: "800+", coords: { x: 48, y: 20 } },
+  { id: "atmosphere", name: "ATMOSPHERE", address: "Шмитовский проезд, 32А, стр. 1", type: "концертный зал", capacity: "3.500+", coords: { x: 28, y: 35 } },
+  { id: "base", name: "BASE", address: "улица Орджоникидзе 11", type: "концертный зал", capacity: "3.000+", coords: { x: 45, y: 62 } },
+  { id: "grafit", name: "ГРАФИТ", address: "электродная улица 2с1", type: "концертный зал", capacity: "2.500+", coords: { x: 58, y: 48 } },
+  { id: "arbat-hall", name: "ARBAT HALL", address: "улица новый Арбат 21", type: "концертный зал", capacity: "2.000+", coords: { x: 38, y: 35 } },
+  { id: "svoboda", name: "СВОБОДА", address: "Ленинградский проспект 47 с19", type: "концертная площадка", capacity: "1.300+", coords: { x: 35, y: 20 } },
+  { id: "urban", name: "URBAN", address: "Большая Новодмитровская улица, 36, стр. 24", type: "концертный зал", capacity: "1.100+", coords: { x: 52, y: 25 } },
+  { id: "pravda", name: "PRAVDA", address: "варшавское шоссе 26с12", type: "концертный зал", capacity: "1.100+", coords: { x: 40, y: 75 } },
+  { id: "izi", name: "IZI", address: "Басманный переулок, 8с1", type: "клуб", capacity: "1.000+", coords: { x: 55, y: 42 } },
+  { id: "anima", name: "ANIMA", address: "сущёвская улица, 21", type: "клуб", capacity: "900+", coords: { x: 45, y: 28 } },
+  { id: "vibe", name: "VIBE", address: "бутырская улица 46с1", type: "клуб", capacity: "800+", coords: { x: 42, y: 22 } },
+  { id: "castle-hall", name: "CASTLE HALL", address: "вишневая, 13", type: "клуб", capacity: "800+", coords: { x: 22, y: 15 } },
+  { id: "pipl", name: "PIPL", address: "комсомольская площадь 6", type: "клуб", capacity: "700", coords: { x: 50, y: 38 } },
 ];
 
 export default function VenueMap() {
@@ -26,7 +29,7 @@ export default function VenueMap() {
         <div className="flex items-center justify-between mb-5">
           <div>
             <span className="mono-label text-[10px]">ИНТЕРАКТИВНАЯ КАРТА</span>
-            <h3 className="font-bold text-base mt-1" style={{ fontFamily: "var(--font-heading)" }}>Наши площадки</h3>
+            <h3 className="font-bold text-base mt-1" style={{ fontFamily: "var(--font-heading)" }}>Локации проведения наших мероприятий</h3>
           </div>
           <span className="tag tag-primary">{venues.length} ЛОКАЦИЙ</span>
         </div>

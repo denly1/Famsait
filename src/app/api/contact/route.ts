@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createMessage } from "@/lib/store";
+import { createMessage } from "@/lib/store-db";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,14 +13,15 @@ export async function POST(request: NextRequest) {
     }
     // XSS sanitization
     const sanitize = (s: string) => s.replace(/[<>]/g, "").trim().slice(0, 1000);
-    const msg = createMessage({
+    const msg = await createMessage({
       name: sanitize(name),
       email: sanitize(email),
       subject: sanitize(subject || ""),
       message: sanitize(message),
     });
     return NextResponse.json({ success: true, id: msg.id }, { status: 201 });
-  } catch {
+  } catch (err) {
+    console.error("POST /api/contact error:", err);
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
   }
 }

@@ -70,7 +70,6 @@ export default function HomePage() {
                   {/* Premium tags with glow */}
                   <div className="flex items-center gap-3 mb-6 sm:mb-10">
                     <span className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/30 to-primary/20 backdrop-blur-xl border border-primary/40 rounded-full text-xs sm:text-sm font-bold text-primary uppercase tracking-wider shadow-lg shadow-primary/20">
-                      <span className="w-2 h-2 rounded-full bg-primary animate-pulse shadow-lg shadow-primary/50" />
                       БЛИЖАЙШЕЕ СОБЫТИЕ
                     </span>
                     {nextEvent.ageLimit && (
@@ -154,7 +153,7 @@ export default function HomePage() {
       <HeroSlider />
 
       {/* ===== MARQUEE TEXT ===== */}
-      <MarqueeText text="THE FAMILY MOSCOW • ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ • " />
+      <MarqueeText text="FAMILY ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ • " />
 
       {/* ===== OLD HERO SECTION (BACKUP) ===== */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden hidden">

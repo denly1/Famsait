@@ -5,7 +5,7 @@ export default function MarqueeText({ text }: { text: string }) {
         {[...Array(20)].map((_, i) => (
           <span
             key={i}
-            className="mx-8 text-2xl sm:text-3xl font-bold tracking-tight text-white/20"
+            className="mx-8 text-2xl sm:text-3xl font-black tracking-tight text-white/20"
             style={{ fontFamily: "var(--font-heading)" }}
           >
             {text}
