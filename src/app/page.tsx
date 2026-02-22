@@ -20,27 +20,10 @@ export default function HomePage() {
       {/* ===== FLOATING BACKGROUND ELEMENTS ===== */}
       <FloatingElements />
 
-      {/* ===== HERO HEADER ===== */}
-      <section className="relative pt-28 sm:pt-32 md:pt-36 pb-8 sm:pb-12 md:pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent" />
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center">
-            <h1 className="font-black tracking-tight leading-[1.1]" style={{ fontFamily: "var(--font-heading)" }}>
-              <span className="block text-[36px] sm:text-6xl md:text-7xl lg:text-8xl gradient-text mb-2 sm:mb-3">
-                КУЛЬТОВЫЕ ВЕЧЕРИНКИ
-              </span>
-              <span className="block text-[32px] sm:text-5xl md:text-6xl lg:text-7xl text-white">
-                И КОНЦЕРТЫ В МОСКВЕ
-              </span>
-            </h1>
-          </div>
-        </div>
-      </section>
 
       {/* ===== FEATURED EVENT - LUXURIOUS DESIGN ===== */}
       {nextEvent && (
-        <section className="relative py-6 sm:py-10 lg:py-14 overflow-hidden">
+        <section className="relative pt-32 sm:pt-36 md:pt-40 pb-6 sm:pb-10 lg:pb-14 overflow-hidden">
           {/* Premium background effects */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-b from-bg-dark via-primary/[0.08] to-bg-dark" />
