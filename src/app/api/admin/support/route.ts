@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import { query } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +7,7 @@ export async function GET(request: NextRequest) {
     const userId = searchParams.get("userId");
 
     if (userId) {
-      const result = await pool.query(
+      const result = await query(
         `SELECT id, user_id, text, sender, created_at as timestamp, is_read 
          FROM support_messages 
          WHERE user_id = $1 
@@ -31,7 +27,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ messages });
     }
 
-    const result = await pool.query(
+    const result = await query(
       `SELECT 
         user_id,
         COUNT(*) as message_count,
@@ -68,14 +64,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await pool.query(
+    const result = await query(
       `INSERT INTO support_messages (user_id, text, sender, created_at, is_read) 
        VALUES ($1, $2, 'support', NOW(), true) 
        RETURNING id, user_id, text, sender, created_at as timestamp, is_read`,
       [userId, text]
     );
 
-    await pool.query(
+    await query(
       `UPDATE support_messages 
        SET is_read = true 
        WHERE user_id = $1 AND sender = 'user' AND is_read = false`,
