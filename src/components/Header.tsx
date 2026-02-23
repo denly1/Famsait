@@ -92,8 +92,8 @@ export default function Header() {
 
       {/* Mobile Menu — SOLID BLACK, no blur */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-60 bg-black">
-          <nav className="flex flex-col items-center justify-center h-full gap-1 px-6">
+        <div className="md:hidden fixed inset-0 z-40 bg-black">
+          <nav className="flex flex-col items-center justify-center h-full gap-1 px-6 pt-24">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

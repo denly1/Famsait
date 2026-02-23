@@ -101,30 +101,6 @@ export default function ContactsPage() {
                 <span className="mono-label text-text-muted/30 text-xs">0{i + 1}</span>
               </div>
             ))}
-
-            {/* Partnership */}
-            <div className="relative rounded-2xl overflow-hidden mt-6">
-              <div className="absolute inset-0 bg-bg-card" />
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/3" />
-              <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-
-              <div className="relative z-10 p-6">
-                <span className="tag tag-primary mb-3 inline-flex">ПАРТНЁРСТВО</span>
-                <h3 className="font-bold text-base mb-2" style={{ fontFamily: "var(--font-heading)" }}>Для партнёров</h3>
-                <p className="text-text-secondary text-sm leading-relaxed mb-4">
-                  Мы открыты к сотрудничеству с брендами, площадками, артистами и медиа.
-                </p>
-                <a
-                  href="mailto:partners@family-moscow.ru"
-                  className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:text-primary-light transition-colors group"
-                >
-                  partners@family-moscow.ru
-                  <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </a>
-              </div>
-            </div>
           </div>
 
           {/* Contact Form */}
@@ -175,7 +151,6 @@ export default function ContactsPage() {
                   >
                     <option value="">Выберите тему</option>
                     <option value="tickets">Вопрос по билетам</option>
-                    <option value="partnership">Партнёрство</option>
                     <option value="venue">Предложить площадку</option>
                     <option value="artist">Я артист / DJ</option>
                     <option value="media">Медиа / Пресса</option>
