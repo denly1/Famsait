@@ -2,6 +2,38 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const getConversations = searchParams.get("conversations");
+
+  if (getConversations === "true") {
+    try {
+      const result = await query(`
+        SELECT 
+          user_id,
+          COUNT(*) as message_count,
+          MAX(created_at) as last_message_at,
+          SUM(CASE WHEN sender = 'user' AND is_read = false THEN 1 ELSE 0 END) as unread_count,
+          (SELECT text FROM support_messages sm2 WHERE sm2.user_id = support_messages.user_id ORDER BY created_at DESC LIMIT 1) as last_message
+        FROM support_messages
+        GROUP BY user_id
+        ORDER BY last_message_at DESC
+      `);
+
+      const conversations = result.rows.map((row: any) => ({
+        userId: row.user_id,
+        messageCount: parseInt(row.message_count),
+        lastMessageAt: row.last_message_at,
+        unreadCount: parseInt(row.unread_count),
+        lastMessage: row.last_message || "",
+      }));
+
+      return NextResponse.json({ conversations });
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      return NextResponse.json({ error: "Failed to fetch conversations" }, { status: 500 });
+    }
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");

@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import ImageUpload from "@/components/ImageUpload";
+import SupportPanel from "@/components/admin/SupportPanel";
 
 type Tab = "dashboard" | "events" | "messages" | "promos" | "settings" | "content" | "venues" | "faq" | "support";
 
@@ -452,7 +454,11 @@ export default function AdminDashboard() {
                         <AdminInput label="Цена" value={eventForm.price} onChange={v => setEventForm({...eventForm, price: Number(v)})} type="number" />
                         <AdminInput label="Ссылка на билеты" value={eventForm.ticketUrl} onChange={v => setEventForm({...eventForm, ticketUrl: v})} />
                       </div>
-                      <AdminInput label="Изображение (URL)" value={eventForm.image} onChange={v => setEventForm({...eventForm, image: v})} />
+                      <ImageUpload
+                        label="Изображение события"
+                        currentImage={eventForm.image}
+                        onUpload={(url) => setEventForm({...eventForm, image: url})}
+                      />
                       <div>
                         <label className="block text-[10px] font-medium tracking-wider text-text-muted/70 uppercase mb-1.5" style={{ fontFamily: "var(--font-mono)" }}>Описание</label>
                         <textarea value={eventForm.description} onChange={e => setEventForm({...eventForm, description: e.target.value})} rows={3} className="w-full px-3 py-2.5 rounded-xl bg-bg-dark border border-border text-sm resize-none focus:outline-none focus:border-primary/30 transition-colors" />
@@ -550,99 +556,9 @@ export default function AdminDashboard() {
             <div className="space-y-6">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Поддержка</h1>
-                <p className="text-text-muted text-sm mt-1">{supportConversations.length} диалогов · {supportUnreadCount} непрочитанных</p>
+                <p className="text-text-muted text-sm mt-1">Диалоги с пользователями</p>
               </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {/* Conversations list */}
-                <div className="lg:col-span-1 space-y-2">
-                  {supportConversations.length === 0 ? (
-                    <div className="text-center py-12 text-text-muted rounded-xl bg-bg-card border border-border">
-                      <svg className="w-10 h-10 mx-auto mb-3 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                      <p className="text-sm">Нет обращений</p>
-                    </div>
-                  ) : (
-                    supportConversations.map(conv => (
-                      <button
-                        key={conv.userId}
-                        onClick={() => loadConversationMessages(conv.userId)}
-                        className={`w-full text-left p-4 rounded-xl border transition-all ${
-                          selectedConversation === conv.userId
-                            ? "bg-primary/10 border-primary/20"
-                            : "bg-bg-card border-border hover:border-border-light"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-bold text-sm truncate" style={{ fontFamily: "var(--font-mono)" }}>{conv.userId.substring(0, 20)}...</span>
-                          {conv.unreadCount > 0 && <span className="w-5 h-5 rounded-full bg-accent text-[10px] font-bold flex items-center justify-center flex-shrink-0">{conv.unreadCount}</span>}
-                        </div>
-                        <div className="text-text-muted text-xs">
-                          {conv.messageCount} сообщений · {new Date(conv.lastMessageAt).toLocaleString("ru", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
-                        </div>
-                      </button>
-                    ))
-                  )}
-                </div>
-
-                {/* Chat window */}
-                <div className="lg:col-span-2 rounded-xl bg-bg-card border border-border overflow-hidden flex flex-col" style={{ height: "600px" }}>
-                  {!selectedConversation ? (
-                    <div className="flex-1 flex items-center justify-center text-text-muted">
-                      <div className="text-center">
-                        <svg className="w-16 h-16 mx-auto mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                        <p className="text-sm">Выберите диалог</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <>
-                      {/* Header */}
-                      <div className="p-4 border-b border-border bg-bg-dark/50">
-                        <div className="font-bold text-sm" style={{ fontFamily: "var(--font-mono)" }}>{selectedConversation}</div>
-                        <div className="text-text-muted text-xs mt-0.5">{supportMessages.length} сообщений</div>
-                      </div>
-
-                      {/* Messages */}
-                      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-bg-dark">
-                        {supportMessages.map(msg => (
-                          <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-start" : "justify-end"}`}>
-                            <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
-                              msg.sender === "user"
-                                ? "bg-white/5 text-white/90 border border-white/10"
-                                : "bg-gradient-to-br from-primary to-accent text-white"
-                            }`}>
-                              <p className="text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>
-                              <p className="text-[10px] mt-1 opacity-60">
-                                {new Date(msg.timestamp).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Input */}
-                      <div className="p-4 border-t border-border">
-                        <div className="flex gap-2">
-                          <input
-                            type="text"
-                            value={supportReply}
-                            onChange={(e) => setSupportReply(e.target.value)}
-                            onKeyPress={(e) => e.key === "Enter" && sendSupportReply()}
-                            placeholder="Напишите ответ..."
-                            className="flex-1 bg-bg-dark border border-border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-primary/30 transition-colors"
-                          />
-                          <button
-                            onClick={sendSupportReply}
-                            disabled={!supportReply.trim()}
-                            className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
-                          >
-                            <span className="relative z-10">ОТПРАВИТЬ</span>
-                          </button>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
+              <SupportPanel />
             </div>
           )}
 
