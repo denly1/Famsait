@@ -1,12 +1,27 @@
-"use client";
-
-import { events } from "@/lib/data";
 import Link from "next/link";
-import { use } from "react";
+import { mapEventFromDB } from "@/lib/mappers";
 
-export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const event = events.find((e) => e.id === id);
+async function getEvent(id: string) {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/events/${id}`, { 
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    if (!res.ok) return null;
+    
+    const data = await res.json();
+    return mapEventFromDB(data.event);
+  } catch (error) {
+    console.error('Error fetching event:', error);
+    return null;
+  }
+}
+
+export default async function EventDetailPage({ params }: { params: { id: string } }) {
+  const event = await getEvent(params.id);
+  
   if (!event) {
     return (
       <div className="pt-32 pb-20 text-center">

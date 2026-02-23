@@ -1,0 +1,31 @@
+import { NextRequest, NextResponse } from "next/server";
+import { query } from "@/lib/db";
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+
+    const result = await query("SELECT * FROM events WHERE id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "Event not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      event: result.rows[0],
+    });
+  } catch (error: any) {
+    console.error("Error fetching event:", error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}

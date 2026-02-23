@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { events } from "@/lib/data";
 import EventCard from "@/components/EventCard";
 import CountdownTimer from "@/components/CountdownTimer";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -9,10 +8,30 @@ import EventTimeline from "@/components/EventTimeline";
 import PastEventsGallery from "@/components/PastEventsGallery";
 import VenueMap from "@/components/VenueMap";
 import HeroSlider from "@/components/HeroSlider";
+import { mapEventsFromDB } from "@/lib/mappers";
 
-export default function HomePage() {
-  const upcomingEvents = events.filter((e) => !e.isPast).slice(0, 4);
-  const pastEvents = events.filter((e) => e.isPast).slice(0, 3);
+async function getEvents() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const res = await fetch(`${baseUrl}/api/events`, { 
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    if (!res.ok) return { events: [] };
+    
+    const data = await res.json();
+    return { events: mapEventsFromDB(data.events || []) };
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    return { events: [] };
+  }
+}
+
+export default async function HomePage() {
+  const { events } = await getEvents();
+  const upcomingEvents = events.filter((e: any) => !e.isPast).slice(0, 4);
+  const pastEvents = events.filter((e: any) => e.isPast).slice(0, 3);
   const nextEvent = upcomingEvents[0];
 
   return (
