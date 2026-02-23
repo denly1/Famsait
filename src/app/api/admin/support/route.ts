@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         [userId]
       );
 
-      const messages = result.rows.map((row) => ({
+      const messages = result.rows.map((row: any) => ({
         id: row.id.toString(),
         userId: row.user_id,
         text: row.text,
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
        ORDER BY last_message_at DESC`
     );
 
-    const conversations = result.rows.map((row) => ({
+    const conversations = result.rows.map((row: any) => ({
       userId: row.user_id,
       messageCount: parseInt(row.message_count),
       lastMessageAt: row.last_message_at,
