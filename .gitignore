@@ -31,17 +31,14 @@ yarn-error.log*
 .env.production.local
 .env.production
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# windsurf
-windsurf_deployment.yaml
+# pm2
+.pm2
+ecosystem.config.js
 
-.vercel
-.env*.local
-
-.vercel
+# logs
+*.log
+logs/

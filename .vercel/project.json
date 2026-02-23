@@ -1,0 +1,16 @@
+{
+  "projectId": "prj_xjhPHCLRQiKXmJcRXukBUzpJCtXL",
+  "orgId": "team_BJIHz1meQUf5dWu0smVIytYT",
+  "projectName": "2-g4b-exg-c5",
+  "settings": {
+    "createdAt": 1771529519245,
+    "framework": "nextjs",
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "24.x"
+  }
+}
