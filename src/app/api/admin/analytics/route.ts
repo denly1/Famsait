@@ -7,12 +7,21 @@ export async function GET() {
     if (result.rows.length === 0) {
       return NextResponse.json({
         totalVisits: 0,
-        totalTicketsSold: 0,
-        totalRevenue: 0,
-        activePromos: 0
+        todayVisits: 0,
+        totalTicketClicks: 0,
+        totalMessages: 0,
+        popularEvents: []
       });
     }
-    return NextResponse.json(result.rows[0]);
+    
+    const row = result.rows[0];
+    return NextResponse.json({
+      totalVisits: row.total_visits || 0,
+      todayVisits: row.today_visits || 0,
+      totalTicketClicks: row.total_ticket_clicks || 0,
+      totalMessages: 0,
+      popularEvents: []
+    });
   } catch (err) {
     console.error("GET /api/admin/analytics error:", err);
     return NextResponse.json({ error: "Ошибка сервера" }, { status: 500 });
