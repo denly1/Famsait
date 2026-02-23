@@ -111,7 +111,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
             <div className="mb-6 sm:mb-8">
               <h3 className="mono-label mb-3">ЛАЙНАП</h3>
               <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                {event.lineup.map((artist) => (
+                {event.lineup.map((artist: string) => (
                   <span
                     key={artist}
                     className="px-4 py-2 rounded-xl bg-bg-card border border-border text-sm font-semibold hover:border-primary/40 hover:bg-primary/5 transition-all cursor-default"
@@ -127,7 +127,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
             <div className="mb-6 sm:mb-8">
               <h3 className="mono-label mb-3">ФИШКИ</h3>
               <div className="flex flex-wrap gap-1.5">
-                {event.features.map((feature) => (
+                {event.features.map((feature: string) => (
                   <span key={feature} className="tag tag-accent">
                     {feature}
                   </span>
@@ -172,7 +172,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
               <div>
                 <h3 className="mono-label mb-4">ФОТОГАЛЕРЕЯ</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {event.gallery.map((photo, i) => (
+                  {event.gallery.map((photo: string, i: number) => (
                     <div key={i} className="rounded-xl overflow-hidden aspect-square border border-border card-hover">
                       <img
                         src={photo}
