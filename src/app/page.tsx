@@ -273,7 +273,7 @@ export default async function HomePage() {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {upcomingEvents.map((event, i) => (
+            {upcomingEvents.map((event: any, i: number) => (
               <ScrollReveal key={event.id} delay={i * 0.08}>
                 <EventCard event={event} />
               </ScrollReveal>
@@ -371,7 +371,7 @@ export default async function HomePage() {
               { value: "100K+", label: "Гостей" },
               { value: "15+", label: "Площадок" },
               { value: "100+", label: "Артистов" },
-            ].map((stat, i) => (
+            ].map((stat: any, i: number) => (
               <ScrollReveal key={stat.label} delay={0.3 + i * 0.05}>
                 <div className="rounded-2xl bg-bg-card/50 border border-border p-5 text-center">
                   <div className="text-2xl sm:text-3xl font-black gradient-text" style={{ fontFamily: "var(--font-heading)" }}>
@@ -434,7 +434,7 @@ export default async function HomePage() {
           </ScrollReveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {pastEvents.map((event, i) => (
+            {pastEvents.map((event: any, i: number) => (
               <ScrollReveal key={event.id} delay={i * 0.08}>
                 <EventCard event={event} />
               </ScrollReveal>

@@ -1,7 +1,26 @@
 // Утилиты для маппинга данных из БД (snake_case) в формат фронтенда (camelCase)
 
-export function mapEventFromDB(dbEvent: any) {
-  if (!dbEvent) return null;
+export function mapEventFromDB(dbEvent: any): any {
+  if (!dbEvent) return {
+    id: '',
+    title: '',
+    subtitle: '',
+    date: '',
+    time: '',
+    venue: '',
+    address: '',
+    ageLimit: '18+',
+    price: 0,
+    currency: '₽',
+    image: '',
+    description: '',
+    lineup: [],
+    features: [],
+    isPast: false,
+    ticketUrl: '#',
+    ticketLink: '#',
+    gallery: [],
+  };
   
   return {
     id: dbEvent.id,
@@ -26,5 +45,5 @@ export function mapEventFromDB(dbEvent: any) {
 }
 
 export function mapEventsFromDB(dbEvents: any[]) {
-  return dbEvents.map(mapEventFromDB).filter(Boolean);
+  return dbEvents.map(mapEventFromDB);
 }
