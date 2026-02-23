@@ -2,15 +2,11 @@
 
 import { events } from "@/lib/data";
 import Link from "next/link";
-import { use, useState } from "react";
+import { use } from "react";
 
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const event = events.find((e) => e.id === id);
-  const [promoOpen, setPromoOpen] = useState(false);
-  const [promoCode, setPromoCode] = useState("");
-  const [promoResult, setPromoResult] = useState<string | null>(null);
-
   if (!event) {
     return (
       <div className="pt-32 pb-20 text-center">
@@ -21,16 +17,6 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       </div>
     );
   }
-
-  const handlePromo = () => {
-    if (promoCode.trim().toUpperCase() === "FAMILY2026") {
-      setPromoResult("Промокод применён! Скидка 20%");
-    } else if (promoCode.trim() === "") {
-      setPromoResult("Введите промокод");
-    } else {
-      setPromoResult("Промокод не найден");
-    }
-  };
 
   return (
     <div className="pt-16 sm:pt-20 pb-16 sm:pb-20 relative">
@@ -151,51 +137,17 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                     <span className="tag tag-primary">БИЛЕТЫ В ПРОДАЖЕ</span>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <a
-                      href={event.ticketUrl}
-                      target={event.ticketUrl?.startsWith("http") ? "_blank" : undefined}
-                      rel={event.ticketUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 btn-gradient rounded-xl font-semibold text-[15px] tracking-wide w-full"
-                    >
-                      <span className="relative z-10">КУПИТЬ БИЛЕТ</span>
-                      <svg className="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </a>
-                    <button
-                      onClick={() => setPromoOpen(!promoOpen)}
-                      className="flex-1 px-6 py-4 btn-outline rounded-xl font-semibold text-[15px] tracking-wide w-full"
-                    >
-                      ПРОМОКОД
-                    </button>
-                  </div>
-
-                  {promoOpen && (
-                    <div className="animate-fade-in space-y-3 pt-1">
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          value={promoCode}
-                          onChange={(e) => setPromoCode(e.target.value)}
-                          placeholder="Введите промокод"
-                          className="flex-1 px-4 py-3 rounded-xl bg-bg-dark border border-border text-sm focus:outline-none transition-colors"
-                          style={{ fontFamily: "var(--font-mono)" }}
-                        />
-                        <button
-                          onClick={handlePromo}
-                          className="px-5 py-3 rounded-xl bg-primary/10 text-primary font-semibold text-sm hover:bg-primary/20 transition-colors border border-primary/20"
-                        >
-                          Применить
-                        </button>
-                      </div>
-                      {promoResult && (
-                        <p className={`text-sm font-medium ${promoResult.includes("применён") ? "text-emerald-400" : "text-accent"}`}>
-                          {promoResult}
-                        </p>
-                      )}
-                    </div>
-                  )}
+                  <a
+                    href={event.ticketUrl}
+                    target={event.ticketUrl?.startsWith("http") ? "_blank" : undefined}
+                    rel={event.ticketUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="flex items-center justify-center gap-2 px-6 py-4 btn-gradient rounded-xl font-semibold text-[15px] tracking-wide w-full"
+                  >
+                    <span className="relative z-10">КУПИТЬ БИЛЕТ</span>
+                    <svg className="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </a>
                 </div>
               </div>
             )}
