@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Pool } from "pg";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import { query } from "@/lib/db";
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +10,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
     }
 
-    const result = await pool.query(
+    const result = await query(
       `SELECT id, user_id, text, sender, created_at as timestamp, is_read 
        FROM support_messages 
        WHERE user_id = $1 
@@ -22,7 +18,7 @@ export async function GET(request: NextRequest) {
       [userId]
     );
 
-    const messages = result.rows.map((row) => ({
+    const messages = result.rows.map((row: any) => ({
       id: row.id.toString(),
       userId: row.user_id,
       text: row.text,
@@ -50,7 +46,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = await pool.query(
+    const result = await query(
       `INSERT INTO support_messages (user_id, text, sender, created_at, is_read) 
        VALUES ($1, $2, $3, NOW(), $4) 
        RETURNING id, user_id, text, sender, created_at as timestamp, is_read`,
