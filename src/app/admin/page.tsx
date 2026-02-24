@@ -110,24 +110,6 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "settings", label: "Настройки", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
 ];
 
-const DEFAULT_VENUES: Venue[] = [
-  { id: "arbat-hall", name: "ARBAT HALL", address: "ул. Новый Арбат 21" },
-  { id: "izi", name: "IZI", address: "Берсеневская наб. 6 стр 3" },
-  { id: "anima", name: "ANIMA", address: "Космодамианская наб. 2" },
-  { id: "vibe", name: "VIBE", address: "Рочдельская ул. 15 стр 25" },
-  { id: "base", name: "BASE", address: "Пресненская наб. 6 стр 2" },
-  { id: "vk-stadium", name: "VK STADIUM", address: "Ленинградский пр-т 31 стр 4" },
-  { id: "castle-hall", name: "CASTLE HALL", address: "Ул. Бутырская 62" },
-  { id: "pravda", name: "PRAVDA", address: "ул. Правды 24 стр 2" },
-  { id: "atmosphere", name: "ATMOSPHERE MOSCOW", address: "Шмитовский проезд 32А, стр 1" },
-];
-
-const DEFAULT_FAQ: FAQItem[] = [
-  { id: "faq-1", question: "Как купить билет?", answer: "Нажмите кнопку «Купить билет» на странице мероприятия. Принимаем оплату картой и через СБП." },
-  { id: "faq-2", question: "Есть ли дресс-код?", answer: "На большинстве мероприятий дресс-код свободный. Для тематических вечеринок указываем рекомендации в описании." },
-  { id: "faq-3", question: "Как работают промокоды?", answer: "Введите промокод при покупке билета. Скидка применяется автоматически. Промокоды нельзя суммировать." },
-  { id: "faq-4", question: "Возможен ли возврат билета?", answer: "Возврат возможен не позднее чем за 48 часов до начала мероприятия. Напишите нам на почту с номером заказа." },
-];
 
 function AdminInput({ label, value, onChange, type = "text", disabled = false, placeholder = "", mono = false }: {
   label: string; value: string | number; onChange: (v: string) => void; type?: string; disabled?: boolean; placeholder?: string; mono?: boolean;
@@ -180,7 +162,6 @@ export default function AdminDashboard() {
     subheading: "Организуем тусовки, которые ты запомнишь навсегда. Москва. Лучшие площадки. Невероятная атмосфера.",
     ctaText: "БЛИЖАЙШИЕ СОБЫТИЯ",
   });
-  const [statsContent, setStatsContent] = useState({ events: "50+", guests: "30K+", venues: "15+", artists: "100+" });
   const [supportConversations, setSupportConversations] = useState<SupportConversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
@@ -203,7 +184,6 @@ export default function AdminDashboard() {
       const fData = await fRes.json(); setFaqItems(fData.faq || []);
       const cData = await cRes.json();
       setHeroContent({ heading: cData.heroHeading, subheading: cData.heroSubheading, ctaText: cData.heroCtaText });
-      setStatsContent({ events: cData.statsEvents, guests: cData.statsGuests, venues: cData.statsVenues, artists: cData.statsArtists });
     } catch { showToast("Ошибка загрузки данных"); }
     setLoading(false);
   }, [router]);
@@ -277,10 +257,6 @@ export default function AdminDashboard() {
       heroHeading: heroContent.heading,
       heroSubheading: heroContent.subheading,
       heroCtaText: heroContent.ctaText,
-      statsEvents: statsContent.events,
-      statsGuests: statsContent.guests,
-      statsVenues: statsContent.venues,
-      statsArtists: statsContent.artists,
     };
     const res = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) { showToast("Контент сохранён"); fetchData(); }
@@ -741,39 +717,6 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                <div className="h-[2px] bg-gradient-to-r from-primary/50 to-accent/50" />
-                <div className="p-4 sm:p-6 space-y-4">
-                  <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Статистика на главной</h3>
-                  <p className="text-text-muted text-xs">Числа, отображаемые в секции статистики</p>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <AdminInput label="Мероприятий" value={statsContent.events} onChange={v => setStatsContent({...statsContent, events: v})} />
-                    <AdminInput label="Гостей" value={statsContent.guests} onChange={v => setStatsContent({...statsContent, guests: v})} />
-                    <AdminInput label="Площадок" value={statsContent.venues} onChange={v => setStatsContent({...statsContent, venues: v})} />
-                    <AdminInput label="Артистов" value={statsContent.artists} onChange={v => setStatsContent({...statsContent, artists: v})} />
-                  </div>
-                  <button onClick={saveContent} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                <div className="h-[2px] bg-gradient-to-r from-primary/50 to-accent/50" />
-                <div className="p-4 sm:p-6 space-y-4">
-                  <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Программа лояльности</h3>
-                  <p className="text-text-muted text-xs">Настройки уровней и привилегий</p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <AdminInput label="Уровень 1 — Название" value="NEWCOMER" onChange={() => {}} />
-                    <AdminInput label="Уровень 1 — Скидка %" value="5" onChange={() => {}} />
-                    <AdminInput label="Уровень 2 — Название" value="REGULAR" onChange={() => {}} />
-                    <AdminInput label="Уровень 2 — Скидка %" value="10" onChange={() => {}} />
-                    <AdminInput label="Уровень 3 — Название" value="VIP" onChange={() => {}} />
-                    <AdminInput label="Уровень 3 — Скидка %" value="15" onChange={() => {}} />
-                    <AdminInput label="Уровень 4 — Название" value="FAMILY" onChange={() => {}} />
-                    <AdminInput label="Уровень 4 — Скидка %" value="25" onChange={() => {}} />
-                  </div>
-                  <button onClick={() => showToast("Лояльность сохранена")} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
-                </div>
-              </div>
             </div>
           )}
 

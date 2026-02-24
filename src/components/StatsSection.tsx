@@ -5,8 +5,6 @@ import { useEffect, useState, useRef } from "react";
 const stats = [
   { value: 200, suffix: "+", label: "Мероприятий проведено" },
   { value: 100000, suffix: "+", label: "Довольных гостей" },
-  { value: 15, suffix: "+", label: "Площадок в Москве" },
-  { value: 100, suffix: "%", label: "Атмосфера" },
 ];
 
 export default function StatsSection() {

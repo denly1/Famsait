@@ -29,14 +29,6 @@ export default function SupportPage() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const loadMessages = async (uid: string) => {
     try {
       const res = await fetch(`/api/support/messages?userId=${uid}`);
@@ -72,23 +64,23 @@ export default function SupportPage() {
 
   return (
     <div className="min-h-screen pt-32 pb-16">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-4xl sm:text-5xl font-black mb-6" style={{ fontFamily: "var(--font-heading)" }}>
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl sm:text-5xl font-black mb-8 text-center" style={{ fontFamily: "var(--font-heading)" }}>
           Поддержка
         </h1>
 
         {/* Чат */}
-        <div className="bg-bg-card border border-border rounded-2xl overflow-hidden mb-6">
+        <div className="bg-bg-card border border-border rounded-2xl overflow-hidden">
           <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
           
           <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: "var(--font-heading)" }}>Онлайн чат</h2>
-            <p className="text-text-secondary mb-4 text-sm">
-              Напишите нам сообщение, и мы ответим в ближайшее время. Ваши сообщения сохраняются.
+            <h2 className="text-xl font-bold mb-3 text-center" style={{ fontFamily: "var(--font-heading)" }}>Онлайн чат поддержки</h2>
+            <p className="text-text-secondary mb-6 text-sm text-center">
+              Напишите нам сообщение, и мы ответим в ближайшее время
             </p>
 
             {/* Сообщения */}
-            <div className="bg-bg-dark rounded-xl p-4 h-[400px] overflow-y-auto mb-4 space-y-3">
+            <div className="bg-bg-dark rounded-xl p-4 h-[500px] overflow-y-auto mb-4 space-y-3">
               {messages.length === 0 ? (
                 <div className="text-center text-text-muted text-sm py-8">
                   Начните диалог, напишите первое сообщение
@@ -130,40 +122,6 @@ export default function SupportPage() {
               >
                 <span className="relative z-10">Отправить</span>
               </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Другие способы связи */}
-        <div className="bg-bg-card border border-border rounded-2xl p-6 sm:p-8">
-          <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: "var(--font-heading)" }}>Другие способы связи</h2>
-          <p className="text-text-secondary mb-6">
-            Также вы можете связаться с нами через социальные сети или по электронной почте.
-          </p>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-bold text-lg mb-2">Email</h3>
-              <a href="mailto:tusa2026@mail.ru" className="text-primary hover:text-primary-light transition-colors">
-                tusa2026@mail.ru
-              </a>
-            </div>
-            <div>
-              <h3 className="font-bold text-lg mb-2">Telegram</h3>
-              <a href="https://t.me/familymsk" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-light transition-colors">
-                @familymsk
-              </a>
-            </div>
-            <div>
-              <h3 className="font-bold text-lg mb-2">VK</h3>
-              <a href="https://vk.ru/thefamilymskk" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-light transition-colors">
-                vk.ru/thefamilymskk
-              </a>
-            </div>
-            <div>
-              <h3 className="font-bold text-lg mb-2">Instagram</h3>
-              <a href="https://www.instagram.com/thefamily_msk" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-light transition-colors">
-                @thefamily_msk
-              </a>
             </div>
           </div>
         </div>

@@ -30,12 +30,8 @@ export default async function PastEventsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-8 sm:mb-14">
-          <span className="tag tag-accent mb-3 sm:mb-4 inline-flex">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            АРХИВ
-          </span>
           <h1 className="text-3xl sm:text-6xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-            ПРОШЕДШИЕ
+            ПРОШЕДШИЕ СОБЫТИЯ
           </h1>
           <p className="text-text-secondary mt-3 sm:mt-4 max-w-xl text-[14px] sm:text-[15px] leading-relaxed">
             Вспомни, как это было! Фотографии и детали наших прошедших событий.
