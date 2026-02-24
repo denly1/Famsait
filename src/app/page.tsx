@@ -12,7 +12,9 @@ import { mapEventsFromDB } from "@/lib/mappers";
 
 async function getEvents() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const baseUrl = typeof window === 'undefined' 
+      ? 'http://localhost:3000' 
+      : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
     const res = await fetch(`${baseUrl}/api/events`, { 
       cache: 'no-store',
       headers: { 'Content-Type': 'application/json' }
