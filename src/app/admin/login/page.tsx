@@ -88,10 +88,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
         </div>
-
-        <p className="text-center text-text-muted text-xs mt-6">
-          Логин: admin / Пароль: family2026
-        </p>
       </div>
     </div>
   );

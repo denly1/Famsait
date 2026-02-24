@@ -335,7 +335,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (tab === "support") {
       loadSupportConversations();
-      const interval = setInterval(loadSupportConversations, 5000);
+      const interval = setInterval(loadSupportConversations, 10000);
       return () => clearInterval(interval);
     }
   }, [tab]);

@@ -5,9 +5,8 @@ const SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "family-moscow-super-secret-key-2026-change-me"
 );
 
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-// Default password: "family2026"
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "family2026";
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "FamAdmin";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "!MscFam909";
 
 export async function createToken(username: string): Promise<string> {
   return new SignJWT({ username, role: "admin" })
@@ -27,7 +26,10 @@ export async function verifyToken(token: string) {
 }
 
 export function getAdminCredentials() {
-  return { username: ADMIN_USERNAME, password: ADMIN_PASSWORD };
+  return {
+    username: process.env.ADMIN_USERNAME || "FamAdmin",
+    password: process.env.ADMIN_PASSWORD || "!MscFam909",
+  };
 }
 
 export async function getSession() {

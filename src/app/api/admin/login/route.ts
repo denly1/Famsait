@@ -3,10 +3,23 @@ import { createToken, getAdminCredentials } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, password } = await request.json();
+    const body = await request.json();
+    const username = String(body.username || "").trim();
+    const password = String(body.password || "");
 
+    // Валидация: только буквы, цифры и базовые символы
     if (!username || !password) {
       return NextResponse.json({ error: "Введите логин и пароль" }, { status: 400 });
+    }
+
+    if (username.length > 50 || password.length > 100) {
+      return NextResponse.json({ error: "Неверный логин или пароль" }, { status: 401 });
+    }
+
+    // Защита от SQL инъекций - проверка на подозрительные символы
+    const sqlInjectionPattern = /['";\\--]/;
+    if (sqlInjectionPattern.test(username) || sqlInjectionPattern.test(password)) {
+      return NextResponse.json({ error: "Неверный логин или пароль" }, { status: 401 });
     }
 
     const creds = getAdminCredentials();
