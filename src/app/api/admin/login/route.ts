@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Защита от SQL инъекций - проверка на подозрительные символы
-    const sqlInjectionPattern = /['";\\--]/;
-    if (sqlInjectionPattern.test(username) || sqlInjectionPattern.test(password)) {
+    const sqlInjectionPattern = /['";\\-]/;
+    if (sqlInjectionPattern.test(username)) {
       return NextResponse.json({ error: "Неверный логин или пароль" }, { status: 401 });
     }
 
