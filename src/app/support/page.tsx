@@ -5,9 +5,21 @@ export default function SupportPage() {
         <h1 className="text-4xl sm:text-5xl font-black mb-6" style={{ fontFamily: "var(--font-heading)" }}>
           Поддержка
         </h1>
+        
+        <div className="bg-bg-card border border-border rounded-2xl p-6 sm:p-8 mb-6">
+          <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: "var(--font-heading)" }}>Онлайн чат</h2>
+          <p className="text-text-secondary mb-4">
+            Напишите нам в чат, и мы ответим в ближайшее время. Ваши сообщения сохраняются, и вы можете вернуться к диалогу в любое время.
+          </p>
+          <p className="text-text-muted text-sm">
+            💬 Нажмите на иконку чата в правом нижнем углу экрана
+          </p>
+        </div>
+
         <div className="bg-bg-card border border-border rounded-2xl p-6 sm:p-8">
+          <h2 className="text-2xl font-bold mb-4" style={{ fontFamily: "var(--font-heading)" }}>Другие способы связи</h2>
           <p className="text-text-secondary mb-6">
-            Если у вас есть вопросы, напишите нам на почту или в социальных сетях.
+            Также вы можете связаться с нами через социальные сети или по электронной почте.
           </p>
           <div className="space-y-4">
             <div>

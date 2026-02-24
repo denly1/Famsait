@@ -180,6 +180,7 @@ export default function AdminDashboard() {
     subheading: "Организуем тусовки, которые ты запомнишь навсегда. Москва. Лучшие площадки. Невероятная атмосфера.",
     ctaText: "БЛИЖАЙШИЕ СОБЫТИЯ",
   });
+  const [statsContent, setStatsContent] = useState({ events: "50+", guests: "30K+", venues: "15+", artists: "100+" });
   const [supportConversations, setSupportConversations] = useState<SupportConversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
@@ -190,15 +191,19 @@ export default function AdminDashboard() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [aRes, eRes, mRes, pRes, sRes, vRes, fRes] = await Promise.all([
+      const [aRes, eRes, mRes, pRes, sRes, vRes, fRes, cRes] = await Promise.all([
         fetch("/api/admin/analytics"), fetch("/api/admin/events"), fetch("/api/admin/messages"),
-        fetch("/api/admin/promos"), fetch("/api/admin/settings"), fetch("/api/admin/venues"), fetch("/api/admin/faq"),
+        fetch("/api/admin/promos"), fetch("/api/admin/settings"), fetch("/api/admin/venues"), 
+        fetch("/api/admin/faq"), fetch("/api/admin/content"),
       ]);
       if (aRes.status === 401) { router.push("/admin/login"); return; }
       setAnalytics(await aRes.json()); setEvents(await eRes.json()); setMessages(await mRes.json());
       setPromos(await pRes.json()); setSettings(await sRes.json());
       const vData = await vRes.json(); setVenues(vData.venues || []);
       const fData = await fRes.json(); setFaqItems(fData.faq || []);
+      const cData = await cRes.json();
+      setHeroContent({ heading: cData.heroHeading, subheading: cData.heroSubheading, ctaText: cData.heroCtaText });
+      setStatsContent({ events: cData.statsEvents, guests: cData.statsGuests, venues: cData.statsVenues, artists: cData.statsArtists });
     } catch { showToast("Ошибка загрузки данных"); }
     setLoading(false);
   }, [router]);
@@ -264,6 +269,21 @@ export default function AdminDashboard() {
     if (!confirm("Удалить вопрос?")) return;
     const res = await fetch("/api/admin/faq", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
     if (res.ok) { showToast("Вопрос удалён"); fetchData(); }
+  };
+
+  // === CONTENT ===
+  const saveContent = async () => {
+    const payload = {
+      heroHeading: heroContent.heading,
+      heroSubheading: heroContent.subheading,
+      heroCtaText: heroContent.ctaText,
+      statsEvents: statsContent.events,
+      statsGuests: statsContent.guests,
+      statsVenues: statsContent.venues,
+      statsArtists: statsContent.artists,
+    };
+    const res = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    if (res.ok) { showToast("Контент сохранён"); fetchData(); }
   };
 
   // === SUPPORT ===
@@ -717,7 +737,7 @@ export default function AdminDashboard() {
                     </div>
                     <AdminInput label="Текст кнопки CTA" value={heroContent.ctaText} onChange={v => setHeroContent({...heroContent, ctaText: v})} />
                   </div>
-                  <button onClick={() => showToast("Контент сохранён")} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
+                  <button onClick={saveContent} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
                 </div>
               </div>
 
@@ -727,12 +747,12 @@ export default function AdminDashboard() {
                   <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Статистика на главной</h3>
                   <p className="text-text-muted text-xs">Числа, отображаемые в секции статистики</p>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <AdminInput label="Мероприятий" value="50+" onChange={() => {}} />
-                    <AdminInput label="Гостей" value="30K+" onChange={() => {}} />
-                    <AdminInput label="Площадок" value="15+" onChange={() => {}} />
-                    <AdminInput label="Артистов" value="100+" onChange={() => {}} />
+                    <AdminInput label="Мероприятий" value={statsContent.events} onChange={v => setStatsContent({...statsContent, events: v})} />
+                    <AdminInput label="Гостей" value={statsContent.guests} onChange={v => setStatsContent({...statsContent, guests: v})} />
+                    <AdminInput label="Площадок" value={statsContent.venues} onChange={v => setStatsContent({...statsContent, venues: v})} />
+                    <AdminInput label="Артистов" value={statsContent.artists} onChange={v => setStatsContent({...statsContent, artists: v})} />
                   </div>
-                  <button onClick={() => showToast("Статистика сохранена")} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
+                  <button onClick={saveContent} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
                 </div>
               </div>
 
