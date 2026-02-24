@@ -44,16 +44,22 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const data = await request.json();
-    const { id, ...rest } = data;
-    if (!id) return NextResponse.json({ error: "ID обязателен" }, { status: 400 });
-    
-    const fields = Object.keys(rest);
-    const values = Object.values(rest);
-    const setClause = fields.map((field, i) => `${field} = $${i + 2}`).join(", ");
+    if (!data.id) return NextResponse.json({ error: "ID обязателен" }, { status: 400 });
     
     const result = await query(
-      `UPDATE events SET ${setClause} WHERE id = $1 RETURNING *`,
-      [id, ...values]
+      `UPDATE events SET 
+        title = $2, subtitle = $3, date = $4, time = $5, venue = $6, 
+        address = $7, age_limit = $8, price = $9, currency = $10, 
+        image = $11, description = $12, lineup = $13, features = $14, 
+        is_past = $15, ticket_url = $16, ticket_link = $17, updated_at = NOW()
+      WHERE id = $1 RETURNING *`,
+      [
+        data.id, data.title, data.subtitle || "", data.date, data.time || "",
+        data.venue || "", data.address || "", data.ageLimit || "18+",
+        data.price || 0, data.currency || "₽", data.image || "",
+        data.description || "", data.lineup || [], data.features || [],
+        data.isPast || false, data.ticketUrl || "#", data.ticketLink || ""
+      ]
     );
     
     if (result.rows.length === 0) {

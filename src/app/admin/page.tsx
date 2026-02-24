@@ -168,10 +168,10 @@ export default function AdminDashboard() {
   const [showPromoForm, setShowPromoForm] = useState(false);
   const [promoForm, setPromoForm] = useState({ code: "", discount: 10, maxUses: 100, active: true, expiresAt: "2026-12-31" });
   const [toast, setToast] = useState<string | null>(null);
-  const [venues, setVenues] = useState<Venue[]>(DEFAULT_VENUES);
+  const [venues, setVenues] = useState<Venue[]>([]);
   const [venueForm, setVenueForm] = useState({ id: "", name: "", address: "" });
   const [showVenueForm, setShowVenueForm] = useState(false);
-  const [faqItems, setFaqItems] = useState<FAQItem[]>(DEFAULT_FAQ);
+  const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
   const [faqForm, setFaqForm] = useState({ id: "", question: "", answer: "" });
   const [showFaqForm, setShowFaqForm] = useState(false);
   const [editingFaq, setEditingFaq] = useState<FAQItem | null>(null);
@@ -190,13 +190,15 @@ export default function AdminDashboard() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [aRes, eRes, mRes, pRes, sRes] = await Promise.all([
+      const [aRes, eRes, mRes, pRes, sRes, vRes, fRes] = await Promise.all([
         fetch("/api/admin/analytics"), fetch("/api/admin/events"), fetch("/api/admin/messages"),
-        fetch("/api/admin/promos"), fetch("/api/admin/settings"),
+        fetch("/api/admin/promos"), fetch("/api/admin/settings"), fetch("/api/admin/venues"), fetch("/api/admin/faq"),
       ]);
       if (aRes.status === 401) { router.push("/admin/login"); return; }
       setAnalytics(await aRes.json()); setEvents(await eRes.json()); setMessages(await mRes.json());
       setPromos(await pRes.json()); setSettings(await sRes.json());
+      const vData = await vRes.json(); setVenues(vData.venues || []);
+      const fData = await fRes.json(); setFaqItems(fData.faq || []);
     } catch { showToast("Ошибка загрузки данных"); }
     setLoading(false);
   }, [router]);
@@ -236,6 +238,33 @@ export default function AdminDashboard() {
 
   // === SETTINGS ===
   const saveSettings = async () => { if (!settings) return; const res = await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }); if (res.ok) showToast("Настройки сохранены"); };
+
+  // === VENUES ===
+  const saveVenue = async () => {
+    if (!venueForm.name) return;
+    const payload = { ...venueForm, id: venueForm.id || venueForm.name.toLowerCase().replace(/\s+/g, "-") };
+    const res = await fetch("/api/admin/venues", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    if (res.ok) { showToast("Площадка добавлена"); setShowVenueForm(false); fetchData(); }
+  };
+  const removeVenue = async (id: string) => {
+    if (!confirm("Удалить площадку?")) return;
+    const res = await fetch("/api/admin/venues", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+    if (res.ok) { showToast("Площадка удалена"); fetchData(); }
+  };
+
+  // === FAQ ===
+  const saveFaq = async () => {
+    if (!faqForm.question || !faqForm.answer) return;
+    const payload = { ...faqForm, id: faqForm.id || `faq-${Date.now()}` };
+    const method = editingFaq ? "PUT" : "POST";
+    const res = await fetch("/api/admin/faq", { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    if (res.ok) { showToast(editingFaq ? "Вопрос обновлён" : "Вопрос добавлен"); setShowFaqForm(false); setEditingFaq(null); fetchData(); }
+  };
+  const removeFaq = async (id: string) => {
+    if (!confirm("Удалить вопрос?")) return;
+    const res = await fetch("/api/admin/faq", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+    if (res.ok) { showToast("Вопрос удалён"); fetchData(); }
+  };
 
   // === SUPPORT ===
   const loadSupportConversations = async () => {
@@ -642,7 +671,7 @@ export default function AdminDashboard() {
                       <AdminInput label="Адрес" value={venueForm.address} onChange={v => setVenueForm({...venueForm, address: v})} placeholder="ул. Примерная 1" />
                     </div>
                     <div className="flex gap-3">
-                      <button onClick={() => { if (!venueForm.name) return; setVenues([...venues, { id: venueForm.name.toLowerCase().replace(/\s+/g, "-"), name: venueForm.name.toUpperCase(), address: venueForm.address }]); setShowVenueForm(false); showToast("Площадка добавлена"); }} className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">ДОБАВИТЬ</span></button>
+                      <button onClick={saveVenue} className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">ДОБАВИТЬ</span></button>
                       <button onClick={() => setShowVenueForm(false)} className="px-5 py-2.5 rounded-xl text-sm font-semibold border border-border hover:bg-white/[0.03] transition-colors">ОТМЕНА</button>
                     </div>
                   </div>
@@ -659,7 +688,7 @@ export default function AdminDashboard() {
                       <span className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>{v.name}</span>
                       <div className="text-text-muted text-xs mt-0.5 truncate">{v.address}</div>
                     </div>
-                    <button onClick={() => { setVenues(venues.filter(x => x.id !== v.id)); showToast("Площадка удалена"); }} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all flex-shrink-0">
+                    <button onClick={() => removeVenue(v.id)} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all flex-shrink-0">
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                     </button>
                   </div>
@@ -752,17 +781,7 @@ export default function AdminDashboard() {
                       <textarea value={faqForm.answer} onChange={e => setFaqForm({...faqForm, answer: e.target.value})} rows={4} className="w-full px-3 py-2.5 rounded-xl bg-bg-dark border border-border text-sm resize-none focus:outline-none focus:border-primary/30 transition-colors" />
                     </div>
                     <div className="flex gap-3">
-                      <button onClick={() => {
-                        if (!faqForm.question) return;
-                        if (editingFaq) {
-                          setFaqItems(faqItems.map(f => f.id === editingFaq.id ? { ...f, question: faqForm.question, answer: faqForm.answer } : f));
-                          showToast("Вопрос обновлён");
-                        } else {
-                          setFaqItems([...faqItems, { id: `faq-${Date.now()}`, question: faqForm.question, answer: faqForm.answer }]);
-                          showToast("Вопрос добавлен");
-                        }
-                        setShowFaqForm(false);
-                      }} className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
+                      <button onClick={saveFaq} className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
                       <button onClick={() => setShowFaqForm(false)} className="px-5 py-2.5 rounded-xl text-sm font-semibold border border-border hover:bg-white/[0.03] transition-colors">ОТМЕНА</button>
                     </div>
                   </div>
@@ -784,7 +803,7 @@ export default function AdminDashboard() {
                         <button onClick={() => { setEditingFaq(faq); setFaqForm({ id: faq.id, question: faq.question, answer: faq.answer }); setShowFaqForm(true); }} className="p-2 rounded-lg hover:bg-white/[0.04] text-text-muted hover:text-primary transition-all">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                         </button>
-                        <button onClick={() => { setFaqItems(faqItems.filter(f => f.id !== faq.id)); showToast("Вопрос удалён"); }} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all">
+                        <button onClick={() => removeFaq(faq.id)} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                         </button>
                       </div>
