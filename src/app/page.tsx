@@ -145,9 +145,8 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
         <div className="flex animate-marquee-infinite whitespace-nowrap">
           {[...Array(30)].map((_, i) => (
-            <span key={i} className="inline-flex items-center mx-8 text-5xl sm:text-6xl lg:text-7xl tracking-wider text-white/[0.18] uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400 }}>
-              FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
-              <span className="ml-8">★</span>
+            <span key={i} className="inline-flex items-center mx-8 text-5xl sm:text-6xl lg:text-7xl tracking-wider text-white/30 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400 }}>
+              FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ <span className="ml-8 text-primary/30">★</span>
             </span>
           ))}
         </div>
