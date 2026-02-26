@@ -76,10 +76,6 @@ export default function SupportPage() {
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-8 sm:mb-10">
-          <span className="tag tag-primary mb-3 sm:mb-4 inline-flex">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-            ПОДДЕРЖКА
-          </span>
           <h1 className="text-3xl sm:text-6xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
             ЧАТ ПОДДЕРЖКИ
           </h1>
@@ -98,9 +94,8 @@ export default function SupportPage() {
                 <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-purple-700" />
               </div>
               <div>
-                <p className="font-bold text-white text-base" style={{ fontFamily: "var(--font-heading)" }}>THE FAMILY</p>
-                <p className="text-white/70 text-sm flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block" />
+                <p className="font-bold text-white text-base" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
+                <p className="text-white/70 text-sm">
                   Онлайн · отвечаем быстро
                 </p>
               </div>
@@ -168,8 +163,8 @@ export default function SupportPage() {
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                 placeholder="Введите сообщение..."
-                className="flex-1 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none transition-colors border"
-                style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)" }}
+                className="flex-1 rounded-xl px-4 py-3 text-base text-white placeholder:text-white/30 focus:outline-none transition-colors border"
+                style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", fontSize: "16px" }}
               />
               <button
                 onClick={handleSend}

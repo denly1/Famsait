@@ -67,9 +67,9 @@ export default function Footer() {
           {/* Brand */}
           <div className="col-span-2 md:col-span-4">
             <div className="flex items-center gap-3 mb-5">
-              <img src="/Familylogo.png" alt="THE FAMILY" className="w-9 h-9 rounded-lg" />
+              <img src="/Familylogo.png" alt="FAMILY" className="w-9 h-9 rounded-lg" />
               <div className="flex flex-col">
-                <span className="text-base font-bold tracking-tight leading-none" style={{ fontFamily: "var(--font-heading)" }}>THE FAMILY</span>
+                <span className="text-base font-bold tracking-tight leading-none" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</span>
                 <span className="text-[10px] font-medium tracking-[0.2em] text-text-muted leading-none mt-0.5">MOSCOW</span>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-10 sm:mt-14 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="mono-label text-[10px]">
-            © 2026 THE FAMILY MOSCOW
+            © 2026 FAMILY MOSCOW
           </p>
           <p className="mono-label text-[10px]">
             MADE WITH LOVE IN MOSCOW

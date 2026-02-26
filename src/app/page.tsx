@@ -133,7 +133,7 @@ export default async function HomePage() {
 
       {/* ===== COUNTDOWN ===== */}
       {nextEvent && nextEvent.date && (
-        <section className="py-8 sm:py-12 relative">
+        <section className="pt-3 sm:pt-5 pb-8 sm:pb-12 relative">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <CountdownTimer targetDate={nextEvent.date} targetTime={nextEvent.time} label="ДО БЛИЖАЙШЕГО СОБЫТИЯ" />
           </div>
@@ -360,7 +360,7 @@ export default async function HomePage() {
               <div className="absolute inset-0 grid-pattern opacity-30" />
 
               <div className="relative z-10 p-6 sm:p-16 lg:p-20">
-                <img src="/Familylogo.png" alt="THE FAMILY" className="w-16 h-16 mx-auto mb-8 rounded-2xl opacity-80" />
+                <img src="/Familylogo.png" alt="FAMILY" className="w-16 h-16 mx-auto mb-8 rounded-2xl opacity-80" />
 
                 <h2 className="text-3xl sm:text-5xl font-black tracking-tight mb-4" style={{ fontFamily: "var(--font-heading)" }}>
                   СТАНЬ ЧАСТЬЮ{" "}

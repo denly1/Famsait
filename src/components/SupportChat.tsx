@@ -133,7 +133,7 @@ export default function SupportChat() {
                 <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-purple-700" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-white text-sm leading-tight" style={{ fontFamily: "var(--font-heading)" }}>THE FAMILY</p>
+                <p className="font-bold text-white text-sm leading-tight" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
                 <p className="text-white/70 text-xs">Поддержка · онлайн</p>
               </div>
               <button onClick={() => setIsOpen(false)} className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors flex-shrink-0">

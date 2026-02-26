@@ -3,8 +3,8 @@ import "./globals.css";
 import SiteShell from "@/components/SiteShell";
 
 export const metadata: Metadata = {
-  title: "THE FAMILY — Тусовки в Москве",
-  description: "Лучшие вечеринки и мероприятия в Москве. Присоединяйся к The Family!",
+  title: "FAMILY — Тусовки в Москве",
+  description: "Лучшие вечеринки и мероприятия в Москве. Присоединяйся к Family!",
 };
 
 export default function RootLayout({
