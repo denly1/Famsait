@@ -145,8 +145,8 @@ export default async function HomePage() {
         <div className="flex animate-marquee whitespace-nowrap">
           {[...Array(2)].map((_, groupIndex) => (
             <div key={groupIndex} className="flex whitespace-nowrap">
-              {[...Array(8)].map((_, i) => (
-                <span key={i} className="mx-6 text-5xl sm:text-6xl lg:text-7xl font-black tracking-wider text-white/20 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
+              {[...Array(10)].map((_, i) => (
+                <span key={i} className="mx-6 text-5xl sm:text-6xl lg:text-7xl tracking-wider text-white/20 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
                   FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
                   <span className="text-primary/20 mx-4">★</span>
                 </span>
