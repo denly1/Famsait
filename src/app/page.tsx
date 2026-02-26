@@ -133,7 +133,7 @@ export default async function HomePage() {
 
       {/* ===== COUNTDOWN ===== */}
       {nextEvent && nextEvent.date && (
-        <section className="pt-3 sm:pt-5 pb-8 sm:pb-12 relative">
+        <section className="pt-0 sm:pt-1 pb-6 sm:pb-8 relative">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <CountdownTimer targetDate={nextEvent.date} targetTime={nextEvent.time} label="ДО БЛИЖАЙШЕГО СОБЫТИЯ" />
           </div>
@@ -141,13 +141,17 @@ export default async function HomePage() {
       )}
 
       {/* ===== MARQUEE TEXT ===== */}
-      <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-5 sm:py-6">
+      <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-3 sm:py-4">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
-        <div className="flex animate-marquee-infinite whitespace-nowrap">
-          {[...Array(30)].map((_, i) => (
-            <span key={i} className="inline-flex items-center mx-8 text-5xl sm:text-6xl lg:text-7xl tracking-wider text-white/30 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400 }}>
-              FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ <span className="ml-8 text-primary/30">★</span>
-            </span>
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[0, 1].map((group) => (
+            <div key={group} className="flex shrink-0">
+              {[...Array(10)].map((_, i) => (
+                <span key={i} className="inline-flex items-center mx-6 text-3xl sm:text-4xl lg:text-5xl tracking-wider text-white/25 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  FAMILY <span className="mx-3 text-primary/20">·</span> ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ <span className="ml-6 text-primary/25">★</span>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>

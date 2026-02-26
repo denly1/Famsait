@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
 
 interface Message {
   id: string;
@@ -18,6 +17,7 @@ export default function SupportPage() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatBodyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let id = localStorage.getItem("support_user_id");
@@ -31,16 +31,11 @@ export default function SupportPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Scroll only inside chat container, not the whole page
   useEffect(() => {
-    const el = messagesEndRef.current;
-    if (el) {
-      const container = el.parentElement;
-      if (container) {
-        container.scrollTop = container.scrollHeight;
-      }
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isTyping]);
 
   const loadMessages = async (uid: string) => {
     try {
@@ -71,10 +66,29 @@ export default function SupportPage() {
   const fmt = (ts: Date) => new Date(ts).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className="pt-44 sm:pt-56 pb-16 sm:pb-20 relative min-h-screen">
-      <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
+    <div className="fixed inset-0 z-30 flex flex-col sm:relative sm:inset-auto sm:z-auto sm:min-h-screen sm:pt-44 sm:pb-20">
+      {/* Mobile: full-screen chat. Desktop: normal page layout */}
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Header */}
+      <div className="flex-shrink-0 relative p-4 sm:hidden safe-top" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
+        <div className="flex items-center gap-3">
+          <a href="/" className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center text-white flex-shrink-0">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+          </a>
+          <div className="relative flex-shrink-0">
+            <img src="/Familylogo.png" alt="F" className="w-10 h-10 rounded-xl object-cover" />
+            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-purple-700" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-bold text-white text-sm leading-tight" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
+            <p className="text-white/70 text-xs">Онлайн · отвечаем быстро</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop header + wrapper */}
+      <div className="hidden sm:block max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
         <div className="mb-8 sm:mb-10">
           <h1 className="text-3xl sm:text-6xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
             ЧАТ ПОДДЕРЖКИ
@@ -83,11 +97,13 @@ export default function SupportPage() {
             Напишите нам — ответим в ближайшее время
           </p>
         </div>
+      </div>
 
-        {/* Chat container */}
-        <div className="rounded-2xl overflow-hidden border border-border shadow-2xl shadow-black/30">
-          {/* Header */}
-          <div className="relative p-5" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
+      {/* Chat card */}
+      <div className="flex-1 flex flex-col min-h-0 sm:max-w-3xl sm:mx-auto sm:px-4 sm:w-full sm:pb-8">
+        <div className="flex-1 flex flex-col min-h-0 sm:rounded-2xl sm:overflow-hidden sm:border sm:border-border sm:shadow-2xl sm:shadow-black/30">
+          {/* Desktop header inside card */}
+          <div className="hidden sm:block relative p-5" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
             <div className="flex items-center gap-4">
               <div className="relative flex-shrink-0">
                 <img src="/Familylogo.png" alt="F" className="w-12 h-12 rounded-xl object-cover" />
@@ -95,15 +111,17 @@ export default function SupportPage() {
               </div>
               <div>
                 <p className="font-bold text-white text-base" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
-                <p className="text-white/70 text-sm">
-                  Онлайн · отвечаем быстро
-                </p>
+                <p className="text-white/70 text-sm">Онлайн · отвечаем быстро</p>
               </div>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="h-[450px] sm:h-[500px] overflow-y-auto p-5 space-y-3" style={{ background: "#0d0d12" }}>
+          <div
+            ref={chatBodyRef}
+            className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-3"
+            style={{ background: "#0d0d12", WebkitOverflowScrolling: "touch" }}
+          >
             {messages.length === 0 && (
               <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
                 <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
@@ -121,9 +139,9 @@ export default function SupportPage() {
                 {msg.sender === "support" && (
                   <img src="/Familylogo.png" className="w-8 h-8 rounded-lg object-cover flex-shrink-0 self-end" alt="" />
                 )}
-                <div className={`flex flex-col gap-0.5 max-w-[75%] ${msg.sender === "user" ? "items-end" : "items-start"}`}>
+                <div className={`flex flex-col gap-0.5 max-w-[78%] ${msg.sender === "user" ? "items-end" : "items-start"}`}>
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm leading-relaxed break-words ${
+                    className={`px-4 py-3 rounded-2xl text-[15px] leading-relaxed break-words ${
                       msg.sender === "user"
                         ? "rounded-br-md text-white"
                         : "rounded-bl-md text-white/90 border border-white/10"
@@ -153,9 +171,9 @@ export default function SupportPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
-          <div className="p-4 border-t border-white/8" style={{ background: "#131318" }}>
-            <div className="flex gap-3 items-center">
+          {/* Input — fixed at bottom on mobile */}
+          <div className="flex-shrink-0 p-3 sm:p-4 border-t border-white/8 safe-bottom" style={{ background: "#131318" }}>
+            <div className="flex gap-2 sm:gap-3 items-center">
               <input
                 ref={inputRef}
                 type="text"
@@ -163,13 +181,15 @@ export default function SupportPage() {
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                 placeholder="Введите сообщение..."
-                className="flex-1 rounded-xl px-4 py-3 text-base text-white placeholder:text-white/30 focus:outline-none transition-colors border"
+                className="flex-1 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none transition-colors border touch-manipulation"
                 style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", fontSize: "16px" }}
+                autoComplete="off"
+                autoCorrect="off"
               />
               <button
                 onClick={handleSend}
                 disabled={!inputValue.trim()}
-                className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center text-white transition-all disabled:opacity-30 hover:opacity-90 active:scale-95"
+                className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center text-white transition-all disabled:opacity-30 hover:opacity-90 active:scale-95 touch-manipulation"
                 style={{ background: inputValue.trim() ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "rgba(255,255,255,0.06)" }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
@@ -177,7 +197,6 @@ export default function SupportPage() {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
