@@ -111,7 +111,7 @@ export default async function HomePage() {
 
                   {/* Elegant countdown */}
                   <div className="mb-10 sm:mb-14">
-                    <CountdownTimer targetDate={nextEvent.date} label={`ДО ${nextEvent.title}`} />
+                    <CountdownTimer targetDate={nextEvent.date} targetTime={nextEvent.time} label={`ДО ${nextEvent.title}`} />
                   </div>
 
                   {/* Premium CTA section */}
@@ -367,12 +367,10 @@ export default async function HomePage() {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+          <div className="grid grid-cols-2 gap-4 mt-4 max-w-xs mx-auto w-full">
             {[
               { value: "200+", label: "Мероприятий" },
               { value: "100K+", label: "Гостей" },
-              { value: "15+", label: "Площадок" },
-              { value: "100+", label: "Артистов" },
             ].map((stat: any, i: number) => (
               <ScrollReveal key={stat.label} delay={0.3 + i * 0.05}>
                 <div className="rounded-2xl bg-bg-card/50 border border-border p-5 text-center">

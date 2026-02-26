@@ -4,21 +4,27 @@ import { useState, useEffect } from "react";
 
 interface CountdownTimerProps {
   targetDate: string; // format: DD.MM.YYYY
+  targetTime?: string; // format: HH:MM or HH:MM – HH:MM
   label?: string;
 }
 
-function parseDate(dateStr: string): Date {
+function parseDate(dateStr: string, timeStr?: string): Date {
   const [day, month, year] = dateStr.split(".").map(Number);
-  return new Date(year, month - 1, day, 20, 0, 0); // assume 20:00 start
+  let hour = 20, minute = 0;
+  if (timeStr) {
+    const match = timeStr.match(/(\d{1,2}):(\d{2})/);
+    if (match) { hour = parseInt(match[1]); minute = parseInt(match[2]); }
+  }
+  return new Date(year, month - 1, day, hour, minute, 0);
 }
 
-export default function CountdownTimer({ targetDate, label }: CountdownTimerProps) {
+export default function CountdownTimer({ targetDate, targetTime, label }: CountdownTimerProps) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const target = parseDate(targetDate);
+    const target = parseDate(targetDate, targetTime);
 
     const update = () => {
       const now = new Date();
@@ -40,7 +46,7 @@ export default function CountdownTimer({ targetDate, label }: CountdownTimerProp
     update();
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [targetDate]);
+  }, [targetDate, targetTime]);
 
   if (!mounted) return null;
 

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import SupportPanel from "@/components/admin/SupportPanel";
 
-type Tab = "dashboard" | "events" | "messages" | "settings" | "content" | "faq" | "support";
+type Tab = "dashboard" | "events" | "settings" | "content" | "faq" | "support";
 
 interface AnalyticsData {
   totalVisits: number;
@@ -104,7 +104,6 @@ const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "content", label: "Контент", icon: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" },
   { id: "faq", label: "FAQ", icon: "M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
   { id: "support", label: "Поддержка", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
-  { id: "messages", label: "Сообщения", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
   { id: "settings", label: "Настройки", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
 ];
 
@@ -337,7 +336,6 @@ export default function AdminDashboard() {
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all ${tab === t.id ? "bg-primary/10 text-primary border border-primary/15" : "text-text-secondary hover:text-text-primary hover:bg-white/[0.03] border border-transparent"}`}>
               <svg className="w-[18px] h-[18px] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d={t.icon} /></svg>
               <span className="truncate">{t.label}</span>
-              {t.id === "messages" && unreadCount > 0 && <span className="ml-auto w-5 h-5 rounded-full bg-accent text-[10px] font-bold flex items-center justify-center flex-shrink-0">{unreadCount}</span>}
               {t.id === "support" && supportUnreadCount > 0 && <span className="ml-auto w-5 h-5 rounded-full bg-accent text-[10px] font-bold flex items-center justify-center flex-shrink-0">{supportUnreadCount}</span>}
             </button>
           ))}
@@ -503,50 +501,6 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* === MESSAGES === */}
-          {tab === "messages" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Сообщения</h1>
-                <p className="text-text-muted text-sm mt-1">{messages.length} всего · {unreadCount} непрочитанных</p>
-              </div>
-              {messages.length === 0 ? (
-                <div className="text-center py-20 text-text-muted">
-                  <svg className="w-12 h-12 mx-auto mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                  <p className="text-sm">Нет сообщений</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  {messages.map(msg => (
-                    <div key={msg.id} className={`rounded-xl bg-bg-card border p-4 sm:p-5 transition-all ${msg.read ? "border-border" : "border-primary/20 bg-primary/[0.02]"}`}>
-                      <div className="flex items-start gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap mb-1">
-                            <span className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>{msg.name}</span>
-                            {!msg.read && <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0" />}
-                            {msg.subject && <span className="text-[9px] py-0.5 px-2 rounded-full bg-primary/10 text-primary font-medium">{msg.subject}</span>}
-                          </div>
-                          <div className="text-text-muted text-xs mb-2 truncate">{msg.email} · {new Date(msg.createdAt).toLocaleString("ru")}</div>
-                          <p className="text-text-secondary text-sm leading-relaxed">{msg.message}</p>
-                        </div>
-                        <div className="flex gap-1 flex-shrink-0">
-                          {!msg.read && (
-                            <button onClick={() => markRead(msg.id)} className="p-2 rounded-lg hover:bg-white/[0.04] text-text-muted hover:text-primary transition-all" title="Прочитано">
-                              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                            </button>
-                          )}
-                          <button onClick={() => removeMessage(msg.id)} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all" title="Удалить">
-                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
           {/* === SUPPORT === */}
           {tab === "support" && (
             <div className="space-y-6">
@@ -651,24 +605,14 @@ export default function AdminDashboard() {
               </div>
 
               <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
-                <div className="p-4 sm:p-6 space-y-5">
-                  <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Основные</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <AdminInput label="Название сайта" value={settings.siteName} onChange={v => setSettings({...settings, siteName: v})} />
-                    <AdminInput label="Описание" value={settings.siteDescription} onChange={v => setSettings({...settings, siteDescription: v})} />
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
                 <div className="h-[2px] bg-gradient-to-r from-blue-500/50 to-cyan-500/50" />
                 <div className="p-4 sm:p-6 space-y-5">
                   <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Соцсети</h3>
+                  <p className="text-text-muted text-xs">Ссылки уже заполнены — измените при необходимости</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <AdminInput label="Telegram URL" value={settings.telegramUrl} onChange={v => setSettings({...settings, telegramUrl: v})} placeholder="https://t.me/..." />
-                    <AdminInput label="VK URL" value={settings.vkUrl} onChange={v => setSettings({...settings, vkUrl: v})} placeholder="https://vk.ru/..." />
-                    <AdminInput label="Instagram URL" value={settings.instagramUrl} onChange={v => setSettings({...settings, instagramUrl: v})} placeholder="https://instagram.com/..." />
+                    <AdminInput label="Telegram URL" value={settings.telegramUrl || "https://t.me/familymsk"} onChange={v => setSettings({...settings, telegramUrl: v})} placeholder="https://t.me/familymsk" />
+                    <AdminInput label="VK URL" value={settings.vkUrl || "https://vk.ru/thefamilymskk"} onChange={v => setSettings({...settings, vkUrl: v})} placeholder="https://vk.ru/thefamilymskk" />
+                    <AdminInput label="Instagram URL" value={settings.instagramUrl || "https://www.instagram.com/thefamily_msk"} onChange={v => setSettings({...settings, instagramUrl: v})} placeholder="https://www.instagram.com/thefamily_msk" />
                   </div>
                 </div>
               </div>
