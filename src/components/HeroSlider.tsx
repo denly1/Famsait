@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
-import { events } from "@/lib/data";
+import { Event } from "@/lib/data";
 
-export default function HeroSlider() {
+export default function HeroSlider({ events = [] }: { events?: Event[] }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -14,10 +14,12 @@ export default function HeroSlider() {
   const minSwipeDistance = 50;
 
   const nextSlide = useCallback(() => {
+    if (upcoming.length === 0) return;
     setCurrentSlide(prev => (prev + 1) % upcoming.length);
   }, [upcoming.length]);
 
   const prevSlide = useCallback(() => {
+    if (upcoming.length === 0) return;
     setCurrentSlide(prev => (prev - 1 + upcoming.length) % upcoming.length);
   }, [upcoming.length]);
 

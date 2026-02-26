@@ -1,20 +1,11 @@
 import EventCard from "@/components/EventCard";
 import { mapEventsFromDB } from "@/lib/mappers";
+import { query } from "@/lib/db";
 
 async function getEvents() {
   try {
-    const baseUrl = typeof window === 'undefined' 
-      ? 'http://localhost:3000' 
-      : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
-    const res = await fetch(`${baseUrl}/api/events?isPast=true`, { 
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    if (!res.ok) return { events: [] };
-    
-    const data = await res.json();
-    return { events: mapEventsFromDB(data.events || []) };
+    const result = await query("SELECT * FROM events WHERE is_past = true ORDER BY date DESC");
+    return { events: mapEventsFromDB(result.rows || []) };
   } catch (error) {
     console.error('Error fetching events:', error);
     return { events: [] };
