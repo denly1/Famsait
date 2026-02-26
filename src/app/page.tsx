@@ -130,18 +130,27 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* ===== COUNTDOWN ===== */}
+      {nextEvent && nextEvent.date && (
+        <section className="py-8 sm:py-12 relative">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <CountdownTimer targetDate={nextEvent.date} targetTime={nextEvent.time} label="ДО БЛИЖАЙШЕГО СОБЫТИЯ" />
+          </div>
+        </section>
+      )}
+
       {/* ===== MARQUEE TEXT ===== */}
       <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-4 sm:py-5">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
         <div className="flex animate-marquee whitespace-nowrap">
           {[...Array(12)].map((_, i) => (
-            <span key={i} className="mx-4 sm:mx-6 text-4xl sm:text-5xl lg:text-6xl tracking-[0.05em] text-white/[0.08] uppercase select-none" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+            <span key={i} className="mx-4 sm:mx-6 text-4xl sm:text-5xl lg:text-6xl font-bold tracking-[0.08em] text-white/[0.12] uppercase select-none" style={{ fontFamily: "'Oswald', sans-serif", fontWeight: 700 }}>
               FAMILY
-              <span className="text-primary/20 mx-3">★</span>
+              <span className="text-primary/25 mx-3">★</span>
               ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
-              <span className="text-accent/20 mx-3">★</span>
+              <span className="text-accent/25 mx-3">★</span>
               ВЕЧЕРИНКИ МОСКВЫ
-              <span className="text-primary/20 mx-3">★</span>
+              <span className="text-primary/25 mx-3">★</span>
             </span>
           ))}
         </div>

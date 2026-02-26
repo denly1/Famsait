@@ -133,7 +133,7 @@ export default function AdminDashboard() {
   const [editingEvent, setEditingEvent] = useState<EventData | null>(null);
   const [eventForm, setEventForm] = useState({
     id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "",
-    ageLimit: "18+", price: 0, currency: "₽", image: "", description: "",
+    ageLimit: "18+", price: "", currency: "₽", image: "", description: "",
     lineup: "", features: "", isPast: false, ticketUrl: "#",
   });
   const [toast, setToast] = useState<string | null>(null);
@@ -200,17 +200,17 @@ export default function AdminDashboard() {
   };
   const openNewEvent = () => {
     setEditingEvent(null);
-    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: 0, currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, ticketUrl: "#" });
+    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, ticketUrl: "#" });
     setShowEventForm(true);
   };
   const openEditEvent = (ev: EventData) => {
     setEditingEvent(ev);
-    setEventForm({ ...ev, lineup: ev.lineup.join(", "), features: ev.features.join(", "), ticketUrl: ev.ticketUrl || "#" });
+    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), ticketUrl: ev.ticketUrl || "#" });
     setShowEventForm(true);
   };
   const saveEvent = async () => {
     const autoId = editingEvent ? eventForm.id : (eventForm.id || generateSlug(eventForm.title));
-    const payload = { ...eventForm, id: autoId, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean) };
+    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean) };
     const res = await fetch("/api/admin/events", { method: editingEvent ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { showToast("Ошибка сохранения"); }
   };
@@ -449,7 +449,7 @@ export default function AdminDashboard() {
                         <AdminInput label="Площадка" value={eventForm.venue} onChange={v => setEventForm({...eventForm, venue: v})} />
                         <AdminInput label="Адрес" value={eventForm.address} onChange={v => setEventForm({...eventForm, address: v})} />
                         <AdminInput label="Возраст" value={eventForm.ageLimit} onChange={v => setEventForm({...eventForm, ageLimit: v})} />
-                        <AdminInput label="Цена" value={eventForm.price} onChange={v => setEventForm({...eventForm, price: Number(v)})} type="number" />
+                        <AdminInput label="Цена" value={eventForm.price} onChange={v => setEventForm({...eventForm, price: v})} placeholder="0" />
                         <AdminInput label="Ссылка на билеты" value={eventForm.ticketUrl} onChange={v => setEventForm({...eventForm, ticketUrl: v})} />
                       </div>
                       <ImageUpload
