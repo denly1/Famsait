@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import EventCard from "@/components/EventCard";
 import { mapEventsFromDB } from "@/lib/mappers";
 import { query } from "@/lib/db";

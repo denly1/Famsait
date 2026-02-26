@@ -31,8 +31,15 @@ export default function SupportPage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Scroll only inside chat container, not the whole page
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = messagesEndRef.current;
+    if (el) {
+      const container = el.parentElement;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
   }, [messages]);
 
   const loadMessages = async (uid: string) => {

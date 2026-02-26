@@ -114,7 +114,7 @@ export default function SupportPanel() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-140px)]">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-100px)]">
       {/* Conversations list */}
       <div className="lg:col-span-1 bg-bg-card border border-border rounded-2xl overflow-hidden flex flex-col">
         <div className="p-4 border-b border-border">
@@ -182,13 +182,13 @@ export default function SupportPanel() {
                   className={`flex ${msg.sender === "support" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-2xl px-4 py-2.5 ${
+                    className={`max-w-[80%] rounded-2xl px-5 py-3 ${
                       msg.sender === "support"
                         ? "bg-gradient-to-br from-primary to-accent text-white"
                         : "bg-white/5 text-white/90 border border-white/10"
                     }`}
                   >
-                    <p className="text-sm leading-relaxed whitespace-pre-line">{msg.text}</p>
+                    <p className="text-[15px] leading-relaxed whitespace-pre-line">{msg.text}</p>
                     <p className="text-[10px] mt-1 opacity-60">
                       {new Date(msg.timestamp).toLocaleTimeString("ru-RU", {
                         hour: "2-digit",
@@ -209,13 +209,13 @@ export default function SupportPanel() {
                   onChange={(e) => setReplyText(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && sendReply()}
                   placeholder="Введите ответ..."
-                  className="flex-1 bg-white/5 border border-border rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-primary transition-colors"
+                  className="flex-1 bg-white/5 border border-border rounded-xl px-5 py-3.5 text-[15px] text-white placeholder:text-white/40 focus:outline-none focus:border-primary transition-colors"
                   disabled={loading}
                 />
                 <button
                   onClick={sendReply}
                   disabled={!replyText.trim() || loading}
-                  className="px-5 py-2.5 bg-gradient-to-r from-primary to-accent text-white rounded-xl text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="px-6 py-3.5 bg-gradient-to-r from-primary to-accent text-white rounded-xl text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">

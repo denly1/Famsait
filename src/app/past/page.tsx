@@ -2,6 +2,9 @@ import EventCard from "@/components/EventCard";
 import { mapEventsFromDB } from "@/lib/mappers";
 import { query } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 async function getEvents() {
   try {
     const result = await query("SELECT * FROM events WHERE is_past = true ORDER BY date DESC");

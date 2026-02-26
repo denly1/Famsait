@@ -86,22 +86,20 @@ export default function FAQPage() {
           <div className="relative z-10 p-6 sm:p-8 text-center">
             <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "var(--font-heading)" }}>Не нашёл ответ?</h3>
             <p className="text-text-secondary text-sm mb-6">
-              Напиши нам в Telegram или на почту — ответим в течение часа!
+              Напиши нам на почту или в чат поддержки — ответим быстро!
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
-                href="https://t.me/familymsk"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="mailto:tusa2026@mail.ru"
                 className="w-full sm:w-auto px-6 py-3 btn-gradient rounded-xl text-sm font-semibold tracking-wide text-center"
               >
-                <span className="relative z-10">НАПИСАТЬ В TELEGRAM</span>
+                <span className="relative z-10">НАПИСАТЬ НА ПОЧТУ</span>
               </a>
               <a
-                href="mailto:tusa2026@mail.ru"
+                href="/support"
                 className="w-full sm:w-auto px-6 py-3 btn-outline rounded-xl text-sm font-semibold tracking-wide text-center"
               >
-                НАПИСАТЬ НА ПОЧТУ
+                ЧАТ ПОДДЕРЖКИ
               </a>
             </div>
           </div>
