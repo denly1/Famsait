@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import SupportPanel from "@/components/admin/SupportPanel";
 
-type Tab = "dashboard" | "events" | "settings" | "content" | "faq" | "support";
+type Tab = "dashboard" | "events" | "settings" | "faq" | "support";
 
 interface AnalyticsData {
   totalVisits: number;
@@ -76,12 +76,6 @@ interface FAQItem {
   answer: string;
 }
 
-interface HeroContent {
-  heading: string;
-  subheading: string;
-  ctaText: string;
-}
-
 interface SupportConversation {
   userId: string;
   messageCount: number;
@@ -101,7 +95,6 @@ interface SupportMessage {
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "dashboard", label: "Дашборд", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
   { id: "events", label: "События", icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
-  { id: "content", label: "Контент", icon: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" },
   { id: "faq", label: "FAQ", icon: "M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
   { id: "support", label: "Поддержка", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
   { id: "settings", label: "Настройки", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
@@ -148,11 +141,6 @@ export default function AdminDashboard() {
   const [faqForm, setFaqForm] = useState({ id: "", question: "", answer: "" });
   const [showFaqForm, setShowFaqForm] = useState(false);
   const [editingFaq, setEditingFaq] = useState<FAQItem | null>(null);
-  const [heroContent, setHeroContent] = useState<HeroContent>({
-    heading: "THE FAMILY",
-    subheading: "Организуем тусовки, которые ты запомнишь навсегда. Москва. Лучшие площадки. Невероятная атмосфера.",
-    ctaText: "БЛИЖАЙШИЕ СОБЫТИЯ",
-  });
   const [supportConversations, setSupportConversations] = useState<SupportConversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
@@ -163,16 +151,24 @@ export default function AdminDashboard() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [aRes, eRes, mRes, sRes, fRes, cRes] = await Promise.all([
+      const [aRes, eRes, mRes, sRes, fRes] = await Promise.all([
         fetch("/api/admin/analytics"), fetch("/api/admin/events"), fetch("/api/admin/messages"),
-        fetch("/api/admin/settings"), fetch("/api/admin/faq"), fetch("/api/admin/content"),
+        fetch("/api/admin/settings"), fetch("/api/admin/faq"),
       ]);
       if (aRes.status === 401) { router.push("/admin/login"); return; }
-      setAnalytics(await aRes.json()); setEvents(await eRes.json()); setMessages(await mRes.json());
+      setAnalytics(await aRes.json());
+      const rawEvents = await eRes.json();
+      setEvents((Array.isArray(rawEvents) ? rawEvents : []).map((e: any) => ({
+        id: e.id, title: e.title, subtitle: e.subtitle || "", date: e.date, time: e.time || "",
+        venue: e.venue || "", address: e.address || "", ageLimit: e.age_limit || e.ageLimit || "18+",
+        price: e.price || 0, currency: e.currency || "₽", image: e.image || "",
+        description: e.description || "", lineup: Array.isArray(e.lineup) ? e.lineup : [],
+        features: Array.isArray(e.features) ? e.features : [],
+        isPast: e.is_past ?? e.isPast ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
+      })));
+      setMessages(await mRes.json());
       setSettings(await sRes.json());
       const fData = await fRes.json(); setFaqItems(fData.faq || []);
-      const cData = await cRes.json();
-      setHeroContent({ heading: cData.heroHeading, subheading: cData.heroSubheading, ctaText: cData.heroCtaText });
     } catch { showToast("Ошибка загрузки данных"); }
     setLoading(false);
   }, [router]);
@@ -227,16 +223,6 @@ export default function AdminDashboard() {
     if (res.ok) { showToast("Вопрос удалён"); fetchData(); }
   };
 
-  // === CONTENT ===
-  const saveContent = async () => {
-    const payload = {
-      heroHeading: heroContent.heading,
-      heroSubheading: heroContent.subheading,
-      heroCtaText: heroContent.ctaText,
-    };
-    const res = await fetch("/api/admin/content", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    if (res.ok) { showToast("Контент сохранён"); fetchData(); }
-  };
 
   // === SUPPORT ===
   const loadSupportConversations = async () => {
@@ -380,9 +366,9 @@ export default function AdminDashboard() {
 
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {[
-                  { label: "Всего визитов", value: analytics.totalVisits.toLocaleString(), color: "bg-violet-500/10", textColor: "text-violet-400" },
-                  { label: "Сегодня", value: analytics.todayVisits.toLocaleString(), color: "bg-blue-500/10", textColor: "text-blue-400" },
-                  { label: "Клики билеты", value: analytics.totalTicketClicks.toLocaleString(), color: "bg-rose-500/10", textColor: "text-rose-400" },
+                  { label: "Всего событий", value: analytics.totalVisits.toLocaleString(), color: "bg-violet-500/10", textColor: "text-violet-400" },
+                  { label: "Активных", value: analytics.todayVisits.toLocaleString(), color: "bg-blue-500/10", textColor: "text-blue-400" },
+                  { label: "Прошедших", value: analytics.totalTicketClicks.toLocaleString(), color: "bg-rose-500/10", textColor: "text-rose-400" },
                   { label: "Сообщений", value: analytics.totalMessages.toString(), color: "bg-emerald-500/10", textColor: "text-emerald-400" },
                 ].map(s => (
                   <div key={s.label} className="rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
@@ -516,32 +502,6 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* === CONTENT (HERO) === */}
-          {tab === "content" && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Контент сайта</h1>
-                <p className="text-text-muted text-sm mt-1">Управление текстами и содержимым</p>
-              </div>
-
-              <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
-                <div className="p-4 sm:p-6 space-y-4">
-                  <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Главная страница (Hero)</h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    <AdminInput label="Заголовок" value={heroContent.heading} onChange={v => setHeroContent({...heroContent, heading: v})} />
-                    <div>
-                      <label className="block text-[10px] font-medium tracking-wider text-text-muted/70 uppercase mb-1.5" style={{ fontFamily: "var(--font-mono)" }}>Подзаголовок</label>
-                      <textarea value={heroContent.subheading} onChange={e => setHeroContent({...heroContent, subheading: e.target.value})} rows={3} className="w-full px-3 py-2.5 rounded-xl bg-bg-dark border border-border text-sm resize-none focus:outline-none focus:border-primary/30 transition-colors" />
-                    </div>
-                    <AdminInput label="Текст кнопки CTA" value={heroContent.ctaText} onChange={v => setHeroContent({...heroContent, ctaText: v})} />
-                  </div>
-                  <button onClick={saveContent} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
-                </div>
-              </div>
-
-            </div>
-          )}
 
           {/* === FAQ === */}
           {tab === "faq" && (

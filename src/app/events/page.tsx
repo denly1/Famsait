@@ -20,7 +20,7 @@ export default async function EventsPage() {
   const { events: upcomingEvents } = await getEvents();
 
   return (
-    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
+    <div className="pt-44 sm:pt-56 pb-16 sm:pb-20 relative">
       <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

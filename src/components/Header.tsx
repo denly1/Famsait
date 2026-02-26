@@ -41,7 +41,7 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex items-center justify-between transition-all duration-300 ${
-            scrolled ? "h-16 sm:h-18" : "h-20 sm:h-24"
+            scrolled ? "h-18 sm:h-20 md:h-22" : "h-36 sm:h-44 md:h-52"
           }`}>
             {/* Logo */}
             <Link href="/" className="relative z-50 select-none" onClick={() => setIsMenuOpen(false)}>
@@ -50,7 +50,7 @@ export default function Header() {
                 alt="FAMILY" 
                 draggable="false"
                 className={`w-auto object-contain transition-all duration-300 select-none ${
-                  scrolled ? "h-12 sm:h-14" : "h-16 sm:h-20"
+                  scrolled ? "h-30 sm:h-35 md:h-40" : "h-40 sm:h-50 md:h-60"
                 }`}
               />
             </Link>

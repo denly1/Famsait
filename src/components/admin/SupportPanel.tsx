@@ -67,10 +67,23 @@ export default function SupportPanel() {
       if (res.ok) {
         const data = await res.json();
         setMessages(data.messages || []);
+        // Помечаем как прочитанные
+        await markAsRead(userId);
+        await loadConversations();
       }
     } catch (err) {
       console.error("Error loading messages:", err);
     }
+  };
+
+  const markAsRead = async (userId: string) => {
+    try {
+      await fetch("/api/admin/support/read", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+    } catch {}
   };
 
   const sendReply = async () => {

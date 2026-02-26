@@ -51,7 +51,7 @@ export default function ContactsPage() {
   };
 
   return (
-    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
+    <div className="pt-44 sm:pt-56 pb-16 sm:pb-20 relative">
       <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
       <div className="glow-orb glow-orb-pink w-[400px] h-[400px] bottom-0 -left-40 opacity-15" />
 
@@ -69,8 +69,7 @@ export default function ContactsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-10">
-          {/* Contact Info */}
+        <div className="max-w-2xl">
           <div className="space-y-3 sm:space-y-4">
             {contacts.map((contact, i) => (
               <div key={contact.label} className="group flex items-center gap-3 sm:gap-4 p-3.5 sm:p-4 rounded-xl bg-bg-card border border-border hover:border-border-light transition-all">
@@ -101,84 +100,6 @@ export default function ContactsPage() {
                 <span className="mono-label text-text-muted/30 text-xs">0{i + 1}</span>
               </div>
             ))}
-          </div>
-
-          {/* Contact Form */}
-          <div className="rounded-2xl bg-bg-card border border-border overflow-hidden h-fit">
-            <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
-
-            <div className="p-5 sm:p-8">
-              <h2 className="text-xl font-bold mb-6" style={{ fontFamily: "var(--font-heading)" }}>Написать нам</h2>
-
-              {submitted && (
-                <div className="mb-6 p-4 rounded-xl bg-emerald-500/8 border border-emerald-500/15 text-emerald-400 text-sm font-medium animate-fade-in flex items-center gap-2">
-                  <svg className="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  Сообщение отправлено! Мы ответим в ближайшее время.
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="mono-label text-[10px] mb-2 block">ИМЯ</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-bg-dark border border-border text-sm focus:outline-none transition-colors"
-                    placeholder="Как вас зовут?"
-                  />
-                </div>
-                <div>
-                  <label className="mono-label text-[10px] mb-2 block">EMAIL</label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-bg-dark border border-border text-sm focus:outline-none transition-colors"
-                    placeholder="your@email.com"
-                  />
-                </div>
-                <div>
-                  <label className="mono-label text-[10px] mb-2 block">ТЕМА</label>
-                  <select
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-bg-dark border border-border text-sm focus:outline-none transition-colors"
-                  >
-                    <option value="">Выберите тему</option>
-                    <option value="tickets">Вопрос по билетам</option>
-                    <option value="venue">Предложить площадку</option>
-                    <option value="artist">Я артист / DJ</option>
-                    <option value="media">Медиа / Пресса</option>
-                    <option value="other">Другое</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="mono-label text-[10px] mb-2 block">СООБЩЕНИЕ</label>
-                  <textarea
-                    required
-                    rows={4}
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl bg-bg-dark border border-border text-sm focus:outline-none transition-colors resize-none"
-                    placeholder="Расскажите подробнее..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 btn-gradient rounded-xl font-semibold text-[15px] tracking-wide"
-                >
-                  <span className="relative z-10">ОТПРАВИТЬ</span>
-                  <svg className="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </button>
-              </form>
-            </div>
           </div>
         </div>
       </div>

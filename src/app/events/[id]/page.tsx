@@ -19,7 +19,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   
   if (!event) {
     return (
-      <div className="pt-32 pb-20 text-center">
+      <div className="pt-44 sm:pt-56 pb-20 text-center">
         <h1 className="text-4xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Мероприятие не найдено</h1>
         <Link href="/events" className="text-primary mt-4 inline-block hover:underline text-sm">
           ← Назад к мероприятиям
@@ -29,7 +29,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
+    <div className="pt-44 sm:pt-56 pb-16 sm:pb-20 relative">
       {/* Background glow */}
       <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
 

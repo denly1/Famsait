@@ -7,7 +7,6 @@ import FloatingElements from "@/components/FloatingElements";
 import EventTimeline from "@/components/EventTimeline";
 import PastEventsGallery from "@/components/PastEventsGallery";
 import VenueMap from "@/components/VenueMap";
-import HeroSlider from "@/components/HeroSlider";
 import { mapEventsFromDB } from "@/lib/mappers";
 import { query } from "@/lib/db";
 
@@ -39,7 +38,7 @@ export default async function HomePage() {
 
       {/* ===== FEATURED EVENT - LUXURIOUS DESIGN ===== */}
       {nextEvent && (
-        <section className="relative pt-32 sm:pt-36 md:pt-40 pb-6 sm:pb-10 lg:pb-14 overflow-hidden">
+        <section className="relative pt-44 sm:pt-56 md:pt-60 pb-6 sm:pb-10 lg:pb-14 overflow-hidden">
           {/* Premium background effects */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-b from-bg-dark via-primary/[0.08] to-bg-dark" />
@@ -148,98 +147,16 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ===== HERO SLIDER ===== */}
-      <HeroSlider events={events} />
-
       {/* ===== MARQUEE TEXT ===== */}
-      <MarqueeText text="FAMILY ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ • " />
-
-      {/* ===== OLD HERO SECTION (BACKUP) ===== */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden hidden">
-        <div className="absolute inset-0 bg-bg-dark" />
-
-        {/* Animated gradient mesh background */}
-        <div className="absolute inset-0 opacity-40">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-violet-900/30 via-transparent to-rose-900/20 gradient-flow" />
-        </div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-primary/[0.06] blur-[120px] hero-glow-bg" />
-
-        {/* Floating particles */}
-        <div className="absolute w-2 h-2 rounded-full bg-primary/40 top-[20%] left-[15%] animate-float" />
-        <div className="absolute w-1.5 h-1.5 rounded-full bg-accent/30 top-[60%] right-[20%] animate-float" style={{ animationDelay: "1s" }} />
-        <div className="absolute w-1 h-1 rounded-full bg-primary/50 top-[40%] left-[70%] animate-float" style={{ animationDelay: "3s" }} />
-        <div className="absolute w-2.5 h-2.5 rounded-full bg-accent/20 bottom-[30%] left-[25%] animate-float" style={{ animationDelay: "2s" }} />
-
-        {/* Logo watermark */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03]">
-          <img src="/Familylogo.png" alt="" className="w-[500px] h-[500px] sm:w-[700px] sm:h-[700px]" />
-        </div>
-
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-24 sm:pt-28 pb-12 sm:pb-16">
-          {/* Live badge */}
-          <div className="animate-fade-in-up mb-8">
-            <div className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-              </span>
-              <span className="text-[11px] sm:text-[12px] font-semibold tracking-wide text-emerald-300/90 truncate max-w-[260px] sm:max-w-none">
-                БЛИЖАЙШЕЕ — {nextEvent?.title} · {nextEvent?.date}
-              </span>
-            </div>
-          </div>
-
-          {/* Main heading */}
-          <div className="animate-fade-in-up" style={{ animationDelay: "0.1s" }}>
-            <img src="/Familylogo.png" alt="THE FAMILY" className="w-16 h-16 sm:w-28 sm:h-28 mx-auto mb-4 sm:mb-6 rounded-2xl sm:rounded-3xl shadow-2xl shadow-primary/20" />
-          </div>
-
-          <h1 className="animate-fade-in-up" style={{ animationDelay: "0.15s" }}>
-            <span className="block text-4xl sm:text-7xl md:text-8xl lg:text-[8rem] font-black tracking-[-0.04em] leading-[0.85]" style={{ fontFamily: "var(--font-heading)" }}>
-              <span className="text-text-primary">THE</span>
-              <br />
-              <span className="gradient-text">FAMILY</span>
+      <div className="relative overflow-hidden bg-black border-y border-white/5 py-5">
+        <div className="flex animate-marquee whitespace-nowrap">
+          {[...Array(15)].map((_, i) => (
+            <span key={i} className="mx-6 text-lg sm:text-xl font-bold tracking-[0.2em] text-white/10 uppercase" style={{ fontFamily: "var(--font-heading)" }}>
+              FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ ·
             </span>
-          </h1>
-
-          <div className="animate-fade-in-up mt-4 sm:mt-6" style={{ animationDelay: "0.25s" }}>
-            <p className="text-sm sm:text-lg text-text-secondary max-w-md mx-auto leading-relaxed px-4 sm:px-0">
-              Организуем тусовки, которые ты запомнишь навсегда.
-              Москва. Лучшие площадки. Невероятная атмосфера.
-            </p>
-          </div>
-
-          {/* CTA buttons */}
-          <div className="animate-fade-in-up flex flex-col sm:flex-row items-center justify-center gap-3 mt-8 sm:mt-10 w-full px-2 sm:px-0" style={{ animationDelay: "0.35s" }}>
-            <Link
-              href="/events"
-              className="group w-full sm:w-auto px-8 py-4 btn-gradient rounded-2xl text-[15px] font-bold tracking-wide animate-pulse-glow flex items-center justify-center gap-2.5"
-            >
-              <span className="relative z-10">БЛИЖАЙШИЕ СОБЫТИЯ</span>
-              <svg className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              href="/contacts"
-              className="w-full sm:w-auto px-8 py-4 btn-outline rounded-2xl text-[15px] font-bold tracking-wide text-center"
-            >
-              НАПИСАТЬ НАМ
-            </Link>
-          </div>
-
-          {/* Countdown */}
-          {nextEvent && (
-            <div className="animate-fade-in-up mt-10 sm:mt-16" style={{ animationDelay: "0.45s" }}>
-              <CountdownTimer targetDate={nextEvent.date} label={`ДО ${nextEvent.title}`} />
-            </div>
-          )}
+          ))}
         </div>
-      </section>
-
-
-
-      <div className="section-divider" />
+      </div>
 
       {/* ===== EVENT TIMELINE ===== */}
       <EventTimeline events={upcomingEvents} />
@@ -364,8 +281,8 @@ export default async function HomePage() {
           {/* Stats row */}
           <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-6 max-w-lg mx-auto w-full">
             {[
-              { value: "200+", label: "Мероприятий", color: "from-primary/20 to-accent/10", border: "border-primary/20" },
-              { value: "100K+", label: "Гостей", color: "from-accent/20 to-primary/10", border: "border-accent/20" },
+              { value: "200+", label: "Мероприятий", color: "from-white/[0.06] to-white/[0.02]", border: "border-white/10" },
+              { value: "100K+", label: "Гостей", color: "from-white/[0.06] to-white/[0.02]", border: "border-white/10" },
             ].map((stat: any, i: number) => (
               <ScrollReveal key={stat.label} delay={0.3 + i * 0.05}>
                 <div className={`rounded-2xl sm:rounded-3xl bg-gradient-to-br ${stat.color} border ${stat.border} p-6 sm:p-8 text-center backdrop-blur-sm hover:scale-105 transition-transform duration-300`}>
