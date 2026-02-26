@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import ImageUpload from "@/components/ImageUpload";
 import SupportPanel from "@/components/admin/SupportPanel";
 
-type Tab = "dashboard" | "events" | "settings" | "faq" | "support";
+type Tab = "dashboard" | "events" | "past-posters" | "settings" | "faq" | "support";
 
 interface AnalyticsData {
   totalVisits: number;
@@ -95,6 +95,7 @@ interface SupportMessage {
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: "dashboard", label: "Дашборд", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
   { id: "events", label: "События", icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
+  { id: "past-posters", label: "Прошедшие", icon: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" },
   { id: "faq", label: "FAQ", icon: "M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
   { id: "support", label: "Поддержка", icon: "M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" },
   { id: "settings", label: "Настройки", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
@@ -145,6 +146,9 @@ export default function AdminDashboard() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [supportMessages, setSupportMessages] = useState<SupportMessage[]>([]);
   const [supportReply, setSupportReply] = useState("");
+  const [pastPosters, setPastPosters] = useState<{id: string; image: string; title: string; created_at: string}[]>([]);
+  const [posterImage, setPosterImage] = useState("");
+  const [posterTitle, setPosterTitle] = useState("");
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
 
@@ -283,6 +287,27 @@ export default function AdminDashboard() {
       showToast("Ошибка отправки");
     }
   };
+
+  const loadPastPosters = async () => {
+    try {
+      const res = await fetch("/api/admin/past-posters");
+      if (res.ok) { const data = await res.json(); setPastPosters(data.posters || []); }
+    } catch {}
+  };
+  const savePoster = async () => {
+    if (!posterImage) return;
+    const res = await fetch("/api/admin/past-posters", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ image: posterImage, title: posterTitle }) });
+    if (res.ok) { showToast("Афиша добавлена"); setPosterImage(""); setPosterTitle(""); loadPastPosters(); }
+  };
+  const removePoster = async (id: string) => {
+    if (!confirm("Удалить афишу?")) return;
+    const res = await fetch("/api/admin/past-posters", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+    if (res.ok) { showToast("Афиша удалена"); loadPastPosters(); }
+  };
+
+  useEffect(() => {
+    if (tab === "past-posters") loadPastPosters();
+  }, [tab]);
 
   useEffect(() => {
     if (tab === "support") {
@@ -502,6 +527,53 @@ export default function AdminDashboard() {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* === PAST POSTERS === */}
+          {tab === "past-posters" && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Прошедшие мероприятия</h1>
+                <p className="text-text-muted text-sm mt-1">Загрузите афиши прошедших мероприятий</p>
+              </div>
+
+              <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
+                <div className="h-[2px] bg-gradient-to-r from-rose-500/50 to-pink-500/50" />
+                <div className="p-4 sm:p-6 space-y-4">
+                  <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Добавить афишу</h3>
+                  <ImageUpload
+                    label="Фото афиши"
+                    currentImage={posterImage}
+                    onUpload={(url) => setPosterImage(url)}
+                  />
+                  <AdminInput label="Название (необязательно)" value={posterTitle} onChange={v => setPosterTitle(v)} placeholder="Например: Вечеринка 22.02" />
+                  <button onClick={savePoster} disabled={!posterImage} className="px-6 py-3 btn-gradient rounded-xl text-sm font-semibold disabled:opacity-40">
+                    <span className="relative z-10">ДОБАВИТЬ АФИШУ</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {pastPosters.map(p => (
+                  <div key={p.id} className="relative rounded-xl overflow-hidden border border-border group">
+                    <img src={p.image} alt={p.title || "Афиша"} className="w-full h-auto" />
+                    <button
+                      onClick={() => removePoster(p.id)}
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                    {p.title && <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-sm px-2 py-1 text-xs text-white truncate">{p.title}</div>}
+                  </div>
+                ))}
+              </div>
+
+              {pastPosters.length === 0 && (
+                <div className="text-center py-12 text-text-muted text-sm">
+                  Пока нет загруженных афиш
+                </div>
+              )}
             </div>
           )}
 

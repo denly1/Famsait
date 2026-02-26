@@ -141,14 +141,14 @@ export default async function HomePage() {
       )}
 
       {/* ===== MARQUEE TEXT ===== */}
-      <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-3 sm:py-4">
+      <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-1">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
         <div className="flex animate-marquee whitespace-nowrap">
           {[0, 1].map((group) => (
-            <div key={group} className="flex shrink-0">
+            <div key={group} className="flex shrink-0 items-center">
               {[...Array(10)].map((_, i) => (
-                <span key={i} className="inline-flex items-center mx-6 text-3xl sm:text-4xl lg:text-5xl tracking-wider text-white/25 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
-                  FAMILY <span className="mx-3 text-primary/20">·</span> ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ <span className="ml-6 text-primary/25">★</span>
+                <span key={i} className="inline-flex items-center mx-3 sm:mx-4 text-2xl sm:text-3xl lg:text-4xl leading-none text-white/25 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", letterSpacing: "0.04em" }}>
+                  FAMILY <span className="mx-2 sm:mx-3 text-primary/20">·</span> ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ <span className="mx-2 sm:mx-3 text-primary/25">★</span>
                 </span>
               ))}
             </div>

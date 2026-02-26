@@ -1,47 +1,72 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
-import { Event } from "@/lib/data";
+import { useState, useRef, useEffect } from "react";
 import EventImage from "@/components/EventImage";
-import Link from "next/link";
 
-const ITEMS_PER_PAGE = 6;
+interface PosterItem {
+  id: string;
+  image: string;
+  title?: string;
+}
 
-export default function PastEventsGrid({ events }: { events: Event[] }) {
-  const [page, setPage] = useState(0);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+export default function PastEventsGrid({ events }: { events: PosterItem[] }) {
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
+  const [posters, setPosters] = useState<PosterItem[]>(events);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
-  const totalPages = Math.ceil(events.length / ITEMS_PER_PAGE);
-  const currentEvents = events.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
+  // Also load standalone posters from API
+  useEffect(() => {
+    fetch("/api/past-posters")
+      .then(r => r.json())
+      .then(data => {
+        const extra: PosterItem[] = (data.posters || []).map((p: any) => ({
+          id: p.id,
+          image: p.image,
+          title: p.title || "",
+        }));
+        setPosters([...events, ...extra]);
+      })
+      .catch(() => {});
+  }, [events]);
 
-  const goNext = useCallback(() => {
-    if (page < totalPages - 1) setPage(p => p + 1);
-  }, [page, totalPages]);
+  const openModal = (idx: number) => setSelectedIdx(idx);
+  const closeModal = () => setSelectedIdx(null);
 
-  const goPrev = useCallback(() => {
-    if (page > 0) setPage(p => p - 1);
-  }, [page]);
+  const goNextModal = () => {
+    if (selectedIdx !== null && selectedIdx < posters.length - 1) setSelectedIdx(selectedIdx + 1);
+  };
+  const goPrevModal = () => {
+    if (selectedIdx !== null && selectedIdx > 0) setSelectedIdx(selectedIdx - 1);
+  };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleModalTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleModalTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
   };
-
-  const handleTouchEnd = () => {
+  const handleModalTouchEnd = () => {
     const diff = touchStartX.current - touchEndX.current;
     if (Math.abs(diff) > 50) {
-      if (diff > 0) goNext();
-      else goPrev();
+      if (diff > 0) goNextModal();
+      else goPrevModal();
     }
   };
 
-  if (events.length === 0) {
+  // Keyboard navigation in modal
+  useEffect(() => {
+    if (selectedIdx === null) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") goNextModal();
+      else if (e.key === "ArrowLeft") goPrevModal();
+      else if (e.key === "Escape") closeModal();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [selectedIdx, posters.length]);
+
+  if (posters.length === 0) {
     return (
       <div className="text-center py-20">
         <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "var(--font-heading)" }}>Пока нет прошедших событий</h3>
@@ -52,124 +77,81 @@ export default function PastEventsGrid({ events }: { events: Event[] }) {
 
   return (
     <>
-      {/* Grid */}
-      <div
-        ref={containerRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className="grid grid-cols-2 gap-3 sm:gap-4"
-      >
-        {currentEvents.map((event) => (
+      {/* 2-column grid */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        {posters.map((poster, idx) => (
           <div
-            key={event.id}
-            className="group relative cursor-pointer rounded-2xl overflow-hidden border border-white/10 hover:border-white/20 transition-all duration-300"
-            onClick={() => setSelectedEvent(event)}
+            key={poster.id}
+            className="group cursor-pointer rounded-2xl overflow-hidden border border-white/10 hover:border-white/25 transition-all duration-300 bg-white/5"
+            onClick={() => openModal(idx)}
           >
-            <div className="relative aspect-[3/4] overflow-hidden bg-white/5">
-              <EventImage
-                src={event.image}
-                alt={event.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                <p className="text-white text-xs sm:text-sm font-bold truncate" style={{ fontFamily: "var(--font-heading)" }}>
-                  {event.title}
-                </p>
-                <p className="text-white/70 text-[10px] sm:text-xs mt-0.5">{event.date} · {event.venue}</p>
-              </div>
-            </div>
+            <EventImage
+              src={poster.image}
+              alt={poster.title || "Афиша"}
+              className="w-full h-auto block group-hover:scale-[1.03] transition-transform duration-500"
+            />
           </div>
         ))}
       </div>
 
-      {/* Navigation */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-4 mt-8">
+      {/* Fullscreen photo modal */}
+      {selectedIdx !== null && posters[selectedIdx] && (
+        <div
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={closeModal}
+        >
+          {/* Close button */}
           <button
-            onClick={goPrev}
-            disabled={page === 0}
-            className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all hover:bg-white/10 hover:border-white/40 disabled:opacity-20 disabled:cursor-not-allowed active:scale-95"
+            onClick={closeModal}
+            className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors active:scale-95"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
-          <div className="flex items-center gap-2">
-            {Array.from({ length: totalPages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i)}
-                className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                  i === page
-                    ? "bg-primary w-8"
-                    : "bg-white/20 hover:bg-white/40"
-                }`}
-              />
-            ))}
+          {/* Counter */}
+          <div className="absolute top-4 left-4 z-20 text-white/50 text-sm" style={{ fontFamily: "var(--font-mono)" }}>
+            {selectedIdx + 1} / {posters.length}
           </div>
 
-          <button
-            onClick={goNext}
-            disabled={page === totalPages - 1}
-            className="w-11 h-11 rounded-full border border-white/20 flex items-center justify-center text-white transition-all hover:bg-white/10 hover:border-white/40 disabled:opacity-20 disabled:cursor-not-allowed active:scale-95"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* Modal */}
-      {selectedEvent && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
-          onClick={() => setSelectedEvent(null)}
-        >
-          <div
-            className="relative max-w-lg w-full rounded-3xl overflow-hidden border border-white/10"
-            onClick={(e) => e.stopPropagation()}
-            style={{ background: "#0d0d12" }}
-          >
+          {/* Left arrow */}
+          {selectedIdx > 0 && (
             <button
-              onClick={() => setSelectedEvent(null)}
-              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+              onClick={(e) => { e.stopPropagation(); goPrevModal(); }}
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
+          )}
 
-            <div className="aspect-[3/4] max-h-[70vh]">
-              <EventImage
-                src={selectedEvent.image}
-                alt={selectedEvent.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
+          {/* Right arrow */}
+          {selectedIdx < posters.length - 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); goNextModal(); }}
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
 
-            <div className="p-5">
-              <h3
-                className="text-xl sm:text-2xl font-bold mb-1"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                {selectedEvent.title}
-              </h3>
-              <p className="text-white/60 text-sm mb-4">{selectedEvent.date} · {selectedEvent.venue}</p>
-              <Link
-                href={`/events/${selectedEvent.id}`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black rounded-xl text-sm font-bold touch-manipulation hover:bg-white/90 transition-colors active:scale-95"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                ПОДРОБНЕЕ
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </div>
+          {/* Photo */}
+          <div
+            className="max-w-[92vw] max-h-[88vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleModalTouchStart}
+            onTouchMove={handleModalTouchMove}
+            onTouchEnd={handleModalTouchEnd}
+          >
+            <EventImage
+              src={posters[selectedIdx].image}
+              alt={posters[selectedIdx].title || "Афиша"}
+              className="max-w-full max-h-[85vh] rounded-2xl object-contain select-none"
+            />
           </div>
         </div>
       )}

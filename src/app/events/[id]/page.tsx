@@ -165,24 +165,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 </div>
               </div>
             )}
-
-            {/* Gallery for past events */}
-            {event.isPast && event.gallery && (
-              <div>
-                <h3 className="mono-label mb-4">ФОТОГАЛЕРЕЯ</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {event.gallery.map((photo: string, i: number) => (
-                    <div key={i} className="rounded-xl overflow-hidden aspect-square border border-border card-hover">
-                      <EventImage
-                        src={photo}
-                        alt={`${event.title} фото ${i + 1}`}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
