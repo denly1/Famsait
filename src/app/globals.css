@@ -493,7 +493,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .animate-marquee-infinite {
-  animation: marquee-infinite 60s linear infinite;
+  animation: marquee-infinite 20s linear infinite;
 }
 
 @keyframes glow-pulse {
