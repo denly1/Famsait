@@ -135,7 +135,6 @@ export default function AdminDashboard() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [events, setEvents] = useState<EventData[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [promos, setPromos] = useState<PromoCode[]>([]);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [loading, setLoading] = useState(true);
   const [showEventForm, setShowEventForm] = useState(false);
@@ -145,12 +144,7 @@ export default function AdminDashboard() {
     ageLimit: "18+", price: 0, currency: "₽", image: "", description: "",
     lineup: "", features: "", isPast: false, ticketUrl: "#",
   });
-  const [showPromoForm, setShowPromoForm] = useState(false);
-  const [promoForm, setPromoForm] = useState({ code: "", discount: 10, maxUses: 100, active: true, expiresAt: "2026-12-31" });
   const [toast, setToast] = useState<string | null>(null);
-  const [venues, setVenues] = useState<Venue[]>([]);
-  const [venueForm, setVenueForm] = useState({ id: "", name: "", address: "" });
-  const [showVenueForm, setShowVenueForm] = useState(false);
   const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
   const [faqForm, setFaqForm] = useState({ id: "", question: "", answer: "" });
   const [showFaqForm, setShowFaqForm] = useState(false);
@@ -170,15 +164,13 @@ export default function AdminDashboard() {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [aRes, eRes, mRes, pRes, sRes, vRes, fRes, cRes] = await Promise.all([
+      const [aRes, eRes, mRes, sRes, fRes, cRes] = await Promise.all([
         fetch("/api/admin/analytics"), fetch("/api/admin/events"), fetch("/api/admin/messages"),
-        fetch("/api/admin/promos"), fetch("/api/admin/settings"), fetch("/api/admin/venues"), 
-        fetch("/api/admin/faq"), fetch("/api/admin/content"),
+        fetch("/api/admin/settings"), fetch("/api/admin/faq"), fetch("/api/admin/content"),
       ]);
       if (aRes.status === 401) { router.push("/admin/login"); return; }
       setAnalytics(await aRes.json()); setEvents(await eRes.json()); setMessages(await mRes.json());
-      setPromos(await pRes.json()); setSettings(await sRes.json());
-      const vData = await vRes.json(); setVenues(vData.venues || []);
+      setSettings(await sRes.json());
       const fData = await fRes.json(); setFaqItems(fData.faq || []);
       const cData = await cRes.json();
       setHeroContent({ heading: cData.heroHeading, subheading: cData.heroSubheading, ctaText: cData.heroCtaText });
@@ -214,26 +206,8 @@ export default function AdminDashboard() {
   const markRead = async (id: string) => { await fetch("/api/admin/messages", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); fetchData(); };
   const removeMessage = async (id: string) => { await fetch("/api/admin/messages", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); showToast("Сообщение удалено"); fetchData(); };
 
-  // === PROMOS ===
-  const savePromo = async () => { const res = await fetch("/api/admin/promos", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(promoForm) }); if (res.ok) { showToast("Промокод создан"); setShowPromoForm(false); fetchData(); } };
-  const togglePromo = async (id: string) => { await fetch("/api/admin/promos", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); fetchData(); };
-  const removePromo = async (id: string) => { if (!confirm("Удалить промокод?")) return; await fetch("/api/admin/promos", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); showToast("Промокод удалён"); fetchData(); };
-
   // === SETTINGS ===
-  const saveSettings = async () => { if (!settings) return; const res = await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }); if (res.ok) showToast("Настройки сохранены"); };
-
-  // === VENUES ===
-  const saveVenue = async () => {
-    if (!venueForm.name) return;
-    const payload = { ...venueForm, id: venueForm.id || venueForm.name.toLowerCase().replace(/\s+/g, "-") };
-    const res = await fetch("/api/admin/venues", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    if (res.ok) { showToast("Площадка добавлена"); setShowVenueForm(false); fetchData(); }
-  };
-  const removeVenue = async (id: string) => {
-    if (!confirm("Удалить площадку?")) return;
-    const res = await fetch("/api/admin/venues", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
-    if (res.ok) { showToast("Площадка удалена"); fetchData(); }
-  };
+  const saveSettings = async () => { await fetch("/api/admin/settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }); showToast("Настройки сохранены"); };
 
   // === FAQ ===
   const saveFaq = async () => {
@@ -428,10 +402,9 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 {[
                   { value: events.filter(e => !e.isPast).length, label: "Активных событий" },
-                  { value: promos.filter(p => p.active).length, label: "Активных промокодов" },
                   { value: unreadCount, label: "Непрочитанных" },
                 ].map(s => (
                   <div key={s.label} className="rounded-2xl bg-bg-card border border-border p-4 sm:p-5 text-center">
@@ -582,112 +555,6 @@ export default function AdminDashboard() {
                 <p className="text-text-muted text-sm mt-1">Диалоги с пользователями</p>
               </div>
               <SupportPanel />
-            </div>
-          )}
-
-          {/* === PROMOS === */}
-          {tab === "promos" && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Промокоды</h1>
-                  <p className="text-text-muted text-sm mt-1">{promos.length} промокодов</p>
-                </div>
-                <button onClick={() => setShowPromoForm(true)} className="px-4 sm:px-5 py-2.5 btn-gradient rounded-xl text-[13px] font-semibold tracking-wide flex-shrink-0">
-                  <span className="relative z-10 flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg><span className="hidden sm:inline">СОЗДАТЬ</span></span>
-                </button>
-              </div>
-
-              {showPromoForm && (
-                <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                  <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
-                  <div className="p-4 sm:p-6 space-y-4">
-                    <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Новый промокод</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <AdminInput label="Код" value={promoForm.code} onChange={v => setPromoForm({...promoForm, code: v.toUpperCase()})} mono />
-                      <AdminInput label="Скидка %" value={promoForm.discount} onChange={v => setPromoForm({...promoForm, discount: Number(v)})} type="number" />
-                      <AdminInput label="Макс. использований" value={promoForm.maxUses} onChange={v => setPromoForm({...promoForm, maxUses: Number(v)})} type="number" />
-                      <AdminInput label="Действует до" value={promoForm.expiresAt} onChange={v => setPromoForm({...promoForm, expiresAt: v})} type="date" />
-                    </div>
-                    <div className="flex gap-3">
-                      <button onClick={savePromo} className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОЗДАТЬ</span></button>
-                      <button onClick={() => setShowPromoForm(false)} className="px-5 py-2.5 rounded-xl text-sm font-semibold border border-border hover:bg-white/[0.03] transition-colors">ОТМЕНА</button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                {promos.map(p => (
-                  <div key={p.id} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-bg-card border border-border hover:border-border-light transition-all">
-                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${p.active ? "bg-primary/10 text-primary" : "bg-white/[0.03] text-text-muted"}`}>{p.discount}%</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-bold text-sm" style={{ fontFamily: "var(--font-mono)" }}>{p.code}</span>
-                        <span className={`text-[9px] py-0.5 px-2 rounded-full font-medium ${p.active ? "bg-emerald-500/10 text-emerald-400" : "bg-white/5 text-text-muted"}`}>{p.active ? "АКТИВЕН" : "ВЫКЛЮЧЕН"}</span>
-                      </div>
-                      <div className="text-text-muted text-xs mt-0.5">{p.currentUses}/{p.maxUses} исп. · до {p.expiresAt}</div>
-                    </div>
-                    <div className="flex gap-1 flex-shrink-0">
-                      <button onClick={() => togglePromo(p.id)} className="p-2 rounded-lg hover:bg-white/[0.04] text-text-muted hover:text-primary transition-all">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d={p.active ? "M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" : "M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"} /></svg>
-                      </button>
-                      <button onClick={() => removePromo(p.id)} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* === VENUES === */}
-          {tab === "venues" && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Площадки</h1>
-                  <p className="text-text-muted text-sm mt-1">{venues.length} площадок</p>
-                </div>
-                <button onClick={() => { setVenueForm({ id: "", name: "", address: "" }); setShowVenueForm(true); }} className="px-4 sm:px-5 py-2.5 btn-gradient rounded-xl text-[13px] font-semibold tracking-wide flex-shrink-0">
-                  <span className="relative z-10 flex items-center gap-1.5"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg><span className="hidden sm:inline">ДОБАВИТЬ</span></span>
-                </button>
-              </div>
-
-              {showVenueForm && (
-                <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                  <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
-                  <div className="p-4 sm:p-6 space-y-4">
-                    <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Новая площадка</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <AdminInput label="Название" value={venueForm.name} onChange={v => setVenueForm({...venueForm, name: v})} placeholder="CLUB NAME" />
-                      <AdminInput label="Адрес" value={venueForm.address} onChange={v => setVenueForm({...venueForm, address: v})} placeholder="ул. Примерная 1" />
-                    </div>
-                    <div className="flex gap-3">
-                      <button onClick={saveVenue} className="px-5 py-2.5 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">ДОБАВИТЬ</span></button>
-                      <button onClick={() => setShowVenueForm(false)} className="px-5 py-2.5 rounded-xl text-sm font-semibold border border-border hover:bg-white/[0.03] transition-colors">ОТМЕНА</button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                {venues.map(v => (
-                  <div key={v.id} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-bg-card border border-border hover:border-border-light transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <span className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>{v.name}</span>
-                      <div className="text-text-muted text-xs mt-0.5 truncate">{v.address}</div>
-                    </div>
-                    <button onClick={() => removeVenue(v.id)} className="p-2 rounded-lg hover:bg-accent/5 text-text-muted hover:text-accent transition-all flex-shrink-0">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                    </button>
-                  </div>
-                ))}
-              </div>
             </div>
           )}
 
