@@ -47,7 +47,17 @@ async function getSettings() {
 export default async function HomePage() {
   const { events } = await getEvents();
   const settings = await getSettings();
-  const upcomingEvents = events.filter((e: any) => !e.isPast).slice(0, 4);
+  const upcomingEvents = events
+    .filter((e: any) => !e.isPast)
+    .sort((a: any, b: any) => {
+      // Parse DD.MM.YYYY → comparable date
+      const parse = (d: string) => {
+        const [dd, mm, yyyy] = d.split(".");
+        return new Date(`${yyyy}-${mm}-${dd}`).getTime() || 0;
+      };
+      return parse(a.date) - parse(b.date);
+    })
+    .slice(0, 4);
   const pastEvents = events.filter((e: any) => e.isPast).slice(0, 3);
   const nextEvent = upcomingEvents[0];
 

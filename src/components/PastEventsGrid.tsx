@@ -101,7 +101,7 @@ export default function PastEventsGrid({ events }: { events: PosterItem[] }) {
       {/* Fullscreen photo modal */}
       {selectedIdx !== null && posters[selectedIdx] && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
           onClick={closeModal}
         >
           {/* Close button */}
