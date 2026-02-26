@@ -143,13 +143,15 @@ export default async function HomePage() {
       <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-4 sm:py-5">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
         <div className="flex animate-marquee whitespace-nowrap">
-          {[...Array(24)].map((_, i) => (
-            <span key={i} className="mx-4 sm:mx-6 text-4xl sm:text-5xl lg:text-6xl tracking-[0.1em] text-white/[0.15] uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
-              FAMILY
-              <span className="text-primary/30 mx-3">★</span>
-              ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
-              <span className="text-accent/30 mx-3">★</span>
-            </span>
+          {[...Array(2)].map((_, groupIndex) => (
+            <div key={groupIndex} className="flex whitespace-nowrap">
+              {[...Array(8)].map((_, i) => (
+                <span key={i} className="mx-6 text-5xl sm:text-6xl lg:text-7xl font-black tracking-wider text-white/20 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
+                  FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
+                  <span className="text-primary/20 mx-4">★</span>
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
