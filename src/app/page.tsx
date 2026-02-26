@@ -143,16 +143,12 @@ export default async function HomePage() {
       {/* ===== MARQUEE TEXT ===== */}
       <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-5 sm:py-6">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
-        <div className="flex animate-marquee whitespace-nowrap" style={{ willChange: 'transform' }}>
-          {[...Array(2)].map((_, groupIndex) => (
-            <React.Fragment key={groupIndex}>
-              {[...Array(10)].map((_, i) => (
-                <span key={i} className="inline-flex items-center mx-8 text-5xl sm:text-6xl lg:text-7xl font-black tracking-wider text-white/[0.18] uppercase select-none" style={{ fontFamily: "'Anton', sans-serif" }}>
-                  FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
-                  <span className="text-primary/[0.18] ml-8">★</span>
-                </span>
-              ))}
-            </React.Fragment>
+        <div className="flex animate-marquee-infinite whitespace-nowrap">
+          {[...Array(30)].map((_, i) => (
+            <span key={i} className="inline-flex items-center mx-8 text-5xl sm:text-6xl lg:text-7xl tracking-wider text-white/[0.18] uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400 }}>
+              FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
+              <span className="ml-8">★</span>
+            </span>
           ))}
         </div>
       </div>
