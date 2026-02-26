@@ -90,7 +90,7 @@ export default function SupportChat() {
     if (!isOpen || !userId) return;
     const interval = setInterval(() => {
       loadMessages(userId);
-    }, 3000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [isOpen, userId]);
 

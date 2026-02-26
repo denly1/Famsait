@@ -29,14 +29,14 @@ export default function SupportPanel() {
 
   useEffect(() => {
     loadConversations();
-    const interval = setInterval(loadConversations, 5000);
+    const interval = setInterval(loadConversations, 15000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     if (selectedUserId) {
       loadMessages(selectedUserId);
-      const interval = setInterval(() => loadMessages(selectedUserId), 3000);
+      const interval = setInterval(() => loadMessages(selectedUserId), 10000);
       return () => clearInterval(interval);
     }
   }, [selectedUserId]);
