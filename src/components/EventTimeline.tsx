@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Event } from "@/lib/data";
 import { useState, useCallback, useRef } from "react";
+import EventImage from "@/components/EventImage";
 
 export default function EventTimeline({ events }: { events: Event[] }) {
   const [current, setCurrent] = useState(0);
@@ -62,11 +63,10 @@ export default function EventTimeline({ events }: { events: Event[] }) {
           <div className="rounded-2xl sm:rounded-3xl overflow-hidden border border-white/10">
             {/* Square image */}
             <div className="relative aspect-square sm:aspect-[4/5] md:aspect-square overflow-hidden">
-              <img
+              <EventImage
                 src={event.image}
                 alt={event.title}
                 className="w-full h-full object-cover transition-transform duration-500"
-                key={event.id}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 

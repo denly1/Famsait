@@ -9,6 +9,7 @@ import MarqueeText from "@/components/MarqueeText";
 import FloatingElements from "@/components/FloatingElements";
 import EventTimeline from "@/components/EventTimeline";
 import PastEventsGallery from "@/components/PastEventsGallery";
+import EventImage from "@/components/EventImage";
 import VenueMap from "@/components/VenueMap";
 import { mapEventsFromDB } from "@/lib/mappers";
 import { query } from "@/lib/db";
@@ -63,7 +64,7 @@ export default async function HomePage() {
               <div className="relative rounded-3xl overflow-hidden group">
                 {/* Image — visible and large */}
                 <div className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-[3/2] overflow-hidden">
-                  <img src={nextEvent.image} alt={nextEvent.title} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700" />
+                  <EventImage src={nextEvent.image} alt={nextEvent.title} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
 
@@ -130,11 +131,17 @@ export default async function HomePage() {
       )}
 
       {/* ===== MARQUEE TEXT ===== */}
-      <div className="relative overflow-hidden bg-black border-y border-white/5 py-5">
+      <div className="relative overflow-hidden bg-black border-y border-white/[0.06] py-4 sm:py-5">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/[0.03] via-transparent to-accent/[0.03]" />
         <div className="flex animate-marquee whitespace-nowrap">
-          {[...Array(15)].map((_, i) => (
-            <span key={i} className="mx-6 text-lg sm:text-xl font-black tracking-[0.2em] text-white/15 uppercase" style={{ fontFamily: "var(--font-heading)" }}>
-              FAMILY · ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ ·
+          {[...Array(12)].map((_, i) => (
+            <span key={i} className="mx-4 sm:mx-6 text-4xl sm:text-5xl lg:text-6xl tracking-[0.05em] text-white/[0.08] uppercase select-none" style={{ fontFamily: "'Bebas Neue', sans-serif" }}>
+              FAMILY
+              <span className="text-primary/20 mx-3">★</span>
+              ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
+              <span className="text-accent/20 mx-3">★</span>
+              ВЕЧЕРИНКИ МОСКВЫ
+              <span className="text-primary/20 mx-3">★</span>
             </span>
           ))}
         </div>

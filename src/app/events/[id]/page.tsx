@@ -4,6 +4,7 @@ export const revalidate = 0;
 import Link from "next/link";
 import { mapEventFromDB } from "@/lib/mappers";
 import { query } from "@/lib/db";
+import EventImage from "@/components/EventImage";
 
 async function getEvent(id: string) {
   try {
@@ -52,7 +53,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           {/* Image */}
           <div className="animate-fade-in-up">
             <div className="rounded-2xl overflow-hidden aspect-[3/4] sm:aspect-[4/5] relative card-glow border border-border">
-              <img
+              <EventImage
                 src={event.image}
                 alt={event.title}
                 className="w-full h-full object-cover"
@@ -172,7 +173,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 <div className="grid grid-cols-2 gap-3">
                   {event.gallery.map((photo: string, i: number) => (
                     <div key={i} className="rounded-xl overflow-hidden aspect-square border border-border card-hover">
-                      <img
+                      <EventImage
                         src={photo}
                         alt={`${event.title} фото ${i + 1}`}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"

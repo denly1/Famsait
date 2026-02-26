@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Event } from "@/lib/data";
+import EventImage from "@/components/EventImage";
 
 export default function PastEventsGallery({ events }: { events: Event[] }) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -36,7 +37,7 @@ export default function PastEventsGallery({ events }: { events: Event[] }) {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="relative aspect-[4/5] rounded-3xl overflow-hidden">
-                <img
+                <EventImage
                   src={event.image}
                   alt={event.title}
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
@@ -102,7 +103,7 @@ export default function PastEventsGallery({ events }: { events: Event[] }) {
             </button>
             
             <div className="aspect-video">
-              <img
+              <EventImage
                 src={selectedEvent.image}
                 alt={selectedEvent.title}
                 className="w-full h-full object-cover"
