@@ -16,10 +16,6 @@ export default function PastEventsGallery({ events }: { events: Event[] }) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <span className="bg-white/10 border border-white/10 px-4 py-2 rounded-full mb-3 sm:mb-4 inline-flex items-center gap-2 text-[10px] sm:text-xs font-semibold text-white">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            АРХИВ
-          </span>
           <h2 
             className="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-2 sm:mb-4 px-4 text-white"
             style={{ fontFamily: "var(--font-heading)" }}
