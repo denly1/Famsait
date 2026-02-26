@@ -157,8 +157,8 @@ export default async function HomePage() {
           {[0, 1].map((group) => (
             <div key={group} className="flex shrink-0 items-center">
               {[...Array(10)].map((_, i) => (
-                <span key={i} className="inline-flex items-center mx-3 sm:mx-4 text-2xl sm:text-3xl lg:text-4xl leading-none text-white/25 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400, letterSpacing: "0.04em", fontStyle: "normal" }}>
-                  FAMILY<span className="mx-2 sm:mx-3 text-primary/20">·</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-2 sm:mx-3 text-primary/25">★</span>
+                <span key={i} className="inline-flex items-center mx-3 sm:mx-4 text-2xl sm:text-3xl lg:text-4xl leading-none text-white uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400, letterSpacing: "0.04em", fontStyle: "normal" }}>
+                  FAMILY<span className="mx-2 sm:mx-3 text-primary">·</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-2 sm:mx-3 text-primary">★</span>
                 </span>
               ))}
             </div>
