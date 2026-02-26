@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { query } from "@/lib/db";
+import { useState, useEffect } from "react";
 
 function TelegramIcon({ className }: { className?: string }) {
   return (
@@ -25,32 +27,30 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-async function getSettings() {
-  try {
-    const result = await query("SELECT * FROM site_settings WHERE id = 1");
-    if (result.rows.length === 0) return null;
-    const r = result.rows[0];
-    return {
-      telegramUrl: r.telegram_url || "https://t.me/familymsk",
-      vkUrl: r.vk_url || "https://vk.ru/thefamilymskk",
-      instagramUrl: r.instagram_url || "https://www.instagram.com/thefamily_msk",
-      email: r.email || "tusa2026@mail.ru",
-      address: r.address || "Москва, Россия",
-    };
-  } catch {
-    return {
-      telegramUrl: "https://t.me/familymsk",
-      vkUrl: "https://vk.ru/thefamilymskk",
-      instagramUrl: "https://www.instagram.com/thefamily_msk",
-      email: "tusa2026@mail.ru",
-      address: "Москва, Россия",
-    };
-  }
-}
+const defaultSettings = {
+  telegramUrl: "https://t.me/familymsk",
+  vkUrl: "https://vk.ru/thefamilymskk",
+  instagramUrl: "https://www.instagram.com/thefamily_msk",
+  email: "tusa2026@mail.ru",
+  address: "Москва, Россия",
+};
 
-export default async function Footer() {
-  const settings = await getSettings();
-  const s = settings!;
+export default function Footer() {
+  const [s, setS] = useState(defaultSettings);
+
+  useEffect(() => {
+    fetch("/api/settings").then(r => r.json()).then(data => {
+      const r = data.settings;
+      if (!r) return;
+      setS({
+        telegramUrl: r.telegram_url || defaultSettings.telegramUrl,
+        vkUrl: r.vk_url || defaultSettings.vkUrl,
+        instagramUrl: r.instagram_url || defaultSettings.instagramUrl,
+        email: r.email || defaultSettings.email,
+        address: r.address || defaultSettings.address,
+      });
+    }).catch(() => {});
+  }, []);
 
   const socials = [
     { href: s.telegramUrl, label: "Telegram", icon: TelegramIcon },
