@@ -54,16 +54,20 @@ export default function PastEventsGrid({ events }: { events: PosterItem[] }) {
     }
   };
 
-  // Keyboard navigation in modal
+  // Lock body scroll when modal open + keyboard nav
   useEffect(() => {
     if (selectedIdx === null) return;
+    document.body.style.overflow = "hidden";
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") goNextModal();
       else if (e.key === "ArrowLeft") goPrevModal();
       else if (e.key === "Escape") closeModal();
     };
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handler);
+    };
   }, [selectedIdx, posters.length]);
 
   if (posters.length === 0) {
@@ -119,7 +123,7 @@ export default function PastEventsGrid({ events }: { events: PosterItem[] }) {
           {selectedIdx > 0 && (
             <button
               onClick={(e) => { e.stopPropagation(); goPrevModal(); }}
-              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
+              className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all active:scale-95"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -131,7 +135,7 @@ export default function PastEventsGrid({ events }: { events: PosterItem[] }) {
           {selectedIdx < posters.length - 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); goNextModal(); }}
-              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95"
+              className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all active:scale-95"
             >
               <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

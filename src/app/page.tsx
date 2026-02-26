@@ -9,7 +9,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import MarqueeText from "@/components/MarqueeText";
 import FloatingElements from "@/components/FloatingElements";
 import EventTimeline from "@/components/EventTimeline";
-import PastEventsGallery from "@/components/PastEventsGallery";
+import PastEventsGrid from "@/components/PastEventsGrid";
 import EventImage from "@/components/EventImage";
 import VenueMap from "@/components/VenueMap";
 import { mapEventsFromDB } from "@/lib/mappers";
@@ -147,8 +147,8 @@ export default async function HomePage() {
           {[0, 1].map((group) => (
             <div key={group} className="flex shrink-0 items-center">
               {[...Array(10)].map((_, i) => (
-                <span key={i} className="inline-flex items-center mx-3 sm:mx-4 text-2xl sm:text-3xl lg:text-4xl leading-none text-white/25 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", letterSpacing: "0.04em" }}>
-                  FAMILY <span className="mx-2 sm:mx-3 text-primary/20">·</span> ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ <span className="mx-2 sm:mx-3 text-primary/25">★</span>
+                <span key={i} className="inline-flex items-center mx-3 sm:mx-4 text-2xl sm:text-3xl lg:text-4xl leading-none text-white/25 uppercase select-none" style={{ fontFamily: "'Anton', sans-serif", fontWeight: 400, letterSpacing: "0.04em", fontStyle: "normal" }}>
+                  FAMILY<span className="mx-2 sm:mx-3 text-primary/20">·</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-2 sm:mx-3 text-primary/25">★</span>
                 </span>
               ))}
             </div>
@@ -199,11 +199,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      <div className="section-divider" />
-
-      {/* ===== PAST EVENTS GALLERY ===== */}
-      <PastEventsGallery events={pastEvents} />
 
       <div className="section-divider" />
 
@@ -322,33 +317,28 @@ export default async function HomePage() {
 
       {/* ===== PAST EVENTS ===== */}
       <section className="py-16 sm:py-24 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <ScrollReveal>
-            <div className="flex items-end justify-between mb-12">
-              <div>
-                <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                  ПРОШЕДШИЕ
-                </h2>
-                <p className="text-white/70 mt-2 text-sm">Как это было</p>
-              </div>
-              <Link
-                href="/past"
-                className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold text-accent hover:text-accent-light transition-colors group"
-              >
-                Все прошедшие
-                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                ПРОШЕДШИЕ СОБЫТИЯ
+              </h2>
+              <p className="text-white/70 mt-2 text-sm sm:text-base">Посмотри список наших легендарных событий</p>
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {pastEvents.map((event: any, i: number) => (
-              <ScrollReveal key={event.id} delay={i * 0.08}>
-                <EventCard event={event} />
-              </ScrollReveal>
-            ))}
+          <PastEventsGrid events={pastEvents} />
+
+          <div className="text-center mt-8">
+            <Link
+              href="/past"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-white/30 text-white rounded-xl text-sm font-bold tracking-wide hover:bg-white/10 hover:border-white/50 transition-all active:scale-95"
+            >
+              ВСЕ ПРОШЕДШИЕ
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
           </div>
         </div>
       </section>

@@ -66,52 +66,31 @@ export default function SupportPage() {
   const fmt = (ts: Date) => new Date(ts).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className="fixed inset-0 z-30 flex flex-col sm:relative sm:inset-auto sm:z-auto sm:min-h-screen sm:pt-44 sm:pb-20">
-      {/* Mobile: full-screen chat. Desktop: normal page layout */}
+    <div className="pt-44 sm:pt-56 pb-16 sm:pb-20 relative">
+      <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
 
-      {/* Header */}
-      <div className="flex-shrink-0 relative p-4 sm:hidden safe-top" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
-        <div className="flex items-center gap-3">
-          <a href="/" className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center text-white flex-shrink-0">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-          </a>
-          <div className="relative flex-shrink-0">
-            <img src="/Familylogo.png" alt="F" className="w-10 h-10 rounded-xl object-cover" />
-            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-purple-700" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="font-bold text-white text-sm leading-tight" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
-            <p className="text-white/70 text-xs">Онлайн · отвечаем быстро</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Desktop header + wrapper */}
-      <div className="hidden sm:block max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-        <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
-        <div className="mb-8 sm:mb-10">
-          <h1 className="text-3xl sm:text-6xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
+      <div className="max-w-lg mx-auto px-4 sm:px-6 relative z-10">
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl sm:text-5xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
             ЧАТ ПОДДЕРЖКИ
           </h1>
-          <p className="text-text-secondary mt-3 sm:mt-4 text-[14px] sm:text-[15px] leading-relaxed">
+          <p className="text-text-secondary mt-3 text-sm leading-relaxed">
             Напишите нам — ответим в ближайшее время
           </p>
         </div>
-      </div>
 
-      {/* Chat card */}
-      <div className="flex-1 flex flex-col min-h-0 sm:max-w-3xl sm:mx-auto sm:px-4 sm:w-full sm:pb-8">
-        <div className="flex-1 flex flex-col min-h-0 sm:rounded-2xl sm:overflow-hidden sm:border sm:border-border sm:shadow-2xl sm:shadow-black/30">
-          {/* Desktop header inside card */}
-          <div className="hidden sm:block relative p-5" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
-            <div className="flex items-center gap-4">
+        {/* Chat card — contained, not full screen */}
+        <div className="rounded-2xl overflow-hidden border border-border shadow-2xl shadow-black/30">
+          {/* Header */}
+          <div className="relative p-4 sm:p-5" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
+            <div className="flex items-center gap-3 sm:gap-4">
               <div className="relative flex-shrink-0">
-                <img src="/Familylogo.png" alt="F" className="w-12 h-12 rounded-xl object-cover" />
-                <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-400 rounded-full border-2 border-purple-700" />
+                <img src="/Familylogo.png" alt="F" className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-purple-700" />
               </div>
               <div>
-                <p className="font-bold text-white text-base" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
-                <p className="text-white/70 text-sm">Онлайн · отвечаем быстро</p>
+                <p className="font-bold text-white text-sm sm:text-base" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
+                <p className="text-white/70 text-xs sm:text-sm">Онлайн · отвечаем быстро</p>
               </div>
             </div>
           </div>
@@ -119,7 +98,7 @@ export default function SupportPage() {
           {/* Messages */}
           <div
             ref={chatBodyRef}
-            className="flex-1 overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-3"
+            className="h-[50vh] sm:h-[55vh] overflow-y-auto overscroll-contain p-4 sm:p-5 space-y-3"
             style={{ background: "#0d0d12", WebkitOverflowScrolling: "touch" }}
           >
             {messages.length === 0 && (
@@ -171,8 +150,8 @@ export default function SupportPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input — fixed at bottom on mobile */}
-          <div className="flex-shrink-0 p-3 sm:p-4 border-t border-white/8 safe-bottom" style={{ background: "#131318" }}>
+          {/* Input */}
+          <div className="p-3 sm:p-4 border-t border-white/8" style={{ background: "#131318" }}>
             <div className="flex gap-2 sm:gap-3 items-center">
               <input
                 ref={inputRef}
