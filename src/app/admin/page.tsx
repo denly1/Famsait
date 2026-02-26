@@ -184,6 +184,10 @@ export default function AdminDashboard() {
   const switchTab = (t: Tab) => { setTab(t); setSidebarOpen(false); };
 
   // === EVENT CRUD ===
+  const generateSlug = (title: string) => {
+    const translitMap: Record<string, string> = { 'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'yo','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'ts','ч':'ch','ш':'sh','щ':'shch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya' };
+    return title.toLowerCase().split('').map(c => translitMap[c] || c).join('').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36);
+  };
   const openNewEvent = () => {
     setEditingEvent(null);
     setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: 0, currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, ticketUrl: "#" });
@@ -195,7 +199,8 @@ export default function AdminDashboard() {
     setShowEventForm(true);
   };
   const saveEvent = async () => {
-    const payload = { ...eventForm, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean) };
+    const autoId = editingEvent ? eventForm.id : (eventForm.id || generateSlug(eventForm.title));
+    const payload = { ...eventForm, id: autoId, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean) };
     const res = await fetch("/api/admin/events", { method: editingEvent ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { showToast("Ошибка сохранения"); }
   };
@@ -437,8 +442,7 @@ export default function AdminDashboard() {
                         <button onClick={() => setShowEventForm(false)} className="p-2 rounded-lg hover:bg-white/5"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <AdminInput label="ID (slug)" value={eventForm.id} onChange={v => setEventForm({...eventForm, id: v})} disabled={!!editingEvent} />
-                        <AdminInput label="Название" value={eventForm.title} onChange={v => setEventForm({...eventForm, title: v})} />
+                        <div className="sm:col-span-2"><AdminInput label="Название" value={eventForm.title} onChange={v => setEventForm({...eventForm, title: v})} /></div>
                         <AdminInput label="Подзаголовок" value={eventForm.subtitle} onChange={v => setEventForm({...eventForm, subtitle: v})} />
                         <AdminInput label="Дата" value={eventForm.date} onChange={v => setEventForm({...eventForm, date: v})} placeholder="22.02.2026" />
                         <AdminInput label="Время" value={eventForm.time} onChange={v => setEventForm({...eventForm, time: v})} placeholder="20:00 – 04:00" />

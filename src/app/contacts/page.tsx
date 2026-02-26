@@ -51,7 +51,7 @@ export default function ContactsPage() {
   };
 
   return (
-    <div className="pt-20 sm:pt-32 pb-16 sm:pb-20 relative">
+    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
       <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
       <div className="glow-orb glow-orb-pink w-[400px] h-[400px] bottom-0 -left-40 opacity-15" />
 

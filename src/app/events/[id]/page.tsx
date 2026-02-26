@@ -1,28 +1,21 @@
 import Link from "next/link";
 import { mapEventFromDB } from "@/lib/mappers";
+import { query } from "@/lib/db";
 
 async function getEvent(id: string) {
   try {
-    const baseUrl = typeof window === 'undefined' 
-      ? 'http://localhost:3000' 
-      : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000');
-    const res = await fetch(`${baseUrl}/api/events/${id}`, { 
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' }
-    });
-    
-    if (!res.ok) return null;
-    
-    const data = await res.json();
-    return mapEventFromDB(data.event);
+    const result = await query("SELECT * FROM events WHERE id = $1", [id]);
+    if (result.rows.length === 0) return null;
+    return mapEventFromDB(result.rows[0]);
   } catch (error) {
     console.error('Error fetching event:', error);
     return null;
   }
 }
 
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
-  const event = await getEvent(params.id);
+export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const event = await getEvent(id);
   
   if (!event) {
     return (
@@ -36,7 +29,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
   }
 
   return (
-    <div className="pt-16 sm:pt-20 pb-16 sm:pb-20 relative">
+    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
       {/* Background glow */}
       <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
 

@@ -25,7 +25,7 @@ export default async function PastEventsPage() {
   const { events: pastEvents } = await getEvents();
 
   return (
-    <div className="pt-20 sm:pt-32 pb-16 sm:pb-20 relative">
+    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
       <div className="glow-orb glow-orb-pink w-[500px] h-[500px] -top-40 -left-40 opacity-20" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

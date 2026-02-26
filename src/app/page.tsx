@@ -367,17 +367,17 @@ export default async function HomePage() {
           </div>
 
           {/* Stats row */}
-          <div className="grid grid-cols-2 gap-4 mt-4 max-w-xs mx-auto w-full">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-6 max-w-lg mx-auto w-full">
             {[
-              { value: "200+", label: "Мероприятий" },
-              { value: "100K+", label: "Гостей" },
+              { value: "200+", label: "Мероприятий", color: "from-primary/20 to-accent/10", border: "border-primary/20" },
+              { value: "100K+", label: "Гостей", color: "from-accent/20 to-primary/10", border: "border-accent/20" },
             ].map((stat: any, i: number) => (
               <ScrollReveal key={stat.label} delay={0.3 + i * 0.05}>
-                <div className="rounded-2xl bg-bg-card/50 border border-border p-5 text-center">
-                  <div className="text-2xl sm:text-3xl font-black gradient-text" style={{ fontFamily: "var(--font-heading)" }}>
+                <div className={`rounded-2xl sm:rounded-3xl bg-gradient-to-br ${stat.color} border ${stat.border} p-6 sm:p-8 text-center backdrop-blur-sm hover:scale-105 transition-transform duration-300`}>
+                  <div className="text-3xl sm:text-5xl font-black gradient-text" style={{ fontFamily: "var(--font-heading)" }}>
                     {stat.value}
                   </div>
-                  <div className="text-white/60 mt-1.5 text-[10px] uppercase tracking-wider font-semibold">{stat.label}</div>
+                  <div className="text-white/60 mt-2 text-xs sm:text-sm uppercase tracking-wider font-semibold">{stat.label}</div>
                 </div>
               </ScrollReveal>
             ))}

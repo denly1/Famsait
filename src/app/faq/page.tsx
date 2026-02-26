@@ -1,13 +1,23 @@
 "use client";
 
-import { faqItems } from "@/lib/data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+interface FAQItem {
+  id: string;
+  question: string;
+  answer: string;
+}
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/faq").then(r => r.json()).then(d => setFaqItems(d.faq || [])).catch(() => {});
+  }, []);
 
   return (
-    <div className="pt-20 sm:pt-32 pb-16 sm:pb-20 relative">
+    <div className="pt-32 sm:pt-40 pb-16 sm:pb-20 relative">
       <div className="glow-orb glow-orb-purple w-[400px] h-[400px] -top-40 right-0 opacity-20" />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

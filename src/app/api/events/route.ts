@@ -4,6 +4,16 @@ import { query } from "@/lib/db";
 // GET - получить все события
 export async function GET(request: NextRequest) {
   try {
+    // Автоматически переносим прошедшие события
+    try {
+      await query(`
+        UPDATE events SET is_past = true, updated_at = NOW()
+        WHERE is_past = false 
+        AND date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$'
+        AND TO_DATE(date, 'DD.MM.YYYY') < CURRENT_DATE
+      `);
+    } catch {}
+
     const { searchParams } = new URL(request.url);
     const isPast = searchParams.get("isPast");
 
