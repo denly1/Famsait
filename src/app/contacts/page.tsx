@@ -1,43 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ContactsPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const [sending, setSending] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSending(true);
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (res.ok) {
-        setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 4000);
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      }
-    } catch {}
-    setSending(false);
-  };
-
-  const contacts = [
+  const [contacts, setContacts] = useState([
     { icon: "mail", label: "Почта", value: "tusa2026@mail.ru", href: "mailto:tusa2026@mail.ru" },
     { icon: "telegram", label: "Telegram", value: "@familymsk", href: "https://t.me/familymsk" },
     { icon: "vk", label: "ВКонтакте", value: "thefamilymskk", href: "https://vk.ru/thefamilymskk" },
     { icon: "instagram", label: "Instagram", value: "@thefamily_msk", href: "https://www.instagram.com/thefamily_msk" },
-    { icon: "location", label: "Город", value: "Москва, Россия", href: undefined },
-  ];
+    { icon: "location", label: "Город", value: "Москва, Россия", href: undefined as string | undefined },
+  ]);
+
+  useEffect(() => {
+    fetch("/api/settings").then(r => r.json()).then(data => {
+      const s = data.settings;
+      if (!s) return;
+      setContacts([
+        { icon: "mail", label: "Почта", value: s.email || "tusa2026@mail.ru", href: `mailto:${s.email || "tusa2026@mail.ru"}` },
+        { icon: "telegram", label: "Telegram", value: "@familymsk", href: s.telegram_url || "https://t.me/familymsk" },
+        { icon: "vk", label: "ВКонтакте", value: "thefamilymskk", href: s.vk_url || "https://vk.ru/thefamilymskk" },
+        { icon: "instagram", label: "Instagram", value: "@thefamily_msk", href: s.instagram_url || "https://www.instagram.com/thefamily_msk" },
+        { icon: "location", label: "Город", value: s.address || "Москва, Россия", href: undefined },
+      ]);
+    }).catch(() => {});
+  }, []);
 
   const iconPaths: Record<string, React.ReactNode> = {
     mail: <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />,

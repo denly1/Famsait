@@ -166,8 +166,22 @@ export default function AdminDashboard() {
         features: Array.isArray(e.features) ? e.features : [],
         isPast: e.is_past ?? e.isPast ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
       })));
-      setMessages(await mRes.json());
-      setSettings(await sRes.json());
+      const rawMsgs = await mRes.json();
+      setMessages((Array.isArray(rawMsgs) ? rawMsgs : []).map((m: any) => ({
+        id: m.id, name: m.name || "", email: m.email || "", subject: m.subject || "",
+        message: m.message || "", createdAt: m.created_at || m.createdAt || "",
+        read: m.read ?? false,
+      })));
+      const rawSettings = await sRes.json();
+      setSettings({
+        siteName: rawSettings.site_name || rawSettings.siteName || "THE FAMILY",
+        siteDescription: rawSettings.site_description || rawSettings.siteDescription || "",
+        telegramUrl: rawSettings.telegram_url || rawSettings.telegramUrl || "https://t.me/familymsk",
+        vkUrl: rawSettings.vk_url || rawSettings.vkUrl || "https://vk.ru/thefamilymskk",
+        instagramUrl: rawSettings.instagram_url || rawSettings.instagramUrl || "https://www.instagram.com/thefamily_msk",
+        email: rawSettings.email || "tusa2026@mail.ru",
+        address: rawSettings.address || "Москва, Россия",
+      });
       const fData = await fRes.json(); setFaqItems(fData.faq || []);
     } catch { showToast("Ошибка загрузки данных"); }
     setLoading(false);
@@ -207,7 +221,7 @@ export default function AdminDashboard() {
   const removeMessage = async (id: string) => { await fetch("/api/admin/messages", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); showToast("Сообщение удалено"); fetchData(); };
 
   // === SETTINGS ===
-  const saveSettings = async () => { await fetch("/api/admin/settings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }); showToast("Настройки сохранены"); };
+  const saveSettings = async () => { await fetch("/api/admin/settings", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(settings) }); showToast("Настройки сохранены"); fetchData(); };
 
   // === FAQ ===
   const saveFaq = async () => {

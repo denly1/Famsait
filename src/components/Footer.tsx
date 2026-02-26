@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { query } from "@/lib/db";
 
 function TelegramIcon({ className }: { className?: string }) {
   return (
@@ -24,11 +25,37 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Footer() {
+async function getSettings() {
+  try {
+    const result = await query("SELECT * FROM site_settings WHERE id = 1");
+    if (result.rows.length === 0) return null;
+    const r = result.rows[0];
+    return {
+      telegramUrl: r.telegram_url || "https://t.me/familymsk",
+      vkUrl: r.vk_url || "https://vk.ru/thefamilymskk",
+      instagramUrl: r.instagram_url || "https://www.instagram.com/thefamily_msk",
+      email: r.email || "tusa2026@mail.ru",
+      address: r.address || "Москва, Россия",
+    };
+  } catch {
+    return {
+      telegramUrl: "https://t.me/familymsk",
+      vkUrl: "https://vk.ru/thefamilymskk",
+      instagramUrl: "https://www.instagram.com/thefamily_msk",
+      email: "tusa2026@mail.ru",
+      address: "Москва, Россия",
+    };
+  }
+}
+
+export default async function Footer() {
+  const settings = await getSettings();
+  const s = settings!;
+
   const socials = [
-    { href: "https://t.me/familymsk", label: "Telegram", icon: TelegramIcon },
-    { href: "https://vk.ru/thefamilymskk", label: "VK", icon: VKIcon },
-    { href: "https://www.instagram.com/thefamily_msk", label: "Instagram", icon: InstagramIcon },
+    { href: s.telegramUrl, label: "Telegram", icon: TelegramIcon },
+    { href: s.vkUrl, label: "VK", icon: VKIcon },
+    { href: s.instagramUrl, label: "Instagram", icon: InstagramIcon },
   ];
 
   return (
@@ -97,14 +124,14 @@ export default function Footer() {
             <h3 className="mono-label mb-5">КОНТАКТЫ</h3>
             <ul className="space-y-3">
               <li>
-                <a href="mailto:tusa2026@mail.ru" className="flex items-center gap-2.5 text-text-secondary text-sm hover:text-text-primary transition-colors group">
+                <a href={`mailto:${s.email}`} className="flex items-center gap-2.5 text-text-secondary text-sm hover:text-text-primary transition-colors group">
                   <svg className="w-4 h-4 text-text-muted group-hover:text-primary transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
-                  tusa2026@mail.ru
+                  {s.email}
                 </a>
               </li>
               <li className="flex items-center gap-2.5 text-text-secondary text-sm">
                 <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
-                Москва, Россия
+                {s.address}
               </li>
             </ul>
           </div>
