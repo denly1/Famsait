@@ -66,8 +66,8 @@ export default async function HomePage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "FAMILY Moscow",
-    "url": "https://familymoscow.ru",
-    "logo": "https://familymoscow.ru/Familylogo.png",
+    "url": "https://family-events.ru",
+    "logo": "https://family-events.ru/Familylogo.png",
     "description": "Лучшие вечеринки и мероприятия в Москве",
     "sameAs": [
       settings?.telegramUrl || "https://t.me/familymsk",
@@ -81,7 +81,7 @@ export default async function HomePage() {
     "@type": "Event",
     "name": event.title,
     "description": event.description || `${event.title} — событие от FAMILY Moscow`,
-    "image": event.image ? `https://familymoscow.ru${event.image}` : "https://familymoscow.ru/Familylogo.png",
+    "image": event.image ? `https://family-events.ru${event.image}` : "https://family-events.ru/Familylogo.png",
     "startDate": event.date && event.time ? `${event.date.split('.').reverse().join('-')}T${event.time}` : undefined,
     "location": {
       "@type": "Place",
@@ -95,13 +95,13 @@ export default async function HomePage() {
     "organizer": {
       "@type": "Organization",
       "name": "FAMILY Moscow",
-      "url": "https://familymoscow.ru"
+      "url": "https://family-events.ru"
     },
     "offers": event.price > 0 ? {
       "@type": "Offer",
       "price": event.price,
       "priceCurrency": event.currency || "RUB",
-      "url": event.ticketLink || event.ticketUrl || `https://familymoscow.ru/events/${event.id}`,
+      "url": event.ticketLink || event.ticketUrl || `https://family-events.ru/events/${event.id}`,
       "availability": "https://schema.org/InStock"
     } : undefined
   }));

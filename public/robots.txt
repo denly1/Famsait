@@ -7,7 +7,7 @@ Disallow: /admin/
 Disallow: /api/admin/
 
 # Sitemap
-Sitemap: https://familymoscow.ru/sitemap.xml
+Sitemap: https://family-events.ru/sitemap.xml
 
 # Yandex specific
 User-agent: Yandex

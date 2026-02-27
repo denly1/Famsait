@@ -3,7 +3,7 @@ import "./globals.css";
 import SiteShell from "@/components/SiteShell";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://familymoscow.ru'),
+  metadataBase: new URL('https://family-events.ru'),
   title: {
     default: "FAMILY — Лучшие тусовки Москвы | Вечеринки и мероприятия",
     template: "%s | FAMILY Moscow"
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "ru_RU",
-    url: "https://familymoscow.ru",
+    url: "https://family-events.ru",
     siteName: "FAMILY Moscow",
     title: "FAMILY — Лучшие тусовки Москвы",
     description: "Лучшие вечеринки и мероприятия в Москве. Присоединяйся к Family!",
