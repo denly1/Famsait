@@ -30,41 +30,56 @@ export default function FAQPage() {
           </p>
         </div>
 
-        <div className="space-y-2.5 sm:space-y-3">
+        <div className="space-y-3">
           {faqItems.map((item, index) => (
             <div
               key={index}
-              className="rounded-2xl bg-bg-card border border-border hover:border-border-light overflow-hidden transition-all"
+              className={`group rounded-2xl overflow-hidden border transition-all duration-300 ${
+                openIndex === index
+                  ? "border-primary/40 shadow-lg shadow-primary/5"
+                  : "border-white/8 hover:border-white/20"
+              }`}
+              style={{ background: openIndex === index ? "rgba(124,58,237,0.05)" : "rgba(255,255,255,0.02)" }}
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-4 sm:p-6 text-left hover:bg-white/[0.02] transition-colors group"
+                className="w-full flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 text-left transition-colors"
               >
-                <div className="flex items-center gap-4 pr-4">
-                  <span className="mono-label text-text-muted/40 text-xs flex-shrink-0">0{index + 1}</span>
-                  <span className="font-semibold text-[15px] sm:text-base" style={{ fontFamily: "var(--font-heading)" }}>{item.question}</span>
+                <div className="flex items-center gap-3 pr-4">
+                  {/* Иконка вопроса */}
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                    openIndex === index
+                      ? "bg-gradient-to-br from-primary to-accent"
+                      : "bg-white/5 group-hover:bg-white/10"
+                  }`}>
+                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <span className={`font-semibold text-[15px] sm:text-base leading-snug transition-colors duration-200 ${
+                    openIndex === index ? "text-white" : "text-white/80 group-hover:text-white"
+                  }`} style={{ fontFamily: "var(--font-heading)" }}>
+                    {item.question}
+                  </span>
                 </div>
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                  openIndex === index ? "bg-primary/10 rotate-180" : "bg-white/[0.03]"
+                {/* Стрелка */}
+                <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                  openIndex === index ? "bg-primary/20 rotate-180" : "bg-white/5"
                 }`}>
-                  <svg
-                    className={`w-4 h-4 transition-colors duration-300 ${openIndex === index ? "text-primary" : "text-text-muted"}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg className={`w-3.5 h-3.5 transition-colors duration-300 ${openIndex === index ? "text-primary" : "text-white/40"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
               </button>
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                }`}
-              >
-                <div className="px-4 sm:px-6 pb-5 sm:pb-6 pl-[48px] sm:pl-[64px]">
-                  <div className="h-[1px] bg-gradient-to-r from-border via-border-light to-border mb-4" />
-                  <p className="text-text-secondary text-[14px] leading-relaxed">
+
+              {/* Ответ */}
+              <div className={`overflow-hidden transition-all duration-300 ${
+                openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              }`}>
+                <div className="px-5 sm:px-6 pb-5">
+                  {/* Разделитель с градиентом */}
+                  <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, rgba(124,58,237,0.4), rgba(236,72,153,0.2), transparent)" }} />
+                  <p className="text-white/60 text-sm sm:text-[15px] leading-relaxed pl-11">
                     {item.answer}
                   </p>
                 </div>
