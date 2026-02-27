@@ -61,8 +61,66 @@ export default async function HomePage() {
   const pastEvents = events.filter((e: any) => e.isPast).slice(0, 3);
   const nextEvent = upcomingEvents[0];
 
+  // JSON-LD structured data для SEO
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "FAMILY Moscow",
+    "url": "https://familymoscow.ru",
+    "logo": "https://familymoscow.ru/Familylogo.png",
+    "description": "Лучшие вечеринки и мероприятия в Москве",
+    "sameAs": [
+      settings?.telegramUrl || "https://t.me/familymsk",
+      settings?.vkUrl || "https://vk.ru/thefamilymskk",
+      settings?.instagramUrl || "https://www.instagram.com/thefamily_msk"
+    ]
+  };
+
+  const eventsSchema = upcomingEvents.slice(0, 3).map((event: any) => ({
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": event.title,
+    "description": event.description || `${event.title} — событие от FAMILY Moscow`,
+    "image": event.image ? `https://familymoscow.ru${event.image}` : "https://familymoscow.ru/Familylogo.png",
+    "startDate": event.date && event.time ? `${event.date.split('.').reverse().join('-')}T${event.time}` : undefined,
+    "location": {
+      "@type": "Place",
+      "name": event.venue || "Москва",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Москва",
+        "addressCountry": "RU"
+      }
+    },
+    "organizer": {
+      "@type": "Organization",
+      "name": "FAMILY Moscow",
+      "url": "https://familymoscow.ru"
+    },
+    "offers": event.price > 0 ? {
+      "@type": "Offer",
+      "price": event.price,
+      "priceCurrency": event.currency || "RUB",
+      "url": event.ticketLink || event.ticketUrl || `https://familymoscow.ru/events/${event.id}`,
+      "availability": "https://schema.org/InStock"
+    } : undefined
+  }));
+
   return (
     <>
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      {eventsSchema.map((schema: any, i: number) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      ))}
+
       {/* ===== FLOATING BACKGROUND ELEMENTS ===== */}
       <FloatingElements />
 

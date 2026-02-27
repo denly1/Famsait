@@ -1,0 +1,22 @@
+# Allow all bots
+User-agent: *
+Allow: /
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/admin/
+
+# Sitemap
+Sitemap: https://familymoscow.ru/sitemap.xml
+
+# Yandex specific
+User-agent: Yandex
+Allow: /
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+
+# Crawl-delay for aggressive bots
+User-agent: *
+Crawl-delay: 1
