@@ -30,89 +30,85 @@ export default function FAQPage() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-3">
           {faqItems.map((item, index) => {
             const isOpen = openIndex === index;
             return (
               <div
                 key={item.id}
-                className="rounded-2xl overflow-hidden transition-all duration-300"
+                className="rounded-2xl overflow-hidden transition-all duration-300 cursor-pointer"
                 style={{
-                  background: isOpen ? "rgba(255,255,255,0.06)" : "transparent",
-                  border: isOpen ? "1px solid rgba(255,255,255,0.15)" : "1px solid rgba(255,255,255,0.12)",
+                  background: isOpen
+                    ? "rgba(255,255,255,0.05)"
+                    : "rgba(255,255,255,0.02)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  boxShadow: isOpen ? "0 4px 30px rgba(0,0,0,0.3)" : "none",
                 }}
+                onClick={() => setOpenIndex(isOpen ? null : index)}
               >
-                {/* Кнопка вопроса */}
-                <button
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full flex items-center gap-4 px-5 py-4 text-left transition-all active:scale-[0.99] group"
-                >
-                  {/* Иконка вопроса */}
+                {/* Градиентная левая полоска при открытии */}
+                <div className="flex">
                   <div
-                    className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300"
+                    className="flex-shrink-0 w-1 transition-all duration-300 rounded-l-2xl"
                     style={{
-                      background: isOpen ? "#fff" : "rgba(255,255,255,0.08)",
+                      background: isOpen
+                        ? "linear-gradient(180deg, #7c3aed, #ec4899)"
+                        : "transparent",
                     }}
-                  >
-                    <svg
-                      className="w-4 h-4 transition-colors duration-300"
-                      style={{ color: isOpen ? "#000" : "rgba(255,255,255,0.5)" }}
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                  />
+                  <div className="flex-1">
+                    {/* Вопрос */}
+                    <div className="flex items-center justify-between gap-3 px-5 py-4">
+                      <span
+                        className="font-bold text-[15px] sm:text-base leading-snug transition-colors duration-200"
+                        style={{
+                          fontFamily: "var(--font-heading)",
+                          color: isOpen ? "#fff" : "rgba(255,255,255,0.7)",
+                        }}
+                      >
+                        {item.question}
+                      </span>
+                      <div
+                        className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300"
+                        style={{
+                          background: isOpen
+                            ? "linear-gradient(135deg, #7c3aed, #ec4899)"
+                            : "rgba(255,255,255,0.07)",
+                        }}
+                      >
+                        <svg
+                          className="w-3.5 h-3.5 text-white transition-transform duration-300"
+                          style={{ transform: isOpen ? "rotate(45deg)" : "rotate(0deg)" }}
+                          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Ответ */}
+                    <div
+                      className="overflow-hidden transition-all duration-300"
+                      style={{ maxHeight: isOpen ? "400px" : "0px", opacity: isOpen ? 1 : 0 }}
                     >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-
-                  <span
-                    className="flex-1 font-bold text-[15px] sm:text-base leading-snug transition-colors duration-200"
-                    style={{
-                      fontFamily: "var(--font-heading)",
-                      color: isOpen ? "#fff" : "rgba(255,255,255,0.75)",
-                    }}
-                  >
-                    {item.question}
-                  </span>
-
-                  {/* +/× */}
-                  <div
-                    className="flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300"
-                    style={{ background: isOpen ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.05)" }}
-                  >
-                    <svg
-                      className="w-3.5 h-3.5 transition-all duration-300"
-                      style={{
-                        color: isOpen ? "#fff" : "rgba(255,255,255,0.35)",
-                        transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
-                      }}
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
-                  </div>
-                </button>
-
-                {/* Ответ */}
-                <div
-                  className="overflow-hidden transition-all duration-300"
-                  style={{ maxHeight: isOpen ? "400px" : "0px", opacity: isOpen ? 1 : 0 }}
-                >
-                  <div className="px-5 pb-4 pl-[72px]">
-                    <div className="h-px mb-3" style={{ background: "rgba(255,255,255,0.06)" }} />
-                    <p className="text-white/55 text-sm sm:text-[15px] leading-relaxed">
-                      {item.answer}
-                    </p>
+                      <div className="px-5 pb-5">
+                        <div className="h-px mb-3" style={{ background: "rgba(255,255,255,0.07)" }} />
+                        <p className="text-white/55 text-sm sm:text-[15px] leading-relaxed">
+                          {item.answer}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             );
           })}
 
-          {/* Разделитель */}
           {faqItems.length > 0 && (
-            <div className="h-px my-1" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)" }} />
+            <div className="h-px my-1" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)" }} />
           )}
 
-          {/* CTA — белая кнопка как Telegram в контактах */}
+          {/* CTA */}
           <a
             href="/support"
             className="flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-white text-black font-bold text-base sm:text-lg tracking-wide transition-all hover:bg-white/90 active:scale-[0.98]"
