@@ -17,101 +17,144 @@ export default function FAQPage() {
   }, []);
 
   return (
-    <div className="pt-44 sm:pt-56 pb-16 sm:pb-20 relative">
-      <div className="glow-orb glow-orb-purple w-[400px] h-[400px] -top-40 right-0 opacity-20" />
+    <div className="relative overflow-hidden" style={{ background: "#07070d" }}>
+      {/* Декоративные орбы */}
+      <div className="pointer-events-none fixed inset-0 z-0">
+        <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, #7c3aed 0%, transparent 70%)", filter: "blur(80px)" }} />
+        <div className="absolute bottom-1/3 -right-32 w-[400px] h-[400px] rounded-full opacity-15" style={{ background: "radial-gradient(circle, #ec4899 0%, transparent 70%)", filter: "blur(80px)" }} />
+      </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-8 sm:mb-14">
-          <h1 className="text-3xl sm:text-6xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-            Q&A
+      <div className="relative z-10 pt-36 sm:pt-48 pb-20 sm:pb-32">
+        {/* Заголовок секции */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 sm:mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 mb-6" style={{ background: "rgba(124,58,237,0.08)" }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="text-primary text-xs font-semibold tracking-widest uppercase">Частые вопросы</span>
+          </div>
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tight leading-none text-white mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+            Q<span style={{ WebkitTextStroke: "2px rgba(124,58,237,0.8)", color: "transparent" }}>&amp;</span>A
           </h1>
-          <p className="text-text-secondary mt-3 sm:mt-4 text-[14px] sm:text-[15px] leading-relaxed">
-            Ответы на самые частые вопросы. Не нашёл ответ? Напиши нам!
+          <p className="text-white/40 text-base sm:text-lg max-w-xl">
+            Ответы на самые частые вопросы. Не нашёл ответ?{" "}
+            <a href="/support" className="text-primary hover:text-primary/80 transition-colors underline underline-offset-4 decoration-primary/30">Напиши нам</a>
           </p>
         </div>
 
-        <div className="space-y-3">
-          {faqItems.map((item, index) => (
-            <div
-              key={index}
-              className={`group rounded-2xl overflow-hidden border transition-all duration-300 ${
-                openIndex === index
-                  ? "border-primary/40 shadow-lg shadow-primary/5"
-                  : "border-white/8 hover:border-white/20"
-              }`}
-              style={{ background: openIndex === index ? "rgba(124,58,237,0.05)" : "rgba(255,255,255,0.02)" }}
-            >
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 text-left transition-colors"
-              >
-                <div className="flex items-center gap-3 pr-4">
-                  {/* Иконка вопроса */}
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                    openIndex === index
-                      ? "bg-gradient-to-br from-primary to-accent"
-                      : "bg-white/5 group-hover:bg-white/10"
-                  }`}>
-                    <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+        {/* FAQ список */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="space-y-4">
+            {faqItems.map((item, index) => {
+              const isOpen = openIndex === index;
+              return (
+                <div
+                  key={item.id}
+                  className="relative overflow-hidden rounded-3xl transition-all duration-500 cursor-pointer"
+                  style={{
+                    background: isOpen
+                      ? "linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(236,72,153,0.06) 100%)"
+                      : "rgba(255,255,255,0.03)",
+                    border: isOpen ? "1px solid rgba(124,58,237,0.35)" : "1px solid rgba(255,255,255,0.06)",
+                    boxShadow: isOpen ? "0 0 40px rgba(124,58,237,0.15), inset 0 1px 0 rgba(255,255,255,0.05)" : "none",
+                  }}
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                >
+                  {/* Верхняя светящаяся линия при открытии */}
+                  {isOpen && (
+                    <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, #7c3aed, #ec4899, transparent)" }} />
+                  )}
+
+                  <div className="p-5 sm:p-7">
+                    <div className="flex items-start gap-4 sm:gap-5">
+                      {/* Большой Q маркер */}
+                      <div
+                        className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-lg sm:text-xl font-black transition-all duration-300"
+                        style={{
+                          background: isOpen
+                            ? "linear-gradient(135deg, #7c3aed, #ec4899)"
+                            : "rgba(255,255,255,0.05)",
+                          color: isOpen ? "#fff" : "rgba(255,255,255,0.3)",
+                          fontFamily: "var(--font-heading)",
+                          boxShadow: isOpen ? "0 8px 20px rgba(124,58,237,0.4)" : "none",
+                        }}
+                      >
+                        Q
+                      </div>
+
+                      <div className="flex-1 min-w-0 pt-1">
+                        <div className="flex items-start justify-between gap-3">
+                          <h3
+                            className="text-base sm:text-lg font-bold leading-snug transition-colors duration-300"
+                            style={{
+                              fontFamily: "var(--font-heading)",
+                              color: isOpen ? "#fff" : "rgba(255,255,255,0.75)",
+                            }}
+                          >
+                            {item.question}
+                          </h3>
+
+                          {/* Кнопка +/- */}
+                          <div
+                            className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-300 mt-0.5"
+                            style={{
+                              background: isOpen ? "rgba(124,58,237,0.2)" : "rgba(255,255,255,0.05)",
+                            }}
+                          >
+                            <svg
+                              className="w-4 h-4 transition-all duration-300"
+                              style={{
+                                color: isOpen ? "#a78bfa" : "rgba(255,255,255,0.3)",
+                                transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
+                              }}
+                              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* Ответ */}
+                        <div
+                          className="overflow-hidden transition-all duration-500"
+                          style={{ maxHeight: isOpen ? "400px" : "0px", opacity: isOpen ? 1 : 0 }}
+                        >
+                          <div className="pt-4">
+                            {/* Разделитель */}
+                            <div className="flex items-center gap-3 mb-4">
+                              <div className="flex-shrink-0 w-6 h-6 rounded-lg flex items-center justify-center text-xs font-black" style={{ background: "linear-gradient(135deg, #7c3aed, #ec4899)", fontFamily: "var(--font-heading)", color: "#fff" }}>A</div>
+                              <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(124,58,237,0.5), transparent)" }} />
+                            </div>
+                            <p className="text-white/60 text-sm sm:text-base leading-relaxed" style={{ paddingLeft: "36px" }}>
+                              {item.answer}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <span className={`font-semibold text-[15px] sm:text-base leading-snug transition-colors duration-200 ${
-                    openIndex === index ? "text-white" : "text-white/80 group-hover:text-white"
-                  }`} style={{ fontFamily: "var(--font-heading)" }}>
-                    {item.question}
-                  </span>
                 </div>
-                {/* Стрелка */}
-                <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
-                  openIndex === index ? "bg-primary/20 rotate-180" : "bg-white/5"
-                }`}>
-                  <svg className={`w-3.5 h-3.5 transition-colors duration-300 ${openIndex === index ? "text-primary" : "text-white/40"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </button>
+              );
+            })}
+          </div>
 
-              {/* Ответ */}
-              <div className={`overflow-hidden transition-all duration-300 ${
-                openIndex === index ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-              }`}>
-                <div className="px-5 sm:px-6 pb-5">
-                  {/* Разделитель с градиентом */}
-                  <div className="h-px mb-4" style={{ background: "linear-gradient(90deg, rgba(124,58,237,0.4), rgba(236,72,153,0.2), transparent)" }} />
-                  <p className="text-white/60 text-sm sm:text-[15px] leading-relaxed pl-11">
-                    {item.answer}
-                  </p>
-                </div>
+          {/* CTA блок */}
+          <div className="mt-16 sm:mt-20 relative rounded-3xl overflow-hidden" style={{ background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(236,72,153,0.05))", border: "1px solid rgba(124,58,237,0.2)" }}>
+            <div className="absolute top-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, #7c3aed 40%, #ec4899 60%, transparent)" }} />
+            <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #7c3aed, transparent)", filter: "blur(40px)" }} />
+
+            <div className="relative z-10 p-8 sm:p-12 text-center">
+              <div className="text-5xl mb-4">💬</div>
+              <h3 className="text-2xl sm:text-3xl font-black mb-3 text-white" style={{ fontFamily: "var(--font-heading)" }}>Не нашёл ответ?</h3>
+              <p className="text-white/50 text-sm sm:text-base mb-8 max-w-md mx-auto">
+                Напиши нам напрямую — отвечаем быстро и по делу
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+                <a href="mailto:tusa2026@mail.ru" className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-bold tracking-wide text-white text-center transition-all hover:opacity-90 active:scale-95" style={{ background: "linear-gradient(135deg, #7c3aed, #ec4899)" }}>
+                  НАПИСАТЬ НА ПОЧТУ
+                </a>
+                <a href="/support" className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-bold tracking-wide text-white text-center border transition-all hover:bg-white/5 active:scale-95" style={{ borderColor: "rgba(255,255,255,0.15)" }}>
+                  ЧАТ ПОДДЕРЖКИ →
+                </a>
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Contact CTA */}
-        <div className="mt-16 relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-bg-card" />
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5" />
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-
-          <div className="relative z-10 p-6 sm:p-8 text-center">
-            <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "var(--font-heading)" }}>Не нашёл ответ?</h3>
-            <p className="text-text-secondary text-sm mb-6">
-              Напиши нам на почту или в чат поддержки — ответим быстро!
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a
-                href="mailto:tusa2026@mail.ru"
-                className="w-full sm:w-auto px-6 py-3 btn-gradient rounded-xl text-sm font-semibold tracking-wide text-center"
-              >
-                <span className="relative z-10">НАПИСАТЬ НА ПОЧТУ</span>
-              </a>
-              <a
-                href="/support"
-                className="w-full sm:w-auto px-6 py-3 btn-outline rounded-xl text-sm font-semibold tracking-wide text-center"
-              >
-                ЧАТ ПОДДЕРЖКИ
-              </a>
             </div>
           </div>
         </div>
