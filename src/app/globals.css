@@ -507,6 +507,25 @@ input:focus, textarea:focus, select:focus {
   will-change: transform;
 }
 
+.marquee-track {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.marquee-content {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  animation: marquee-scroll 12s linear infinite;
+  will-change: transform;
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
 @keyframes glow-pulse {
   0%, 100% { 
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.3),
