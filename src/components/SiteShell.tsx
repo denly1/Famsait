@@ -9,6 +9,7 @@ import SupportChat from "@/components/SupportChat";
 export default function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isSupport = pathname === "/support";
   if (isAdmin) {
     return <>{children}</>;
   }
@@ -18,7 +19,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <ParticleField />
       <Header />
       <main className="flex-1 relative z-10">{children}</main>
-      <Footer />
+      {!isSupport && <Footer />}
     </>
   );
 }

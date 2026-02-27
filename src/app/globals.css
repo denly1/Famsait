@@ -517,7 +517,7 @@ input:focus, textarea:focus, select:focus {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  animation: marquee-scroll 55s linear infinite;
+  animation: marquee-scroll 85s linear infinite;
   will-change: transform;
 }
 
