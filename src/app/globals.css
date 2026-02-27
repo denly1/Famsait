@@ -497,6 +497,16 @@ input:focus, textarea:focus, select:focus {
   animation: marquee-infinite 20s linear infinite;
 }
 
+@keyframes marquee-full {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-full {
+  animation: marquee-full 12s linear infinite;
+  will-change: transform;
+}
+
 @keyframes glow-pulse {
   0%, 100% { 
     box-shadow: 0 0 20px rgba(139, 92, 246, 0.3),
