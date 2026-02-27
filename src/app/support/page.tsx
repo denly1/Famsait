@@ -66,62 +66,63 @@ export default function SupportPage() {
   const fmt = (ts: Date) => new Date(ts).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
 
   return (
-    <div className="min-h-screen flex flex-col relative" style={{ paddingTop: "env(safe-area-inset-top)" }}>
-      <div className="glow-orb glow-orb-purple w-[500px] h-[500px] -top-40 -right-40 opacity-20" />
+    <div className="pt-20 sm:pt-28 pb-8 px-4 sm:px-6 relative">
+      <div className="glow-orb glow-orb-purple w-[400px] h-[400px] -top-40 -right-40 opacity-15 pointer-events-none" />
 
-      {/* Header страницы */}
-      <div className="pt-24 sm:pt-32 pb-4 text-center px-4 relative z-10">
-        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-          ЧАТ ПОДДЕРЖКИ
-        </h1>
-        <p className="text-white/50 mt-1 text-xs sm:text-sm">Напишите нам — ответим в ближайшее время</p>
-      </div>
+      <div className="max-w-lg mx-auto relative z-10">
+        {/* Заголовок */}
+        <div className="mb-5 text-center">
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
+            ЧАТ ПОДДЕРЖКИ
+          </h1>
+          <p className="text-white/50 mt-1 text-xs">Напишите нам — ответим в ближайшее время</p>
+        </div>
 
-      {/* Chat — занимает оставшееся место */}
-      <div className="flex-1 flex flex-col max-w-lg w-full mx-auto px-4 sm:px-6 pb-6 relative z-10" style={{ minHeight: 0 }}>
-        <div className="flex-1 flex flex-col rounded-2xl overflow-hidden border border-border shadow-2xl shadow-black/30" style={{ minHeight: 0 }}>
-
+        {/* Чат-карточка с фиксированной высотой */}
+        <div
+          className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50 flex flex-col"
+          style={{ height: "70svh", maxHeight: 600, minHeight: 400 }}
+        >
           {/* Chat header */}
-          <div className="flex-shrink-0 p-4 sm:p-5" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
+          <div className="flex-shrink-0 px-4 py-3" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)" }}>
             <div className="flex items-center gap-3">
               <div className="relative flex-shrink-0">
-                <img src="/Familylogo.png" alt="F" className="w-10 h-10 rounded-xl object-cover" />
-                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-purple-700" />
+                <img src="/Familylogo.png" alt="F" className="w-9 h-9 rounded-xl object-cover" />
+                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-purple-700" />
               </div>
               <div>
-                <p className="font-bold text-white text-sm" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
+                <p className="font-bold text-white text-sm leading-tight" style={{ fontFamily: "var(--font-heading)" }}>FAMILY</p>
                 <p className="text-white/70 text-xs">Онлайн · отвечаем быстро</p>
               </div>
             </div>
           </div>
 
-          {/* Messages — flex-1 скроллится */}
+          {/* Сообщения */}
           <div
             ref={chatBodyRef}
-            className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-3"
-            style={{ background: "#0d0d12", WebkitOverflowScrolling: "touch", minHeight: 0 }}
+            className="flex-1 overflow-y-auto p-4 space-y-3"
+            style={{ background: "#0d0d12", overscrollBehavior: "contain", WebkitOverflowScrolling: "touch" }}
           >
             {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
-                <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                  <svg className="w-7 h-7 text-primary/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+              <div className="flex flex-col items-center justify-center h-full gap-3 text-center">
+                <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <svg className="w-6 h-6 text-primary/50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
                 </div>
                 <div>
                   <p className="text-white/70 font-semibold text-sm">Начните диалог</p>
-                  <p className="text-white/35 text-xs mt-1">Напишите ваш вопрос — мы на связи</p>
+                  <p className="text-white/35 text-xs mt-0.5">Напишите ваш вопрос — мы на связи</p>
                 </div>
               </div>
             )}
-
             {messages.map(msg => (
-              <div key={msg.id} className={`flex gap-2.5 ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
+              <div key={msg.id} className={`flex gap-2 ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
                 {msg.sender === "support" && (
-                  <img src="/Familylogo.png" className="w-8 h-8 rounded-lg object-cover flex-shrink-0 self-end" alt="" />
+                  <img src="/Familylogo.png" className="w-7 h-7 rounded-lg object-cover flex-shrink-0 self-end" alt="" />
                 )}
-                <div className={`flex flex-col gap-0.5 max-w-[78%] ${msg.sender === "user" ? "items-end" : "items-start"}`}>
+                <div className={`flex flex-col gap-0.5 max-w-[80%] ${msg.sender === "user" ? "items-end" : "items-start"}`}>
                   <div
-                    className={`px-3 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-                      msg.sender === "user" ? "rounded-br-md text-white" : "rounded-bl-md text-white/90 border border-white/10"
+                    className={`px-3 py-2 rounded-2xl text-sm leading-relaxed break-words ${
+                      msg.sender === "user" ? "rounded-br-sm text-white" : "rounded-bl-sm text-white/90 border border-white/10"
                     }`}
                     style={msg.sender === "user"
                       ? { background: "linear-gradient(135deg, #7c3aed, #ec4899)" }
@@ -134,11 +135,10 @@ export default function SupportPage() {
                 </div>
               </div>
             ))}
-
             {isTyping && (
-              <div className="flex gap-2.5">
-                <img src="/Familylogo.png" className="w-8 h-8 rounded-lg object-cover flex-shrink-0 self-end" alt="" />
-                <div className="px-3 py-2.5 rounded-2xl rounded-bl-md border border-white/10" style={{ background: "rgba(255,255,255,0.06)" }}>
+              <div className="flex gap-2">
+                <img src="/Familylogo.png" className="w-7 h-7 rounded-lg object-cover flex-shrink-0 self-end" alt="" />
+                <div className="px-3 py-2 rounded-2xl rounded-bl-sm border border-white/10" style={{ background: "rgba(255,255,255,0.06)" }}>
                   <div className="flex gap-1 items-center h-4">
                     {[0,1,2].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-white/40 animate-bounce" style={{ animationDelay: `${i*0.15}s` }} />)}
                   </div>
@@ -148,8 +148,8 @@ export default function SupportPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input — всегда внизу чата */}
-          <div className="flex-shrink-0 p-3 border-t border-white/10" style={{ background: "#131318" }}>
+          {/* Input */}
+          <div className="flex-shrink-0 px-3 py-3 border-t border-white/10" style={{ background: "#131318" }}>
             <div className="flex gap-2 items-center">
               <input
                 ref={inputRef}
@@ -158,16 +158,17 @@ export default function SupportPage() {
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); } }}
                 placeholder="Введите сообщение..."
-                className="flex-1 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none border touch-manipulation"
-                style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", fontSize: "16px" }}
+                className="flex-1 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none border"
+                style={{ background: "rgba(255,255,255,0.05)", borderColor: "rgba(255,255,255,0.1)", fontSize: "16px", touchAction: "manipulation" }}
                 autoComplete="off"
                 autoCorrect="off"
+                inputMode="text"
               />
               <button
                 onClick={handleSend}
                 disabled={!inputValue.trim()}
-                className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center text-white transition-all disabled:opacity-30 active:scale-95 touch-manipulation"
-                style={{ background: inputValue.trim() ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "rgba(255,255,255,0.08)" }}
+                className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center text-white transition-all disabled:opacity-30 active:scale-95"
+                style={{ background: inputValue.trim() ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "rgba(255,255,255,0.08)", touchAction: "manipulation" }}
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
               </button>
