@@ -215,9 +215,9 @@ export default async function HomePage() {
             {[...Array(10)].map((_, i) => (
               <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
                 FAMILY MOSCOW
-                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "2rem", marginRight: "1rem" }} />
+                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "1.5rem", marginRight: "1.5rem" }} />
                 ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
-                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "2rem", marginRight: "1rem" }} />
+                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "1.5rem", marginRight: "1.5rem" }} />
               </span>
             ))}
           </div>
@@ -225,9 +225,9 @@ export default async function HomePage() {
             {[...Array(10)].map((_, i) => (
               <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
                 FAMILY MOSCOW
-                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "2rem", marginRight: "1rem" }} />
+                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "1.5rem", marginRight: "1.5rem" }} />
                 ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
-                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "2rem", marginRight: "1rem" }} />
+                <span className="flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px", marginBottom: "0.15em", marginLeft: "1.5rem", marginRight: "1.5rem" }} />
               </span>
             ))}
           </div>
