@@ -214,14 +214,14 @@ export default async function HomePage() {
           <div className="marquee-content">
             {[...Array(10)].map((_, i) => (
               <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
-                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>
+                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary" style={{ fontSize: "0.5em", verticalAlign: "middle" }}>•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary" style={{ fontSize: "0.5em", verticalAlign: "middle" }}>•</span>
               </span>
             ))}
           </div>
           <div className="marquee-content" aria-hidden="true">
             {[...Array(10)].map((_, i) => (
               <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
-                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>
+                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary" style={{ fontSize: "0.5em", verticalAlign: "middle" }}>•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary" style={{ fontSize: "0.5em", verticalAlign: "middle" }}>•</span>
               </span>
             ))}
           </div>
