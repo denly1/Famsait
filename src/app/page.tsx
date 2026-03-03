@@ -213,15 +213,15 @@ export default async function HomePage() {
         <div className="marquee-track">
           <div className="marquee-content">
             {[...Array(10)].map((_, i) => (
-              <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl leading-none text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em" }}>
-                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary">•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary">•</span>
+              <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
+                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>
               </span>
             ))}
           </div>
           <div className="marquee-content" aria-hidden="true">
             {[...Array(10)].map((_, i) => (
-              <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl leading-none text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em" }}>
-                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary">•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary">•</span>
+              <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
+                FAMILY MOSCOW<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 text-primary" style={{ lineHeight: 1, display: "inline-flex", alignItems: "center" }}>•</span>
               </span>
             ))}
           </div>
@@ -382,36 +382,6 @@ export default async function HomePage() {
           <ScrollReveal>
             <VenueMap />
           </ScrollReveal>
-        </div>
-      </section>
-
-      <div className="section-divider" />
-
-      {/* ===== PAST EVENTS ===== */}
-      <section className="py-16 sm:py-24 relative">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <ScrollReveal>
-            <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                ПРОШЕДШИЕ СОБЫТИЯ
-              </h2>
-              <p className="text-white/70 mt-2 text-sm sm:text-base">Посмотри список наших легендарных событий</p>
-            </div>
-          </ScrollReveal>
-
-          <PastEventsGrid events={pastEvents} />
-
-          <div className="text-center mt-8">
-            <Link
-              href="/past"
-              className="inline-flex items-center gap-2 px-6 py-3 border border-white/30 text-white rounded-xl text-sm font-bold tracking-wide hover:bg-white/10 hover:border-white/50 transition-all active:scale-95"
-            >
-              ВСЕ ПРОШЕДШИЕ
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-          </div>
         </div>
       </section>
 
