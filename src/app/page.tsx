@@ -214,14 +214,20 @@ export default async function HomePage() {
           <div className="marquee-content">
             {[...Array(10)].map((_, i) => (
               <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
-                FAMILY MOSCOW<span className="mx-3 sm:mx-4 flex-shrink-0 inline-block rounded-full bg-primary" style={{ width: "10px", height: "10px", verticalAlign: "middle" }} />&thinsp;ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 flex-shrink-0 inline-block rounded-full bg-primary" style={{ width: "10px", height: "10px", verticalAlign: "middle" }} />&thinsp;
+                FAMILY MOSCOW
+                <span className="mx-3 sm:mx-4 flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px" }} />
+                ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
+                <span className="mx-3 sm:mx-4 flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px" }} />
               </span>
             ))}
           </div>
           <div className="marquee-content" aria-hidden="true">
             {[...Array(10)].map((_, i) => (
               <span key={i} className="inline-flex items-center mx-6 sm:mx-8 text-4xl sm:text-5xl lg:text-6xl text-white uppercase select-none flex-shrink-0" style={{ fontFamily: "'Arial Black', Impact, sans-serif", fontWeight: 900, letterSpacing: "0.02em", lineHeight: 1 }}>
-                FAMILY MOSCOW<span className="mx-3 sm:mx-4 flex-shrink-0 inline-block rounded-full bg-primary" style={{ width: "10px", height: "10px", verticalAlign: "middle" }} />&thinsp;ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ<span className="mx-3 sm:mx-4 flex-shrink-0 inline-block rounded-full bg-primary" style={{ width: "10px", height: "10px", verticalAlign: "middle" }} />&thinsp;
+                FAMILY MOSCOW
+                <span className="mx-3 sm:mx-4 flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px" }} />
+                ЛУЧШИЕ ТУСОВКИ СТОЛИЦЫ
+                <span className="mx-3 sm:mx-4 flex-shrink-0 rounded-full bg-primary" style={{ width: "10px", height: "10px" }} />
               </span>
             ))}
           </div>
