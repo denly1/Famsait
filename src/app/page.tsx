@@ -280,66 +280,73 @@ export default async function HomePage() {
 
       <div className="section-divider" />
 
-      {/* ===== ABOUT / WHY US — BENTO GRID ===== */}
-      <section className="py-16 sm:py-24 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* ===== ABOUT / WHY US ===== */}
+      <section className="py-20 sm:py-32 relative overflow-hidden">
+        {/* Subtle background accent */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%)" }} />
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Header */}
           <ScrollReveal>
-            <div className="text-center mb-14">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                ПОЧЕМУ <span className="gradient-text text-4xl sm:text-6xl">FAMILY</span>
-              </h2>
+            <div className="flex items-center gap-6 mb-16 sm:mb-20">
+              <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2))" }} />
+              <h2 className="text-xs font-bold tracking-[0.3em] text-white/40 uppercase whitespace-nowrap">ПОЧЕМУ FAMILY</h2>
+              <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.2), transparent)" }} />
             </div>
           </ScrollReveal>
 
-          {/* Feature cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-            <ScrollReveal delay={0.05}>
-              <div className="group rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-5 transition-all duration-300 hover:border-white/20" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+          {/* Items */}
+          <div className="flex flex-col">
+            {[
+              {
+                num: "01",
+                title: "ЛУЧШИЙ ЗВУК",
+                text: "Профессиональное звуковое оборудование. Кристально чистый звук на каждом событии.",
+                delay: 0.05,
+              },
+              {
+                num: "02",
+                title: "АТМОСФЕРА",
+                text: "Энергетика, которую не передать словами — каждое мероприятие это отдельный мир.",
+                delay: 0.1,
+              },
+              {
+                num: "03",
+                title: "АРТИСТЫ",
+                text: "Топовые DJ и секретные гости. Только лучшие имена на наших площадках.",
+                delay: 0.15,
+              },
+              {
+                num: "04",
+                title: "ФОТОЗОНЫ",
+                text: "Профессиональная съёмка и продуманные фотозоны на каждом мероприятии.",
+                delay: 0.2,
+              },
+            ].map((item, idx, arr) => (
+              <ScrollReveal key={item.num} delay={item.delay}>
+                <div className="group grid grid-cols-[3rem_1fr] sm:grid-cols-[5rem_1fr_1fr] items-start gap-6 sm:gap-10 py-8 sm:py-10 cursor-default transition-all duration-300" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                  {/* Number */}
+                  <span className="text-xs font-bold tracking-widest text-white/20 pt-1 group-hover:text-white/40 transition-colors duration-300" style={{ fontFamily: "var(--font-heading)" }}>
+                    {item.num}
+                  </span>
+                  {/* Title */}
+                  <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white group-hover:text-white transition-colors duration-300" style={{ fontFamily: "var(--font-heading)" }}>
+                    {item.title}
+                  </h3>
+                  {/* Description — hidden on mobile, right col on desktop */}
+                  <p className="hidden sm:block text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors duration-300 self-center">
+                    {item.text}
+                  </p>
+                  {/* Description on mobile — below title */}
+                  <p className="sm:hidden col-span-1 col-start-2 text-sm leading-relaxed text-white/40 -mt-4">
+                    {item.text}
+                  </p>
                 </div>
-                <div>
-                  <h3 className="text-sm font-black tracking-widest text-white mb-2 uppercase" style={{ fontFamily: "var(--font-heading)" }}>ЛУЧШИЙ ЗВУК</h3>
-                  <p className="text-sm leading-relaxed text-white/45">Профессиональное звуковое оборудование. Кристально чистый звук на каждом событии.</p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.1}>
-              <div className="group rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-5 transition-all duration-300 hover:border-white/20" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-black tracking-widest text-white mb-2 uppercase" style={{ fontFamily: "var(--font-heading)" }}>АТМОСФЕРА</h3>
-                  <p className="text-sm leading-relaxed text-white/45">Энергетика, которую не передать словами</p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.15}>
-              <div className="group rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-5 transition-all duration-300 hover:border-white/20" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-black tracking-widest text-white mb-2 uppercase" style={{ fontFamily: "var(--font-heading)" }}>АРТИСТЫ</h3>
-                  <p className="text-sm leading-relaxed text-white/45">Топовые DJ и секретные гости</p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal delay={0.2}>
-              <div className="group rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-5 transition-all duration-300 hover:border-white/20" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)" }}>
-                  <svg className="w-5 h-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" /></svg>
-                </div>
-                <div>
-                  <h3 className="text-sm font-black tracking-widest text-white mb-2 uppercase" style={{ fontFamily: "var(--font-heading)" }}>ФОТОЗОНЫ</h3>
-                  <p className="text-sm leading-relaxed text-white/45">Профессиональная съёмка</p>
-                </div>
-              </div>
-            </ScrollReveal>
+                {idx === arr.length - 1 && (
+                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+                )}
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </section>
