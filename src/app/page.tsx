@@ -288,10 +288,10 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Header */}
           <ScrollReveal>
-            <div className="flex items-center gap-6 mb-16 sm:mb-20">
-              <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2))" }} />
-              <h2 className="text-xs font-bold tracking-[0.3em] text-white/40 uppercase whitespace-nowrap">ПОЧЕМУ FAMILY</h2>
-              <div className="h-px flex-1" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.2), transparent)" }} />
+            <div className="text-center mb-14">
+              <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                ПОЧЕМУ <span className="gradient-text text-4xl sm:text-6xl">FAMILY</span>
+              </h2>
             </div>
           </ScrollReveal>
 
@@ -299,46 +299,32 @@ export default async function HomePage() {
           <div className="flex flex-col">
             {[
               {
-                num: "01",
                 title: "ЛУЧШИЙ ЗВУК",
                 text: "Профессиональное звуковое оборудование. Кристально чистый звук на каждом событии.",
                 delay: 0.05,
               },
               {
-                num: "02",
                 title: "АТМОСФЕРА",
                 text: "Энергетика, которую не передать словами — каждое мероприятие это отдельный мир.",
                 delay: 0.1,
               },
               {
-                num: "03",
                 title: "АРТИСТЫ",
                 text: "Топовые DJ и секретные гости. Только лучшие имена на наших площадках.",
                 delay: 0.15,
               },
               {
-                num: "04",
                 title: "ФОТОЗОНЫ",
                 text: "Профессиональная съёмка и продуманные фотозоны на каждом мероприятии.",
                 delay: 0.2,
               },
             ].map((item, idx, arr) => (
-              <ScrollReveal key={item.num} delay={item.delay}>
-                <div className="group grid grid-cols-[3rem_1fr] sm:grid-cols-[5rem_1fr_1fr] items-start gap-6 sm:gap-10 py-8 sm:py-10 cursor-default transition-all duration-300" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                  {/* Number */}
-                  <span className="text-xs font-bold tracking-widest text-white/20 pt-1 group-hover:text-white/40 transition-colors duration-300" style={{ fontFamily: "var(--font-heading)" }}>
-                    {item.num}
-                  </span>
-                  {/* Title */}
-                  <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white group-hover:text-white transition-colors duration-300" style={{ fontFamily: "var(--font-heading)" }}>
+              <ScrollReveal key={item.title} delay={item.delay}>
+                <div className="group grid grid-cols-1 sm:grid-cols-[1fr_1fr] items-center gap-3 sm:gap-10 py-8 sm:py-10 cursor-default transition-all duration-300" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                  <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white" style={{ fontFamily: "var(--font-heading)" }}>
                     {item.title}
                   </h3>
-                  {/* Description — hidden on mobile, right col on desktop */}
-                  <p className="hidden sm:block text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors duration-300 self-center">
-                    {item.text}
-                  </p>
-                  {/* Description on mobile — below title */}
-                  <p className="sm:hidden col-span-1 col-start-2 text-sm leading-relaxed text-white/40 -mt-4">
+                  <p className="text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors duration-300">
                     {item.text}
                   </p>
                 </div>
