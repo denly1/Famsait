@@ -280,65 +280,6 @@ export default async function HomePage() {
 
       <div className="section-divider" />
 
-      {/* ===== ABOUT / WHY US ===== */}
-      <section className="py-20 sm:py-32 relative overflow-hidden">
-        {/* Subtle background accent */}
-        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,255,255,0.02) 0%, transparent 70%)" }} />
-
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Header */}
-          <ScrollReveal>
-            <div className="text-center mb-14">
-              <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                ПОЧЕМУ <span className="gradient-text text-4xl sm:text-6xl">FAMILY</span>
-              </h2>
-            </div>
-          </ScrollReveal>
-
-          {/* Items */}
-          <div className="flex flex-col">
-            {[
-              {
-                title: "ЛУЧШИЙ ЗВУК",
-                text: "Профессиональное звуковое оборудование. Кристально чистый звук на каждом событии.",
-                delay: 0.05,
-              },
-              {
-                title: "АТМОСФЕРА",
-                text: "Энергетика, которую не передать словами — каждое мероприятие это отдельный мир.",
-                delay: 0.1,
-              },
-              {
-                title: "АРТИСТЫ",
-                text: "Топовые DJ и секретные гости. Только лучшие имена на наших площадках.",
-                delay: 0.15,
-              },
-              {
-                title: "ФОТОЗОНЫ",
-                text: "Профессиональная съёмка и продуманные фотозоны на каждом мероприятии.",
-                delay: 0.2,
-              },
-            ].map((item, idx, arr) => (
-              <ScrollReveal key={item.title} delay={item.delay}>
-                <div className="group grid grid-cols-1 sm:grid-cols-[1fr_1fr] items-center gap-3 sm:gap-10 py-8 sm:py-10 cursor-default transition-all duration-300" style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-                  <h3 className="text-xl sm:text-2xl font-black tracking-tight text-white" style={{ fontFamily: "var(--font-heading)" }}>
-                    {item.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors duration-300">
-                    {item.text}
-                  </p>
-                </div>
-                {idx === arr.length - 1 && (
-                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
-                )}
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <div className="section-divider" />
-
       {/* ===== VENUES SECTION ===== */}
       <section className="py-16 sm:py-24 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
