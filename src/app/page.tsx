@@ -294,53 +294,49 @@ export default async function HomePage() {
           {/* Feature cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             <ScrollReveal delay={0.05}>
-              <div className="group relative rounded-3xl overflow-hidden p-6 sm:p-8 h-full min-h-[180px] flex flex-col justify-between" style={{ background: "linear-gradient(135deg, #1a0a2e 0%, #2d1060 50%, #1a0a2e 100%)", border: "1px solid rgba(168,85,247,0.3)" }}>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(135deg, rgba(168,85,247,0.15) 0%, rgba(109,40,217,0.1) 100%)" }} />
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: "rgba(168,85,247,0.2)", border: "1px solid rgba(168,85,247,0.4)" }}>
-                  <svg className="w-6 h-6" style={{ color: "#c084fc" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
+              <div className="group bg-white rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-4 hover:scale-[1.02] transition-transform duration-300">
+                <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" /></svg>
                 </div>
-                <div className="relative z-10">
-                  <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2" style={{ fontFamily: "var(--font-heading)", color: "#e9d5ff" }}>ЛУЧШИЙ ЗВУК</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(233,213,255,0.6)" }}>Профессиональное звуковое оборудование. Кристально чистый звук на каждом событии.</p>
+                <div>
+                  <h3 className="text-base font-black tracking-tight text-black mb-1.5" style={{ fontFamily: "var(--font-heading)" }}>ЛУЧШИЙ ЗВУК</h3>
+                  <p className="text-sm leading-relaxed text-black/55">Профессиональное звуковое оборудование. Кристально чистый звук на каждом событии.</p>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.1}>
-              <div className="group relative rounded-3xl overflow-hidden p-6 sm:p-8 h-full min-h-[180px] flex flex-col justify-between" style={{ background: "linear-gradient(135deg, #1a0a0a 0%, #5c1111 50%, #1a0a0a 100%)", border: "1px solid rgba(239,68,68,0.3)" }}>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(135deg, rgba(239,68,68,0.15) 0%, rgba(185,28,28,0.1) 100%)" }} />
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: "rgba(239,68,68,0.2)", border: "1px solid rgba(239,68,68,0.4)" }}>
-                  <svg className="w-6 h-6" style={{ color: "#fca5a5" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
+              <div className="group bg-white rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-4 hover:scale-[1.02] transition-transform duration-300">
+                <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" /></svg>
                 </div>
-                <div className="relative z-10">
-                  <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2" style={{ fontFamily: "var(--font-heading)", color: "#fecaca" }}>АТМОСФЕРА</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(254,202,202,0.6)" }}>Энергетика, которую не передать словами</p>
+                <div>
+                  <h3 className="text-base font-black tracking-tight text-black mb-1.5" style={{ fontFamily: "var(--font-heading)" }}>АТМОСФЕРА</h3>
+                  <p className="text-sm leading-relaxed text-black/55">Энергетика, которую не передать словами</p>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.15}>
-              <div className="group relative rounded-3xl overflow-hidden p-6 sm:p-8 h-full min-h-[180px] flex flex-col justify-between" style={{ background: "linear-gradient(135deg, #0a0f1a 0%, #0f2a5c 50%, #0a0f1a 100%)", border: "1px solid rgba(59,130,246,0.3)" }}>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(29,78,216,0.1) 100%)" }} />
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: "rgba(59,130,246,0.2)", border: "1px solid rgba(59,130,246,0.4)" }}>
-                  <svg className="w-6 h-6" style={{ color: "#93c5fd" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
+              <div className="group bg-white rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-4 hover:scale-[1.02] transition-transform duration-300">
+                <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" /></svg>
                 </div>
-                <div className="relative z-10">
-                  <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2" style={{ fontFamily: "var(--font-heading)", color: "#bfdbfe" }}>АРТИСТЫ</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(191,219,254,0.6)" }}>Топовые DJ и секретные гости</p>
+                <div>
+                  <h3 className="text-base font-black tracking-tight text-black mb-1.5" style={{ fontFamily: "var(--font-heading)" }}>АРТИСТЫ</h3>
+                  <p className="text-sm leading-relaxed text-black/55">Топовые DJ и секретные гости</p>
                 </div>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.2}>
-              <div className="group relative rounded-3xl overflow-hidden p-6 sm:p-8 h-full min-h-[180px] flex flex-col justify-between" style={{ background: "linear-gradient(135deg, #0a1a12 0%, #0f4c2a 50%, #0a1a12 100%)", border: "1px solid rgba(34,197,94,0.3)" }}>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: "linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(21,128,61,0.1) 100%)" }} />
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4" style={{ background: "rgba(34,197,94,0.2)", border: "1px solid rgba(34,197,94,0.4)" }}>
-                  <svg className="w-6 h-6" style={{ color: "#86efac" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" /></svg>
+              <div className="group bg-white rounded-2xl p-6 sm:p-7 h-full flex flex-col gap-4 hover:scale-[1.02] transition-transform duration-300">
+                <div className="w-11 h-11 rounded-xl bg-black flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" /></svg>
                 </div>
-                <div className="relative z-10">
-                  <h3 className="text-lg sm:text-xl font-black tracking-tight mb-2" style={{ fontFamily: "var(--font-heading)", color: "#bbf7d0" }}>ФОТОЗОНЫ</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: "rgba(187,247,208,0.6)" }}>Профессиональная съёмка</p>
+                <div>
+                  <h3 className="text-base font-black tracking-tight text-black mb-1.5" style={{ fontFamily: "var(--font-heading)" }}>ФОТОЗОНЫ</h3>
+                  <p className="text-sm leading-relaxed text-black/55">Профессиональная съёмка</p>
                 </div>
               </div>
             </ScrollReveal>
