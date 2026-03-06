@@ -31,6 +31,7 @@ interface EventData {
   lineup: string[];
   features: string[];
   isPast: boolean;
+  isPinned: boolean;
   ticketUrl?: string;
 }
 
@@ -135,7 +136,7 @@ export default function AdminDashboard() {
   const [eventForm, setEventForm] = useState({
     id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "",
     ageLimit: "18+", price: "", currency: "₽", image: "", description: "",
-    lineup: "", features: "", isPast: false, ticketUrl: "#",
+    lineup: "", features: "", isPast: false, isPinned: false, ticketUrl: "#",
   });
   const [toast, setToast] = useState<string | null>(null);
   const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
@@ -168,7 +169,7 @@ export default function AdminDashboard() {
         price: e.price || 0, currency: e.currency || "₽", image: e.image || "",
         description: e.description || "", lineup: Array.isArray(e.lineup) ? e.lineup : [],
         features: Array.isArray(e.features) ? e.features : [],
-        isPast: e.is_past ?? e.isPast ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
+        isPast: e.is_past ?? e.isPast ?? false, isPinned: e.is_pinned ?? e.isPinned ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
       })));
       const rawMsgs = await mRes.json();
       setMessages((Array.isArray(rawMsgs) ? rawMsgs : []).map((m: any) => ({
@@ -204,17 +205,17 @@ export default function AdminDashboard() {
   };
   const openNewEvent = () => {
     setEditingEvent(null);
-    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, ticketUrl: "#" });
+    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, ticketUrl: "#" });
     setShowEventForm(true);
   };
   const openEditEvent = (ev: EventData) => {
     setEditingEvent(ev);
-    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), ticketUrl: ev.ticketUrl || "#" });
+    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, ticketUrl: ev.ticketUrl || "#" });
     setShowEventForm(true);
   };
   const saveEvent = async () => {
     const autoId = editingEvent ? eventForm.id : (eventForm.id || generateSlug(eventForm.title));
-    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean) };
+    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean), isPinned: eventForm.isPinned || false };
     const res = await fetch("/api/admin/events", { method: editingEvent ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { showToast("Ошибка сохранения"); }
   };
@@ -488,10 +489,16 @@ export default function AdminDashboard() {
                       </div>
                       <AdminInput label="Лайнап (через запятую)" value={eventForm.lineup} onChange={v => setEventForm({...eventForm, lineup: v})} placeholder="DJ SMOKE, LERA FOXX" />
                       <AdminInput label="Фишки (через запятую)" value={eventForm.features} onChange={v => setEventForm({...eventForm, features: v})} placeholder="UV ZONE, PHOTO BOOTH" />
-                      <label className="flex items-center gap-2.5 text-sm cursor-pointer">
-                        <input type="checkbox" checked={eventForm.isPast} onChange={e => setEventForm({...eventForm, isPast: e.target.checked})} className="rounded border-border" />
-                        Прошедшее событие
-                      </label>
+                      <div className="flex flex-col gap-2">
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                          <input type="checkbox" checked={eventForm.isPast} onChange={e => setEventForm({...eventForm, isPast: e.target.checked})} className="rounded border-border" />
+                          Прошедшее событие
+                        </label>
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                          <input type="checkbox" checked={eventForm.isPinned} onChange={e => setEventForm({...eventForm, isPinned: e.target.checked})} className="rounded border-border accent-primary" />
+                          <span className="flex items-center gap-1.5">📌 Закрепить на главной странице</span>
+                        </label>
+                      </div>
                       <div className="flex gap-3 pt-2">
                         <button onClick={saveEvent} className="flex-1 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
                         <button onClick={() => setShowEventForm(false)} className="flex-1 py-3 rounded-xl text-sm font-semibold border border-border hover:bg-white/[0.03] transition-colors">ОТМЕНА</button>
@@ -513,6 +520,9 @@ export default function AdminDashboard() {
                         <span className={`inline-flex text-[9px] py-0.5 px-2 rounded-full font-medium ${ev.isPast ? "bg-rose-500/10 text-rose-400" : "bg-emerald-500/10 text-emerald-400"}`}>
                           {ev.isPast ? "ПРОШЛО" : "АКТИВНО"}
                         </span>
+                        {ev.isPinned && (
+                          <span className="inline-flex items-center gap-0.5 text-[9px] py-0.5 px-2 rounded-full font-medium bg-amber-500/15 text-amber-400">📌 ГЛАВНАЯ</span>
+                        )}
                       </div>
                       <div className="text-text-muted text-xs mt-0.5 truncate">{ev.date} · {ev.venue} · {ev.price}{ev.currency}</div>
                     </div>

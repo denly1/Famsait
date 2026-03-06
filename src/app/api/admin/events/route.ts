@@ -17,20 +17,25 @@ export async function POST(request: NextRequest) {
     if (!data.id || !data.title) {
       return NextResponse.json({ error: "ID и название обязательны" }, { status: 400 });
     }
+
+    if (data.isPinned) {
+      await query("UPDATE events SET is_pinned = FALSE WHERE is_pinned = TRUE");
+    }
     
     const result = await query(
       `INSERT INTO events (
         id, title, subtitle, date, time, venue, address, age_limit, 
         price, currency, image, description, lineup, features, is_past, 
-        ticket_url, ticket_link
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        ticket_url, ticket_link, is_pinned
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
       RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
         data.venue || "", data.address || "", data.ageLimit || "18+",
         data.price || 0, data.currency || "₽", data.image || "",
         data.description || "", data.lineup || [], data.features || [],
-        data.isPast || false, data.ticketUrl || "#", data.ticketLink || ""
+        data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
+        data.isPinned || false
       ]
     );
     
@@ -45,20 +50,26 @@ export async function PUT(request: NextRequest) {
   try {
     const data = await request.json();
     if (!data.id) return NextResponse.json({ error: "ID обязателен" }, { status: 400 });
+
+    if (data.isPinned) {
+      await query("UPDATE events SET is_pinned = FALSE WHERE is_pinned = TRUE AND id != $1", [data.id]);
+    }
     
     const result = await query(
       `UPDATE events SET 
         title = $2, subtitle = $3, date = $4, time = $5, venue = $6, 
         address = $7, age_limit = $8, price = $9, currency = $10, 
         image = $11, description = $12, lineup = $13, features = $14, 
-        is_past = $15, ticket_url = $16, ticket_link = $17, updated_at = NOW()
+        is_past = $15, ticket_url = $16, ticket_link = $17, is_pinned = $18,
+        updated_at = NOW()
       WHERE id = $1 RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
         data.venue || "", data.address || "", data.ageLimit || "18+",
         data.price || 0, data.currency || "₽", data.image || "",
         data.description || "", data.lineup || [], data.features || [],
-        data.isPast || false, data.ticketUrl || "#", data.ticketLink || ""
+        data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
+        data.isPinned || false
       ]
     );
     

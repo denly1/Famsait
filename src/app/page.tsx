@@ -21,7 +21,7 @@ async function getEvents() {
     try {
       await query(`UPDATE events SET is_past = true, updated_at = NOW() WHERE is_past = false AND date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(date, 'DD.MM.YYYY') < CURRENT_DATE`);
     } catch {}
-    const result = await query("SELECT * FROM events ORDER BY date DESC");
+    const result = await query("SELECT *, is_pinned FROM events ORDER BY date DESC");
     return { events: mapEventsFromDB(result.rows || []) };
   } catch (error) {
     console.error('Error fetching events:', error);
@@ -59,7 +59,8 @@ export default async function HomePage() {
     })
     .slice(0, 4);
   const pastEvents = events.filter((e: any) => e.isPast).slice(0, 3);
-  const nextEvent = upcomingEvents[0];
+  const pinnedEvent = upcomingEvents.find((e: any) => e.isPinned);
+  const nextEvent = pinnedEvent || upcomingEvents[0];
 
   // JSON-LD structured data для SEO
   const organizationSchema = {
@@ -142,7 +143,7 @@ export default async function HomePage() {
                   {/* Tags */}
                   <div className="flex items-center gap-2 mb-3">
                     <span className="px-3 py-1 bg-primary/80 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">
-                      БЛИЖАЙШЕЕ СОБЫТИЕ
+                      БЛИЖАЙШИЙ КОНЦЕРТ
                     </span>
                     {nextEvent.ageLimit && (
                       <span className="px-2.5 py-1 bg-white/15 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white">
