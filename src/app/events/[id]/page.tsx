@@ -70,30 +70,16 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <p className="text-base sm:text-lg text-text-secondary font-medium mb-6 sm:mb-8">{event.subtitle}</p>
 
             {/* Date & Venue cards */}
-            <div className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8">
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-bg-card border border-border">
-                <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="font-bold text-[15px]" style={{ fontFamily: "var(--font-heading)" }}>{event.date}</div>
-                  <div className="text-text-muted text-[13px]">{event.time}</div>
-                </div>
+            <div className="grid grid-cols-2 gap-3 mb-6 sm:mb-8">
+              <div className="flex flex-col gap-1.5 p-4 sm:p-5 rounded-2xl bg-bg-card border border-white/10">
+                <div className="text-[10px] font-medium tracking-widest text-white/40 uppercase" style={{ fontFamily: "var(--font-mono)" }}>ДАТА</div>
+                <div className="font-black text-[17px] sm:text-xl text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.date}</div>
+                {event.time && <div className="text-sm text-white/50 font-medium">{event.time}</div>}
               </div>
-
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-bg-card border border-border">
-                <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-accent/15 to-accent/5 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-5 h-5 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="font-bold text-[15px]" style={{ fontFamily: "var(--font-heading)" }}>{event.venue}</div>
-                  <div className="text-text-muted text-[13px]">{event.address}</div>
-                </div>
+              <div className="flex flex-col gap-1.5 p-4 sm:p-5 rounded-2xl bg-bg-card border border-white/10">
+                <div className="text-[10px] font-medium tracking-widest text-white/40 uppercase" style={{ fontFamily: "var(--font-mono)" }}>МЕСТО</div>
+                <div className="font-black text-[17px] sm:text-xl text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.venue}</div>
+                {event.address && <div className="text-sm text-white/50 font-medium leading-snug">{event.address}</div>}
               </div>
             </div>
 
@@ -101,32 +87,40 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             <p className="text-text-secondary text-[14px] sm:text-[15px] leading-relaxed mb-6 sm:mb-8 whitespace-pre-line">{event.description}</p>
 
             {/* Lineup */}
-            <div className="mb-6 sm:mb-8">
-              <h3 className="mono-label mb-3">ЛАЙНАП</h3>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                {event.lineup.map((artist: string) => (
-                  <span
-                    key={artist}
-                    className="px-4 py-2 rounded-xl bg-bg-card border border-border text-sm font-semibold hover:border-primary/40 hover:bg-primary/5 transition-all cursor-default"
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
-                    {artist}
-                  </span>
-                ))}
+            {event.lineup.length > 0 && (
+              <div className="mb-6 sm:mb-8 rounded-2xl bg-bg-card border border-white/10 overflow-hidden">
+                <div className="px-5 py-3 border-b border-white/[0.06] flex items-center gap-2">
+                  <span className="text-[10px] font-medium tracking-widest text-white/40 uppercase" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</span>
+                </div>
+                <div className="p-4 sm:p-5 flex flex-wrap gap-2">
+                  {event.lineup.map((artist: string) => (
+                    <span
+                      key={artist}
+                      className="px-4 py-2 rounded-xl border border-white/15 text-sm font-bold text-white hover:border-white/30 hover:bg-white/5 transition-all cursor-default"
+                      style={{ fontFamily: "var(--font-heading)" }}
+                    >
+                      {artist}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Features */}
-            <div className="mb-6 sm:mb-8">
-              <h3 className="mono-label mb-3">ФИШКИ</h3>
-              <div className="flex flex-wrap gap-1.5">
-                {event.features.map((feature: string) => (
-                  <span key={feature} className="tag tag-accent">
-                    {feature}
-                  </span>
-                ))}
+            {event.features.length > 0 && (
+              <div className="mb-6 sm:mb-8 rounded-2xl bg-bg-card border border-white/10 overflow-hidden">
+                <div className="px-5 py-3 border-b border-white/[0.06] flex items-center gap-2">
+                  <span className="text-[10px] font-medium tracking-widest text-white/40 uppercase" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</span>
+                </div>
+                <div className="p-4 sm:p-5 flex flex-wrap gap-2">
+                  {event.features.map((feature: string) => (
+                    <span key={feature} className="px-4 py-2 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Ticket Section */}
             {!event.isPast && (
@@ -137,7 +131,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 className="flex items-center justify-center px-6 py-5 bg-white text-black rounded-2xl font-black text-lg tracking-wide w-full hover:bg-white/90 active:scale-[0.98] transition-all"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                КУПИТЬ БИЛЕТЫ
+                КУПИТЬ БИЛЕТ
               </a>
             )}
           </div>
