@@ -59,12 +59,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/60 via-transparent to-transparent" />
-
-              {/* Floating badges on image */}
-              <div className="absolute top-5 left-5 flex gap-2">
-                <span className="tag tag-primary backdrop-blur-md">{event.isPast ? "ПРОШЕДШЕЕ" : "СКОРО"}</span>
-                <span className="tag tag-accent backdrop-blur-md">{event.ageLimit}</span>
-              </div>
             </div>
           </div>
 
@@ -136,34 +130,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
             {/* Ticket Section */}
             {!event.isPast && (
-              <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
-                {/* Top accent */}
-                <div className="h-[2px] bg-gradient-to-r from-primary via-accent to-primary" />
-
-                <div className="p-6 space-y-5">
-                  <div className="flex items-end justify-between">
-                    <div>
-                      <span className="mono-label text-[10px]">СТОИМОСТЬ</span>
-                      <div className="text-3xl font-bold gradient-text mt-1" style={{ fontFamily: "var(--font-heading)" }}>
-                        {event.price > 0 ? `${event.price}${event.currency}` : "КУПИТЬ БИЛЕТ"}
-                      </div>
-                    </div>
-                    <span className="tag tag-primary">БИЛЕТЫ В ПРОДАЖЕ</span>
-                  </div>
-
-                  <a
-                    href={event.ticketUrl}
-                    target={event.ticketUrl?.startsWith("http") ? "_blank" : undefined}
-                    rel={event.ticketUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
-                    className="flex items-center justify-center gap-2 px-6 py-4 btn-gradient rounded-xl font-semibold text-[15px] tracking-wide w-full"
-                  >
-                    <span className="relative z-10">КУПИТЬ БИЛЕТ</span>
-                    <svg className="w-4 h-4 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
+              <a
+                href={event.ticketUrl}
+                target={event.ticketUrl?.startsWith("http") ? "_blank" : undefined}
+                rel={event.ticketUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
+                className="flex items-center justify-center px-6 py-5 bg-white text-black rounded-2xl font-black text-lg tracking-wide w-full hover:bg-white/90 active:scale-[0.98] transition-all"
+                style={{ fontFamily: "var(--font-heading)" }}
+              >
+                КУПИТЬ БИЛЕТЫ
+              </a>
             )}
           </div>
         </div>

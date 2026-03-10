@@ -48,7 +48,7 @@ export default function EventCard({ event }: { event: Event }) {
             className="flex-1 py-3 sm:py-3.5 bg-white text-black rounded-xl text-xs sm:text-sm font-bold text-center touch-manipulation hover:bg-white/90 transition-colors active:scale-95"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            БИЛЕТ
+            КУПИТЬ БИЛЕТ
           </Link>
           <Link
             href={`/events/${event.id}`}

@@ -249,7 +249,6 @@ export default async function HomePage() {
                 <h2 className="text-3xl sm:text-5xl font-black tracking-tight" style={{ fontFamily: "var(--font-heading)" }}>
                   ПРЕДСТОЯЩИЕ
                 </h2>
-                <p className="text-text-secondary mt-2 text-sm">Не пропусти ближайшие события</p>
               </div>
               <Link
                 href="/events"

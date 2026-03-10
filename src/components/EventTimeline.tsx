@@ -27,9 +27,6 @@ export default function EventTimeline({ events }: { events: Event[] }) {
           >
             БЛИЖАЙШИЕ МЕРОПРИЯТИЯ
           </h2>
-          <p className="text-white/50 text-sm sm:text-base mt-2 sm:mt-3">
-            Не пропусти самые горячие события
-          </p>
         </div>
 
         <div className="relative">
@@ -87,7 +84,7 @@ export default function EventTimeline({ events }: { events: Event[] }) {
                           rel="noopener noreferrer"
                           className="px-4 py-2 bg-white text-black rounded-xl text-xs font-black tracking-wide touch-manipulation hover:bg-white/90 transition-all active:scale-95"
                         >
-                          БИЛЕТ
+                          КУПИТЬ БИЛЕТ
                         </Link>
                       )}
                       <Link
