@@ -3,13 +3,7 @@ import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { existsSync } from "fs";
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '30mb',
-    },
-  },
-};
+export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,6 +14,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: "No file provided" },
         { status: 400 }
+      );
+    }
+
+    const MAX_SIZE = 30 * 1024 * 1024; // 30MB
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json(
+        { success: false, error: "Файл слишком большой. Максимальный размер: 30MB" },
+        { status: 413 }
       );
     }
 
