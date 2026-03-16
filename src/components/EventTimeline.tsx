@@ -41,11 +41,11 @@ export default function EventTimeline({ events }: { events: Event[] }) {
                 key={event.id}
                 className="flex-shrink-0 w-[75vw] sm:w-[320px] snap-start rounded-2xl overflow-hidden border border-white/10 bg-bg-card"
               >
-                <div className="relative aspect-[3/4] overflow-hidden">
+                <div className="relative aspect-[3/4] overflow-hidden bg-black">
                   <EventImage
                     src={event.image}
                     alt={event.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
 
