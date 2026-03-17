@@ -21,8 +21,8 @@ export default function ImageUpload({ onUpload, currentImage, label = "Загр�
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Размер файла не должен превышать 5MB");
+    if (file.size > 30 * 1024 * 1024) {
+      alert("Размер файла не должен превышать 30MB");
       return;
     }
 
@@ -98,7 +98,7 @@ export default function ImageUpload({ onUpload, currentImage, label = "Загр�
       </div>
 
       <p className="text-xs text-text-muted">
-        Поддерживаются: JPG, PNG, GIF, WebP. Максимум 5MB
+        Поддерживаются: JPG, PNG, GIF, WebP. Максимум 30MB
       </p>
     </div>
   );
