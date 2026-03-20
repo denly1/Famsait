@@ -52,13 +52,12 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-14">
           {/* Image */}
           <div className="animate-fade-in-up">
-            <div className="rounded-2xl overflow-hidden aspect-[3/4] sm:aspect-[4/5] relative card-glow border border-border">
+            <div className="rounded-2xl overflow-hidden card-glow border border-border bg-black">
               <EventImage
                 src={event.image}
                 alt={event.title}
-                className="w-full h-full object-cover"
+                className="w-full h-auto block"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-bg-dark/60 via-transparent to-transparent" />
             </div>
           </div>
 

@@ -39,61 +39,64 @@ export default function EventTimeline({ events }: { events: Event[] }) {
             {events.map((event) => (
               <div
                 key={event.id}
-                className="flex-shrink-0 w-[75vw] sm:w-[320px] snap-start rounded-2xl overflow-hidden border border-white/10 bg-bg-card"
+                className="flex-shrink-0 w-[75vw] sm:w-[300px] snap-start rounded-2xl overflow-hidden border border-white/10 bg-bg-card flex flex-col"
               >
-                <div className="relative aspect-[3/4] overflow-hidden bg-black">
+                {/* Poster — full image, no crop */}
+                <div className="w-full bg-black">
                   <EventImage
                     src={event.image}
                     alt={event.title}
-                    className="w-full h-full object-contain"
+                    className="w-full h-auto block"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <div className="flex items-center gap-1.5 mb-2 flex-wrap">
-                      <span className="text-[10px] font-bold text-white bg-primary/80 backdrop-blur-sm px-2 py-0.5 rounded-md">
-                        {event.date}
+                {/* Info below image */}
+                <div className="p-4 flex flex-col gap-3 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] font-bold text-white bg-primary/80 px-2 py-0.5 rounded-md">
+                      {event.date}
+                    </span>
+                    {event.time && (
+                      <span className="text-[10px] font-bold text-white bg-white/15 px-2 py-0.5 rounded-md">
+                        {event.time}
                       </span>
-                      {event.time && (
-                        <span className="text-[10px] font-bold text-white bg-white/15 backdrop-blur-sm px-2 py-0.5 rounded-md">
-                          {event.time}
-                        </span>
-                      )}
-                    </div>
+                    )}
+                  </div>
 
-                    <h3
-                      className="text-base sm:text-lg font-black text-white leading-tight mb-1 drop-shadow-lg"
+                  <h3
+                    className="text-base sm:text-lg font-black text-white leading-tight"
+                    style={{ fontFamily: "var(--font-heading)" }}
+                  >
+                    {event.title}
+                  </h3>
+
+                  <div className="flex items-center gap-1.5 text-xs text-white/60">
+                    <svg className="w-3 h-3 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                    </svg>
+                    <span className="truncate">{event.venue}</span>
+                  </div>
+
+                  <div className="flex gap-2 mt-auto pt-1">
+                    {!event.isPast && (
+                      <Link
+                        href={event.ticketLink || event.ticketUrl || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2.5 bg-white text-black rounded-xl text-xs font-black tracking-wide text-center touch-manipulation hover:bg-white/90 transition-all active:scale-95"
+                        style={{ fontFamily: "var(--font-heading)" }}
+                      >
+                        КУПИТЬ БИЛЕТ
+                      </Link>
+                    )}
+                    <Link
+                      href={`/events/${event.id}`}
+                      className="flex-1 py-2.5 border border-white/30 text-white rounded-xl text-xs font-black tracking-wide text-center touch-manipulation hover:bg-white/10 transition-all active:scale-95"
                       style={{ fontFamily: "var(--font-heading)" }}
                     >
-                      {event.title}
-                    </h3>
-
-                    <div className="flex items-center gap-1.5 text-xs text-white/70 mb-3">
-                      <svg className="w-3 h-3 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                      </svg>
-                      <span className="truncate">{event.venue}</span>
-                    </div>
-
-                    <div className="flex gap-2">
-                      {!event.isPast && (
-                        <Link
-                          href={event.ticketLink || event.ticketUrl || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-4 py-2 bg-white text-black rounded-xl text-xs font-black tracking-wide touch-manipulation hover:bg-white/90 transition-all active:scale-95"
-                        >
-                          КУПИТЬ БИЛЕТ
-                        </Link>
-                      )}
-                      <Link
-                        href={`/events/${event.id}`}
-                        className="px-4 py-2 border border-white/30 text-white rounded-xl text-xs font-black tracking-wide touch-manipulation hover:bg-white/10 transition-all active:scale-95"
-                      >
-                        ПОДРОБНЕЕ
-                      </Link>
-                    </div>
+                      ПОДРОБНЕЕ
+                    </Link>
                   </div>
                 </div>
               </div>
