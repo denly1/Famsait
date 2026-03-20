@@ -143,7 +143,7 @@ export default async function HomePage() {
                   {/* Tags */}
                   <div className="flex items-center gap-2 mb-3">
                     <span className="px-3 py-1 bg-primary/80 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">
-                      БЛИЖАЙШИЙ КОНЦЕРТ
+                      БЛИЖАЙШЕЕ МЕРОПРИЯТИЕ
                     </span>
                     {nextEvent.ageLimit && (
                       <span className="px-2.5 py-1 bg-white/15 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white">

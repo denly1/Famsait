@@ -5,12 +5,12 @@ import EventImage from "@/components/EventImage";
 export default function EventCard({ event }: { event: Event }) {
   return (
     <article className="group bg-white/[0.04] border border-white/[0.08] rounded-2xl overflow-hidden hover:border-white/20 transition-colors w-full flex flex-col">
-      {/* Image — full poster, no crop */}
-      <div className="w-full bg-black">
+      {/* Image — fixed height, poster fits without crop */}
+      <div className="w-full h-52 sm:h-56 bg-black flex items-center justify-center overflow-hidden">
         <EventImage
           src={event.image}
           alt={event.title}
-          className="w-full h-auto block group-hover:opacity-90 transition-opacity duration-300"
+          className="w-full h-full object-contain group-hover:opacity-90 transition-opacity duration-300"
         />
       </div>
 
