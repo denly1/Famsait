@@ -41,12 +41,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         {/* Back link */}
         <Link
           href={event.isPast ? "/past" : "/events"}
-          className="inline-flex items-center gap-2 text-text-muted hover:text-text-primary transition-colors mb-5 sm:mb-8 text-[13px] font-medium group"
+          className="inline-flex items-center gap-2.5 mb-6 sm:mb-10 px-4 py-2.5 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/30 transition-all group text-sm font-semibold text-white/70 hover:text-white"
+          style={{ fontFamily: "var(--font-heading)" }}
         >
-          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
-          Назад
+          НАЗАД
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-14">

@@ -132,9 +132,9 @@ export default async function HomePage() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <ScrollReveal>
               <div className="relative rounded-3xl overflow-hidden group">
-                {/* Image — visible and large */}
-                <div className="relative aspect-[3/4] sm:aspect-[4/5] md:aspect-[3/2] overflow-hidden">
-                  <EventImage src={nextEvent.image} alt={nextEvent.title} className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-700" />
+                {/* Image — full poster, no crop */}
+                <div className="relative w-full">
+                  <EventImage src={nextEvent.image} alt={nextEvent.title} className="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
 
