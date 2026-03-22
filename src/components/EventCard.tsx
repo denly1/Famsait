@@ -6,11 +6,11 @@ export default function EventCard({ event }: { event: Event }) {
   return (
     <article className="group bg-white/[0.04] border border-white/[0.08] rounded-2xl overflow-hidden hover:border-white/20 transition-colors w-full">
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[3/4] overflow-hidden bg-zinc-900">
         <EventImage
           src={event.image}
           alt={event.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
