@@ -33,15 +33,23 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div
-      className="flex flex-col overflow-hidden"
-      style={{ height: "calc(100dvh - 64px)" }}
-    >
-      {/* Back link */}
-      <div className="flex-shrink-0 px-3 pt-2 pb-1">
+    <div className="pb-6 pt-36 sm:pt-44">
+
+      {/* ── POSTER full width ── */}
+      <div className="w-full bg-black">
+        <EventImage
+          src={event.image}
+          alt={event.title}
+          className="w-full object-contain max-h-[55vw] sm:max-h-[420px] block mx-auto"
+        />
+      </div>
+
+      <div className="px-4 pt-4 max-w-2xl mx-auto">
+
+        {/* Back link */}
         <Link
           href={event.isPast ? "/past" : "/events"}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10 transition-all group text-[11px] font-semibold text-white/60 hover:text-white"
+          className="inline-flex items-center gap-1.5 mb-3 text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
           style={{ fontFamily: "var(--font-heading)" }}
         >
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -49,110 +57,82 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           </svg>
           НАЗАД
         </Link>
-      </div>
 
-      {/* Main: poster + info side by side on desktop, stacked on mobile */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-2 px-3 pb-3 min-h-0">
+        {/* Title */}
+        <h1
+          className="text-2xl sm:text-3xl font-black tracking-tight leading-tight mb-1"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          {event.title}
+        </h1>
+        {event.subtitle && (
+          <p className="text-sm text-white/50 mb-4">{event.subtitle}</p>
+        )}
 
-        {/* Poster */}
-        <div className="lg:w-[38%] flex-shrink-0 rounded-xl overflow-hidden border border-white/10 bg-zinc-950
-                        h-[30vh] lg:h-full">
-          <EventImage
-            src={event.image}
-            alt={event.title}
-            className="w-full h-full object-contain"
-          />
-        </div>
-
-        {/* Info + button */}
-        <div className="flex-1 flex flex-col min-h-0 gap-2">
-
-          {/* Scrollable info */}
-          <div className="flex-1 overflow-y-auto min-h-0" style={{ scrollbarWidth: "none" }}>
-
-            <h1
-              className="text-[22px] sm:text-3xl lg:text-4xl font-black tracking-tight leading-tight mb-0.5"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              {event.title}
-            </h1>
-            {event.subtitle && (
-              <p className="text-[11px] text-white/50 mb-2">{event.subtitle}</p>
-            )}
-
-            {/* Date & Venue */}
-            <div className="grid grid-cols-2 gap-1.5 mb-2">
-              <div className="flex flex-col gap-0.5 p-2.5 rounded-xl bg-bg-card border border-white/10">
-                <div className="text-[8px] tracking-widest text-white/35 uppercase font-medium" style={{ fontFamily: "var(--font-mono)" }}>ДАТА</div>
-                <div className="font-black text-[13px] text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.date}</div>
-                {event.time && <div className="text-[11px] text-white/45">{event.time}</div>}
-              </div>
-              <div className="flex flex-col gap-0.5 p-2.5 rounded-xl bg-bg-card border border-white/10">
-                <div className="text-[8px] tracking-widest text-white/35 uppercase font-medium" style={{ fontFamily: "var(--font-mono)" }}>МЕСТО</div>
-                <div className="font-black text-[13px] text-white leading-tight" style={{ fontFamily: "var(--font-heading)" }}>{event.venue}</div>
-                {event.address && <div className="text-[11px] text-white/45 leading-snug">{event.address}</div>}
-              </div>
-            </div>
-
-            {/* Description */}
-            {event.description && (
-              <p className="text-white/55 text-[11px] sm:text-xs leading-relaxed mb-2 whitespace-pre-line">{event.description}</p>
-            )}
-
-            {/* Lineup */}
-            {event.lineup.length > 0 && (
-              <div className="mb-2 rounded-xl bg-bg-card border border-white/10 overflow-hidden">
-                <div className="px-3 py-1.5 border-b border-white/[0.06]">
-                  <span className="text-[8px] tracking-widest text-white/35 uppercase font-medium" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</span>
-                </div>
-                <div className="p-2.5 flex flex-wrap gap-1">
-                  {event.lineup.map((artist: string) => (
-                    <span key={artist} className="px-2.5 py-1 rounded-lg border border-white/15 text-[11px] font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>
-                      {artist}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Features */}
-            {event.features.length > 0 && (
-              <div className="mb-2 rounded-xl bg-bg-card border border-white/10 overflow-hidden">
-                <div className="px-3 py-1.5 border-b border-white/[0.06]">
-                  <span className="text-[8px] tracking-widest text-white/35 uppercase font-medium" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</span>
-                </div>
-                <div className="p-2.5 flex flex-wrap gap-1">
-                  {event.features.map((feature: string) => (
-                    <span key={feature} className="px-2.5 py-1 rounded-lg border border-primary/30 bg-primary/5 text-primary text-[11px] font-bold">
-                      {feature}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+        {/* Date / Time / Venue / Age — row layout like d12 */}
+        <div className="flex flex-col gap-2 mb-4">
+          {/* Row 1: date + time */}
+          <div className="flex items-baseline justify-between border-b border-white/8 pb-2">
+            <span className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.date}</span>
+            {event.time && <span className="text-base font-bold text-white/60">{event.time}</span>}
           </div>
-
-          {/* Buy button — always at bottom */}
-          {!event.isPast ? (
-            <div className="flex-shrink-0">
-              <a
-                href={event.ticketUrl}
-                target={event.ticketUrl?.startsWith("http") ? "_blank" : undefined}
-                rel={event.ticketUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="flex items-center justify-center py-3.5 bg-white text-black rounded-xl font-black text-sm tracking-wide w-full hover:bg-white/90 active:scale-[0.98] transition-all"
-                style={{ fontFamily: "var(--font-heading)" }}
-              >
-                КУПИТЬ БИЛЕТ
-              </a>
-            </div>
-          ) : (
-            <div className="flex-shrink-0">
-              <div className="flex items-center justify-center py-3 rounded-xl border border-white/10 text-white/30 text-xs font-bold tracking-widest" style={{ fontFamily: "var(--font-heading)" }}>
-                МЕРОПРИЯТИЕ ЗАВЕРШЕНО
-              </div>
-            </div>
-          )}
+          {/* Row 2: venue */}
+          <div className="flex flex-col gap-0.5 border-b border-white/8 pb-2">
+            <span className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.venue}</span>
+            {event.address && <span className="text-sm text-white/45">{event.address}</span>}
+          </div>
         </div>
+
+        {/* Buy ticket button */}
+        {!event.isPast ? (
+          <a
+            href={event.ticketUrl}
+            target={event.ticketUrl?.startsWith("http") ? "_blank" : undefined}
+            rel={event.ticketUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
+            className="flex items-center justify-center py-4 bg-white text-black rounded-2xl font-black text-base tracking-wide w-full hover:bg-white/90 active:scale-[0.98] transition-all mb-5"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            КУПИТЬ БИЛЕТ
+          </a>
+        ) : (
+          <div className="flex items-center justify-center py-3.5 rounded-2xl border border-white/10 text-white/30 text-sm font-bold tracking-widest mb-5" style={{ fontFamily: "var(--font-heading)" }}>
+            МЕРОПРИЯТИЕ ЗАВЕРШЕНО
+          </div>
+        )}
+
+        {/* ── Below fold: description, lineup, features ── */}
+        {event.description && (
+          <div className="mb-5">
+            <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
+            <p className="text-white/65 text-sm leading-relaxed whitespace-pre-line">{event.description}</p>
+          </div>
+        )}
+
+        {event.lineup.length > 0 && (
+          <div className="mb-5">
+            <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
+            <div className="flex flex-wrap gap-2">
+              {event.lineup.map((artist: string) => (
+                <span key={artist} className="px-3 py-1.5 rounded-xl border border-white/15 text-sm font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>
+                  {artist}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {event.features.length > 0 && (
+          <div className="mb-5">
+            <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
+            <div className="flex flex-wrap gap-2">
+              {event.features.map((feature: string) => (
+                <span key={feature} className="px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">
+                  {feature}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
