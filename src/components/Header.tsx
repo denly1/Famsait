@@ -53,7 +53,7 @@ export default function Header() {
                 alt="FAMILY" 
                 draggable="false"
                 className={`w-auto object-contain transition-all duration-300 select-none ${
-                  scrolled || isDetailPage ? "h-9" : "h-40 sm:h-50 md:h-60"
+                  scrolled || isDetailPage ? "h-12" : "h-40 sm:h-50 md:h-60"
                 }`}
               />
             </Link>

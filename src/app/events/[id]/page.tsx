@@ -36,11 +36,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     <div className="pb-6 pt-16">
 
       {/* ── POSTER full width ── */}
-      <div className="w-full bg-black">
+      <div className="w-full">
         <EventImage
           src={event.image}
           alt={event.title}
-          className="w-full object-contain max-h-[55vw] sm:max-h-[420px] block mx-auto"
+          className="w-full h-auto block"
         />
       </div>
 
@@ -104,7 +104,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         {event.description && (
           <div className="mb-5">
             <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
-            <p className="text-white/65 text-sm leading-relaxed whitespace-pre-line">{event.description}</p>
+            <p className="text-white/85 text-base leading-relaxed whitespace-pre-line">{event.description}</p>
           </div>
         )}
 
