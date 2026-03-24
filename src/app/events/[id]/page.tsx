@@ -49,10 +49,10 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         {/* Back link */}
         <Link
           href={event.isPast ? "/past" : "/events"}
-          className="inline-flex items-center gap-1.5 mb-3 text-[11px] font-semibold text-white/40 hover:text-white transition-colors"
+          className="inline-flex items-center gap-2 mb-4 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all group text-sm font-bold text-white"
           style={{ fontFamily: "var(--font-heading)" }}
         >
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           НАЗАД
