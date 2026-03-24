@@ -46,41 +46,45 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       <div className="px-4 pt-4 max-w-2xl mx-auto">
 
-        {/* Back link */}
-        <Link
-          href={event.isPast ? "/past" : "/events"}
-          className="inline-flex items-center gap-2 mb-4 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all group text-sm font-bold text-white"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          НАЗАД
-        </Link>
+        {/* Back link + title in one row */}
+        <div className="flex items-center gap-3 mb-4">
+          <Link
+            href={event.isPast ? "/past" : "/events"}
+            className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all group text-sm font-bold text-white"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            НАЗАД
+          </Link>
+          <h1
+            className="flex-1 text-lg sm:text-xl font-black tracking-tight leading-tight truncate"
+            style={{ fontFamily: "var(--font-heading)" }}
+          >
+            {event.title}
+          </h1>
+        </div>
 
-        {/* Title */}
-        <h1
-          className="text-2xl sm:text-3xl font-black tracking-tight leading-tight mb-1"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          {event.title}
-        </h1>
         {event.subtitle && (
-          <p className="text-sm text-white/50 mb-4">{event.subtitle}</p>
+          <p className="text-sm text-white/50 mb-4 -mt-2">{event.subtitle}</p>
         )}
 
-        {/* Date / Time / Venue / Age — row layout like d12 */}
-        <div className="flex flex-col gap-2 mb-4">
-          {/* Row 1: date + time */}
-          <div className="flex items-baseline justify-between border-b border-white/8 pb-2">
-            <span className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.date}</span>
-            {event.time && <span className="text-base font-bold text-white/60">{event.time}</span>}
+        {/* Date + Time widgets side by side, then Venue widget full width */}
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          <div className="flex flex-col gap-0.5 p-3 rounded-xl bg-white/5 border border-white/10">
+            <div className="text-[10px] tracking-widest text-white/40 uppercase font-bold" style={{ fontFamily: "var(--font-mono)" }}>ДАТА</div>
+            <div className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.date}</div>
           </div>
-          {/* Row 2: venue */}
-          <div className="flex flex-col gap-0.5 border-b border-white/8 pb-2">
-            <span className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.venue}</span>
-            {event.address && <span className="text-sm text-white/45">{event.address}</span>}
+          <div className="flex flex-col gap-0.5 p-3 rounded-xl bg-white/5 border border-white/10">
+            <div className="text-[10px] tracking-widest text-white/40 uppercase font-bold" style={{ fontFamily: "var(--font-mono)" }}>ВРЕМЯ</div>
+            <div className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.time || "—"}</div>
           </div>
+        </div>
+        <div className="flex flex-col gap-0.5 p-3 rounded-xl bg-white/5 border border-white/10 mb-4">
+          <div className="text-[10px] tracking-widest text-white/40 uppercase font-bold" style={{ fontFamily: "var(--font-mono)" }}>МЕСТО</div>
+          <div className="text-base font-black text-white" style={{ fontFamily: "var(--font-heading)" }}>{event.venue}</div>
+          {event.address && <div className="text-sm text-white/50">{event.address}</div>}
         </div>
 
         {/* Buy ticket button */}
