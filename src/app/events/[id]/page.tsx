@@ -103,14 +103,14 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         {/* ── Below fold: description, lineup, features ── */}
         {event.description && (
           <div className="mb-5">
-            <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
+            <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
             <p className="text-white/85 text-base leading-relaxed whitespace-pre-line">{event.description}</p>
           </div>
         )}
 
         {event.lineup.length > 0 && (
           <div className="mb-5">
-            <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
+            <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
             <div className="flex flex-wrap gap-2">
               {event.lineup.map((artist: string) => (
                 <span key={artist} className="px-3 py-1.5 rounded-xl border border-white/15 text-sm font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>
@@ -123,7 +123,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
         {event.features.length > 0 && (
           <div className="mb-5">
-            <div className="text-[10px] tracking-widest text-white/30 uppercase font-medium mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
+            <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
             <div className="flex flex-wrap gap-2">
               {event.features.map((feature: string) => (
                 <span key={feature} className="px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">

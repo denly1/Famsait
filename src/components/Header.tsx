@@ -44,7 +44,7 @@ export default function Header() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex items-center justify-between transition-all duration-300 ${
-            scrolled || isDetailPage ? "h-16" : "h-36 sm:h-44 md:h-52"
+            scrolled || isDetailPage ? "h-14" : "h-36 sm:h-44 md:h-52"
           }`}>
             {/* Logo */}
             <Link href="/" className="relative z-50 select-none" onClick={() => setIsMenuOpen(false)}>
@@ -53,7 +53,7 @@ export default function Header() {
                 alt="FAMILY" 
                 draggable="false"
                 className={`w-auto object-contain transition-all duration-300 select-none ${
-                  scrolled || isDetailPage ? "h-12" : "h-40 sm:h-50 md:h-60"
+                  scrolled || isDetailPage ? "h-10" : "h-40 sm:h-50 md:h-60"
                 }`}
               />
             </Link>
