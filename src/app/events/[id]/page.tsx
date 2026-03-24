@@ -46,25 +46,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       <div className="px-4 pt-4 max-w-2xl mx-auto">
 
-        {/* Back link + title in one row */}
-        <div className="flex items-center gap-3 mb-4">
-          <Link
-            href={event.isPast ? "/past" : "/events"}
-            className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all group text-sm font-bold text-white"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            НАЗАД
-          </Link>
-          <h1
-            className="flex-1 text-lg sm:text-xl font-black tracking-tight leading-tight truncate"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {event.title}
-          </h1>
-        </div>
+        {/* Title */}
+        <h1
+          className="text-xl sm:text-2xl font-black tracking-tight leading-tight mb-4"
+          style={{ fontFamily: "var(--font-heading)" }}
+        >
+          {event.title}
+        </h1>
 
         {event.subtitle && (
           <p className="text-sm text-white/50 mb-4 -mt-2">{event.subtitle}</p>
