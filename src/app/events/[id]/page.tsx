@@ -33,7 +33,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <div className="pb-6 pt-36 sm:pt-44">
+    <div className="pb-6 pt-16">
 
       {/* ── POSTER full width ── */}
       <div className="w-full bg-black">

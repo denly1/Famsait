@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isDetailPage = /^\/events\/[^/]+$/.test(pathname) || /^\/past\/[^/]+$/.test(pathname);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -36,12 +39,12 @@ export default function Header() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-200 ${
-          scrolled || isMenuOpen ? "bg-black" : "bg-transparent"
+          scrolled || isMenuOpen || isDetailPage ? "bg-black" : "bg-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex items-center justify-between transition-all duration-300 ${
-            scrolled ? "h-18 sm:h-20 md:h-22" : "h-36 sm:h-44 md:h-52"
+            scrolled || isDetailPage ? "h-16" : "h-36 sm:h-44 md:h-52"
           }`}>
             {/* Logo */}
             <Link href="/" className="relative z-50 select-none" onClick={() => setIsMenuOpen(false)}>
@@ -50,7 +53,7 @@ export default function Header() {
                 alt="FAMILY" 
                 draggable="false"
                 className={`w-auto object-contain transition-all duration-300 select-none ${
-                  scrolled ? "h-30 sm:h-35 md:h-40" : "h-40 sm:h-50 md:h-60"
+                  scrolled || isDetailPage ? "h-9" : "h-40 sm:h-50 md:h-60"
                 }`}
               />
             </Link>
