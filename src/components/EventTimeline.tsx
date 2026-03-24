@@ -42,11 +42,11 @@ export default function EventTimeline({ events }: { events: Event[] }) {
                 className="flex-shrink-0 w-[55vw] sm:w-[220px] snap-start rounded-xl overflow-hidden border border-white/10 bg-bg-card flex flex-col"
               >
                 {/* Poster — aspect 3:4, no crop */}
-                <div className="w-full aspect-[3/4] overflow-hidden">
+                <div className="w-full aspect-[3/4] overflow-hidden bg-zinc-900">
                   <EventImage
                     src={event.image}
                     alt={event.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-contain"
                   />
                 </div>
 

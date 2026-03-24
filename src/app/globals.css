@@ -28,6 +28,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: none;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -38,6 +39,7 @@ body {
   line-height: 1.6;
   overscroll-behavior-y: none;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
 }
 
 ::selection {
