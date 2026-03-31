@@ -6,13 +6,32 @@ import ImageUpload from "@/components/ImageUpload";
 import SupportPanel from "@/components/admin/SupportPanel";
 
 type Tab = "dashboard" | "events" | "past-posters" | "settings" | "faq" | "support";
+type Period = "1h" | "24h" | "7d" | "30d" | "1y";
 
+interface ChartPoint { t: string; pageviews: number; visitors: number; }
 interface AnalyticsData {
+  period: string;
+  periodLabel: string;
+  totalVisitors: number;
+  totalPageviews: number;
+  todayPageviews: number;
+  todayVisitors: number;
+  ticketClicks: number;
+  totalClicks: number;
+  allTimePageviews: number;
+  totalEvents: number;
+  activeEvents: number;
+  pastEventsCount: number;
+  totalMessages: number;
+  chart: ChartPoint[];
+  topPages: { path: string; views: number; uniq: number }[];
+  hourly: { hour: number; cnt: number }[];
+  popularEvents: { path: string; title: string; views: number }[];
+  referrers: { source: string; cnt: number }[];
+  // legacy
   totalVisits: number;
   todayVisits: number;
   totalTicketClicks: number;
-  totalMessages: number;
-  popularEvents: { id: string; title: string; views: number }[];
 }
 
 interface EventData {
@@ -126,6 +145,8 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [tab, setTab] = useState<Tab>("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [analyticsPeriod, setAnalyticsPeriod] = useState<Period>("7d");
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [events, setEvents] = useState<EventData[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -153,11 +174,20 @@ export default function AdminDashboard() {
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 3000); };
 
+  const fetchAnalytics = useCallback(async (p: Period) => {
+    setAnalyticsLoading(true);
+    try {
+      const res = await fetch(`/api/admin/analytics?period=${p}`);
+      if (res.ok) setAnalytics(await res.json());
+    } catch {}
+    setAnalyticsLoading(false);
+  }, []);
+
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [aRes, eRes, mRes, sRes, fRes] = await Promise.all([
-        fetch("/api/admin/analytics"), fetch("/api/admin/events"), fetch("/api/admin/messages"),
+        fetch(`/api/admin/analytics?period=${analyticsPeriod}`), fetch("/api/admin/events"), fetch("/api/admin/messages"),
         fetch("/api/admin/settings"), fetch("/api/admin/faq"),
       ]);
       if (aRes.status === 401) { router.push("/admin/login"); return; }
@@ -397,51 +427,238 @@ export default function AdminDashboard() {
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto">
 
           {/* === DASHBOARD === */}
-          {tab === "dashboard" && analytics && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Дашборд</h1>
-                <p className="text-text-muted text-sm mt-1">Обзор активности сайта</p>
-              </div>
-
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                {[
-                  { label: "Всего событий", value: analytics.totalVisits.toLocaleString(), color: "bg-violet-500/10", textColor: "text-violet-400" },
-                  { label: "Активных", value: analytics.todayVisits.toLocaleString(), color: "bg-blue-500/10", textColor: "text-blue-400" },
-                  { label: "Прошедших", value: analytics.totalTicketClicks.toLocaleString(), color: "bg-rose-500/10", textColor: "text-rose-400" },
-                  { label: "Сообщений", value: analytics.totalMessages.toString(), color: "bg-emerald-500/10", textColor: "text-emerald-400" },
-                ].map(s => (
-                  <div key={s.label} className="rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
-                    <span className="text-[10px] font-medium tracking-wider text-text-muted/70 uppercase" style={{ fontFamily: "var(--font-mono)" }}>{s.label}</span>
-                    <div className={`text-xl sm:text-2xl font-bold mt-2 ${s.textColor}`} style={{ fontFamily: "var(--font-heading)" }}>{s.value}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-2xl bg-bg-card border border-border p-4 sm:p-6">
-                <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "var(--font-heading)" }}>Популярные события</h3>
-                <div className="space-y-2">
-                  {analytics.popularEvents.map((ev, i) => (
-                    <div key={ev.id} className="flex items-center gap-3 p-3 rounded-xl bg-bg-dark/50">
-                      <span className="text-text-muted/30 text-xs w-5 text-center" style={{ fontFamily: "var(--font-mono)" }}>0{i + 1}</span>
-                      <span className="flex-1 font-medium text-sm truncate">{ev.title}</span>
-                      <span className="text-xs text-text-muted flex-shrink-0" style={{ fontFamily: "var(--font-mono)" }}>{ev.views.toLocaleString()}</span>
-                    </div>
+          {tab === "dashboard" && (
+            <div className="space-y-5">
+              {/* Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                  <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Дашборд</h1>
+                  <p className="text-text-muted text-sm mt-0.5">Реальная статистика посещаемости</p>
+                </div>
+                {/* Period switcher */}
+                <div className="flex items-center gap-1 p-1 rounded-xl bg-bg-card border border-border">
+                  {(["1h","24h","7d","30d","1y"] as Period[]).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => { setAnalyticsPeriod(p); fetchAnalytics(p); }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${analyticsPeriod === p ? "bg-primary/20 text-primary" : "text-text-muted hover:text-text-primary"}`}
+                      style={{ fontFamily: "var(--font-mono)" }}
+                    >
+                      {p}
+                    </button>
                   ))}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                {[
-                  { value: events.filter(e => !e.isPast).length, label: "Активных событий" },
-                  { value: unreadCount, label: "Непрочитанных" },
-                ].map(s => (
-                  <div key={s.label} className="rounded-2xl bg-bg-card border border-border p-4 sm:p-5 text-center">
-                    <div className="text-2xl sm:text-3xl font-bold gradient-text" style={{ fontFamily: "var(--font-heading)" }}>{s.value}</div>
-                    <div className="text-[10px] mt-2 text-text-muted/70 uppercase tracking-wider" style={{ fontFamily: "var(--font-mono)" }}>{s.label}</div>
+              {!analytics ? (
+                <div className="flex items-center justify-center h-40"><div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
+              ) : (
+                <>
+                  {/* KPI cards */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    {[
+                      { label: "Посетителей", sub: `за ${analytics.periodLabel}`, value: analytics.totalVisitors.toLocaleString(), icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z", color: "violet" },
+                      { label: "Просмотров", sub: `за ${analytics.periodLabel}`, value: analytics.totalPageviews.toLocaleString(), icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z", color: "blue" },
+                      { label: "Кликов на билеты", sub: `за ${analytics.periodLabel}`, value: analytics.ticketClicks.toLocaleString(), icon: "M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z", color: "emerald" },
+                      { label: "Сегодня", sub: `${analytics.todayVisitors} уник.`, value: analytics.todayPageviews.toLocaleString(), icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", color: "amber" },
+                    ].map(s => {
+                      const colors: Record<string,string> = { violet:"bg-violet-500/10 text-violet-400 border-violet-500/20", blue:"bg-blue-500/10 text-blue-400 border-blue-500/20", emerald:"bg-emerald-500/10 text-emerald-400 border-emerald-500/20", amber:"bg-amber-500/10 text-amber-400 border-amber-500/20" };
+                      const [bg, tc, bc] = colors[s.color].split(" ");
+                      return (
+                        <div key={s.label} className={`rounded-2xl bg-bg-card border border-border p-4 flex flex-col gap-3`}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold tracking-wider text-text-muted uppercase" style={{ fontFamily: "var(--font-mono)" }}>{s.label}</span>
+                            <div className={`w-8 h-8 rounded-lg ${bg} border ${bc} flex items-center justify-center flex-shrink-0`}>
+                              <svg className={`w-4 h-4 ${tc}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d={s.icon} /></svg>
+                            </div>
+                          </div>
+                          <div>
+                            <div className={`text-2xl font-black ${tc}`} style={{ fontFamily: "var(--font-heading)" }}>{s.value}</div>
+                            <div className="text-[10px] text-text-muted mt-0.5">{s.sub}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
-              </div>
+
+                  {/* Chart */}
+                  <div className="rounded-2xl bg-bg-card border border-border p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-bold text-sm" style={{ fontFamily: "var(--font-heading)" }}>Трафик за {analytics.periodLabel}</h3>
+                      <div className="flex items-center gap-4 text-[10px] text-text-muted" style={{ fontFamily: "var(--font-mono)" }}>
+                        <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-violet-400 rounded inline-block" />просмотры</span>
+                        <span className="flex items-center gap-1.5"><span className="w-3 h-0.5 bg-blue-400 rounded inline-block" />посетители</span>
+                      </div>
+                    </div>
+                    {analyticsLoading ? (
+                      <div className="h-40 flex items-center justify-center"><div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>
+                    ) : analytics.chart.length === 0 ? (
+                      <div className="h-40 flex flex-col items-center justify-center text-text-muted text-sm gap-2">
+                        <svg className="w-8 h-8 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}><path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                        <span>Данных пока нет — статистика накапливается</span>
+                      </div>
+                    ) : (() => {
+                      const W = 600; const H = 120; const pad = 8;
+                      const maxPV = Math.max(...analytics.chart.map(d => d.pageviews), 1);
+                      const pts = analytics.chart;
+                      const xStep = pts.length > 1 ? (W - pad*2) / (pts.length - 1) : 0;
+                      const pvPath = pts.map((d,i) => `${i===0?"M":"L"}${pad+i*xStep},${H-pad-(d.pageviews/maxPV)*(H-pad*2)}`).join(" ");
+                      const viPath = pts.map((d,i) => `${i===0?"M":"L"}${pad+i*xStep},${H-pad-(d.visitors/maxPV)*(H-pad*2)}`).join(" ");
+                      const pvArea = pvPath + ` L${pad+(pts.length-1)*xStep},${H-pad} L${pad},${H-pad} Z`;
+                      const formatLabel = (t: string) => {
+                        const d = new Date(t);
+                        if (analytics.period === "1h") return d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+                        if (analytics.period === "24h") return d.toLocaleTimeString("ru",{hour:"2-digit",minute:"2-digit"});
+                        if (analytics.period === "1y") return d.toLocaleDateString("ru",{month:"short"});
+                        return d.toLocaleDateString("ru",{day:"numeric",month:"short"});
+                      };
+                      const step = Math.max(1, Math.floor(pts.length / 6));
+                      return (
+                        <div className="overflow-x-auto">
+                          <svg viewBox={`0 0 ${W} ${H+20}`} className="w-full" style={{ minWidth: 300 }}>
+                            {/* Grid lines */}
+                            {[0,0.25,0.5,0.75,1].map(f => (
+                              <line key={f} x1={pad} y1={H-pad-(f)*(H-pad*2)} x2={W-pad} y2={H-pad-(f)*(H-pad*2)} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                            ))}
+                            {/* Area fill */}
+                            <path d={pvArea} fill="url(#pvGrad)" opacity="0.3" />
+                            {/* Lines */}
+                            <path d={pvPath} fill="none" stroke="#a78bfa" strokeWidth="2" strokeLinejoin="round" />
+                            <path d={viPath} fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeLinejoin="round" strokeDasharray="4 2" />
+                            {/* X labels */}
+                            {pts.map((d,i) => i % step === 0 ? (
+                              <text key={i} x={pad+i*xStep} y={H+16} textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="9" fontFamily="JetBrains Mono,monospace">{formatLabel(d.t)}</text>
+                            ) : null)}
+                            <defs>
+                              <linearGradient id="pvGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor="#a78bfa" />
+                                <stop offset="100%" stopColor="#a78bfa" stopOpacity="0" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                        </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Bottom row: top pages + hourly + referrers */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+                    {/* Top pages */}
+                    <div className="lg:col-span-1 rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
+                      <h3 className="font-bold text-sm mb-3" style={{ fontFamily: "var(--font-heading)" }}>Топ страниц</h3>
+                      {analytics.topPages.length === 0 ? (
+                        <p className="text-text-muted text-xs text-center py-6">Нет данных</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {analytics.topPages.map((p, i) => {
+                            const maxV = analytics.topPages[0]?.views || 1;
+                            return (
+                              <div key={p.path}>
+                                <div className="flex items-center justify-between mb-0.5">
+                                  <span className="text-[11px] text-text-secondary truncate flex-1 pr-2" title={p.path}>{p.path || "/"}</span>
+                                  <span className="text-[10px] text-text-muted flex-shrink-0" style={{ fontFamily: "var(--font-mono)" }}>{p.views}</span>
+                                </div>
+                                <div className="h-1 rounded-full bg-white/5 overflow-hidden">
+                                  <div className="h-full rounded-full bg-violet-500/60 transition-all" style={{ width: `${(p.views/maxV)*100}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Hourly heatmap */}
+                    <div className="lg:col-span-1 rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
+                      <h3 className="font-bold text-sm mb-3" style={{ fontFamily: "var(--font-heading)" }}>Активность по часам</h3>
+                      <p className="text-[10px] text-text-muted mb-3">за последние 7 дней</p>
+                      <div className="grid grid-cols-12 gap-1">
+                        {analytics.hourly.map(h => {
+                          const maxH = Math.max(...analytics.hourly.map(x => x.cnt), 1);
+                          const intensity = h.cnt / maxH;
+                          const alpha = Math.round(intensity * 200);
+                          return (
+                            <div key={h.hour} className="flex flex-col items-center gap-1" title={`${h.hour}:00 — ${h.cnt} посещений`}>
+                              <div className="w-full rounded-sm" style={{ height: 32, background: `rgba(167,139,250,${intensity * 0.8 + 0.05})` }} />
+                              {h.hour % 6 === 0 && <span className="text-[8px] text-text-muted/50" style={{ fontFamily: "var(--font-mono)" }}>{h.hour}</span>}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Referrers */}
+                    <div className="lg:col-span-1 rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
+                      <h3 className="font-bold text-sm mb-3" style={{ fontFamily: "var(--font-heading)" }}>Источники трафика</h3>
+                      {analytics.referrers.length === 0 ? (
+                        <p className="text-text-muted text-xs text-center py-6">Нет данных</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {analytics.referrers.map((r, i) => {
+                            const maxR = analytics.referrers[0]?.cnt || 1;
+                            const colors = ["bg-violet-500","bg-blue-500","bg-emerald-500","bg-amber-500","bg-rose-500","bg-cyan-500","bg-pink-500","bg-orange-500"];
+                            const col = colors[i % colors.length];
+                            return (
+                              <div key={r.source}>
+                                <div className="flex items-center justify-between mb-0.5">
+                                  <span className="text-[11px] text-text-secondary truncate flex-1 pr-2" title={r.source}>{r.source.length > 30 ? r.source.slice(0,28)+"…" : r.source}</span>
+                                  <span className="text-[10px] text-text-muted flex-shrink-0" style={{ fontFamily: "var(--font-mono)" }}>{r.cnt}</span>
+                                </div>
+                                <div className="h-1 rounded-full bg-white/5 overflow-hidden">
+                                  <div className={`h-full rounded-full ${col}/60 transition-all`} style={{ width: `${(r.cnt/maxR)*100}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Popular events + site stats */}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+                    {/* Popular events */}
+                    <div className="rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
+                      <h3 className="font-bold text-sm mb-3" style={{ fontFamily: "var(--font-heading)" }}>Популярные события</h3>
+                      {analytics.popularEvents.length === 0 ? (
+                        <p className="text-text-muted text-xs text-center py-6">Нет просмотров событий</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {analytics.popularEvents.map((ev, i) => (
+                            <div key={ev.path} className="flex items-center gap-3 p-2.5 rounded-xl bg-bg-dark/50">
+                              <span className="w-5 h-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center flex-shrink-0">{i+1}</span>
+                              <span className="flex-1 text-xs truncate text-text-secondary">{ev.title}</span>
+                              <span className="text-[10px] text-text-muted flex-shrink-0 font-bold" style={{ fontFamily: "var(--font-mono)" }}>{ev.views}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Site-wide totals */}
+                    <div className="rounded-2xl bg-bg-card border border-border p-4 sm:p-5">
+                      <h3 className="font-bold text-sm mb-3" style={{ fontFamily: "var(--font-heading)" }}>Сайт в цифрах</h3>
+                      <div className="space-y-3">
+                        {[
+                          { label: "Всего просмотров (все время)", value: analytics.allTimePageviews, color: "text-violet-400" },
+                          { label: "Активных событий", value: analytics.activeEvents, color: "text-emerald-400" },
+                          { label: "Прошедших событий", value: analytics.pastEventsCount, color: "text-text-muted" },
+                          { label: "Всего кликов по кнопкам", value: analytics.totalClicks, color: "text-blue-400" },
+                          { label: "Кликов на билеты (за период)", value: analytics.ticketClicks, color: "text-amber-400" },
+                          { label: "Обращений в поддержку", value: analytics.totalMessages, color: "text-rose-400" },
+                        ].map(s => (
+                          <div key={s.label} className="flex items-center justify-between py-1.5 border-b border-white/[0.04] last:border-0">
+                            <span className="text-xs text-text-muted">{s.label}</span>
+                            <span className={`text-sm font-black ${s.color}`} style={{ fontFamily: "var(--font-heading)" }}>{s.value.toLocaleString()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
 

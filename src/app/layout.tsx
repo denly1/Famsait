@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
+import Analytics from "@/components/Analytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://family-events.ru'),
@@ -73,6 +74,7 @@ export default function RootLayout({
         />
       </head>
       <body className="noise-bg min-h-screen flex flex-col">
+        <Analytics />
         <SiteShell>{children}</SiteShell>
       </body>
     </html>
