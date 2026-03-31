@@ -44,7 +44,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // === API PROTECTION ===
-  if (pathname.startsWith("/api/admin") && !pathname.startsWith("/api/admin/login")) {
+  if (pathname.startsWith("/api/admin") && !pathname.startsWith("/api/admin/login") && !pathname.startsWith("/api/admin/init-analytics")) {
     const token = request.cookies.get("admin_token")?.value;
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
