@@ -787,7 +787,7 @@ export default function AdminDashboard() {
                     <img src={p.image} alt={p.title || "Афиша"} className="w-full h-auto" />
                     <button
                       onClick={() => removePoster(p.id)}
-                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/70 backdrop-blur-sm flex items-center justify-center text-white transition-colors hover:bg-red-600 active:bg-red-700"
                     >
                       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
