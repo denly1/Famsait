@@ -762,8 +762,49 @@ export default function AdminDashboard() {
             <div className="space-y-6">
               <div>
                 <h1 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Прошедшие мероприятия</h1>
-                <p className="text-text-muted text-sm mt-1">Загрузите афиши прошедших мероприятий</p>
+                <p className="text-text-muted text-sm mt-1">Управление прошедшими событиями и афишами</p>
               </div>
+
+              {/* Прошедшие события из БД */}
+              {events.filter(e => e.isPast).length > 0 && (
+                <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
+                  <div className="h-[2px] bg-gradient-to-r from-orange-500/50 to-red-500/50" />
+                  <div className="p-4 sm:p-6">
+                    <h3 className="font-bold text-sm mb-4" style={{ fontFamily: "var(--font-heading)" }}>
+                      События помеченные как прошедшие
+                      <span className="ml-2 text-xs text-text-muted font-normal">({events.filter(e => e.isPast).length})</span>
+                    </h3>
+                    <div className="space-y-2">
+                      {events.filter(e => e.isPast).map(ev => (
+                        <div key={ev.id} className="flex items-center gap-3 p-3 rounded-xl bg-bg-dark/50 border border-white/5">
+                          {ev.image && (
+                            <img src={ev.image} alt={ev.title} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium truncate">{ev.title}</div>
+                            <div className="text-[11px] text-text-muted">{ev.date}{ev.venue ? ` · ${ev.venue}` : ""}</div>
+                          </div>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <button
+                              onClick={() => { setEditingEvent(ev); setEventForm({ ...ev, price: String(ev.price ?? ""), lineup: Array.isArray(ev.lineup) ? ev.lineup.join(", ") : (ev.lineup || ""), features: Array.isArray(ev.features) ? ev.features.join(", ") : (ev.features || ""), ticketUrl: ev.ticketUrl || "" }); setShowEventForm(true); setTab("events"); }}
+                              className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-text-muted transition-colors"
+                            >
+                              Изменить
+                            </button>
+                            <button
+                              onClick={() => removeEvent(ev.id)}
+                              className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-xs text-red-400 transition-colors"
+                            >
+                              Удалить
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <p className="text-[11px] text-text-muted mt-3">«Удалить» — полностью удаляет событие из базы данных. «Изменить» — позволяет снять отметку «прошедшее».</p>
+                  </div>
+                </div>
+              )}
 
               <div className="rounded-2xl bg-bg-card border border-border overflow-hidden">
                 <div className="h-[2px] bg-gradient-to-r from-rose-500/50 to-pink-500/50" />
