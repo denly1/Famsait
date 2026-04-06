@@ -26,8 +26,8 @@ export async function POST(request: NextRequest) {
       `INSERT INTO events (
         id, title, subtitle, date, time, venue, address, age_limit, 
         price, currency, image, description, lineup, features, is_past, 
-        ticket_url, ticket_link, is_pinned
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+        ticket_url, ticket_link, is_pinned, hide_from_past
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
       RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
         data.price || 0, data.currency || "₽", data.image || "",
         data.description || "", data.lineup || [], data.features || [],
         data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
-        data.isPinned || false
+        data.isPinned || false, data.hideFromPast || false
       ]
     );
     
@@ -61,7 +61,7 @@ export async function PUT(request: NextRequest) {
         address = $7, age_limit = $8, price = $9, currency = $10, 
         image = $11, description = $12, lineup = $13, features = $14, 
         is_past = $15, ticket_url = $16, ticket_link = $17, is_pinned = $18,
-        updated_at = NOW()
+        hide_from_past = $19, updated_at = NOW()
       WHERE id = $1 RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
@@ -69,7 +69,7 @@ export async function PUT(request: NextRequest) {
         data.price || 0, data.currency || "₽", data.image || "",
         data.description || "", data.lineup || [], data.features || [],
         data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
-        data.isPinned || false
+        data.isPinned || false, data.hideFromPast || false
       ]
     );
     

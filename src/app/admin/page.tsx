@@ -51,6 +51,7 @@ interface EventData {
   features: string[];
   isPast: boolean;
   isPinned: boolean;
+  hideFromPast: boolean;
   ticketUrl?: string;
 }
 
@@ -157,7 +158,7 @@ export default function AdminDashboard() {
   const [eventForm, setEventForm] = useState({
     id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "",
     ageLimit: "18+", price: "", currency: "₽", image: "", description: "",
-    lineup: "", features: "", isPast: false, isPinned: false, ticketUrl: "#",
+    lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#",
   });
   const [toast, setToast] = useState<string | null>(null);
   const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
@@ -199,7 +200,7 @@ export default function AdminDashboard() {
         price: e.price || 0, currency: e.currency || "₽", image: e.image || "",
         description: e.description || "", lineup: Array.isArray(e.lineup) ? e.lineup : [],
         features: Array.isArray(e.features) ? e.features : [],
-        isPast: e.is_past ?? e.isPast ?? false, isPinned: e.is_pinned ?? e.isPinned ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
+        isPast: e.is_past ?? e.isPast ?? false, isPinned: e.is_pinned ?? e.isPinned ?? false, hideFromPast: e.hide_from_past ?? e.hideFromPast ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
       })));
       const rawMsgs = await mRes.json();
       setMessages((Array.isArray(rawMsgs) ? rawMsgs : []).map((m: any) => ({
@@ -235,17 +236,17 @@ export default function AdminDashboard() {
   };
   const openNewEvent = () => {
     setEditingEvent(null);
-    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, ticketUrl: "#" });
+    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#" });
     setShowEventForm(true);
   };
   const openEditEvent = (ev: EventData) => {
     setEditingEvent(ev);
-    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, ticketUrl: ev.ticketUrl || "#" });
+    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, hideFromPast: ev.hideFromPast || false, ticketUrl: ev.ticketUrl || "#" });
     setShowEventForm(true);
   };
   const saveEvent = async () => {
     const autoId = editingEvent ? eventForm.id : (eventForm.id || generateSlug(eventForm.title));
-    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean), isPinned: eventForm.isPinned || false };
+    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean), isPinned: eventForm.isPinned || false, hideFromPast: eventForm.hideFromPast || false };
     const res = await fetch("/api/admin/events", { method: editingEvent ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { showToast("Ошибка сохранения"); }
   };
@@ -714,6 +715,10 @@ export default function AdminDashboard() {
                         <label className="flex items-center gap-2.5 text-sm cursor-pointer">
                           <input type="checkbox" checked={eventForm.isPinned} onChange={e => setEventForm({...eventForm, isPinned: e.target.checked})} className="rounded border-border accent-primary" />
                           <span className="flex items-center gap-1.5">📌 Закрепить на главной странице</span>
+                        </label>
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                          <input type="checkbox" checked={eventForm.hideFromPast} onChange={e => setEventForm({...eventForm, hideFromPast: e.target.checked})} className="rounded border-border" />
+                          <span className="flex items-center gap-1.5">🙈 Не показывать в разделе «Прошедшие»</span>
                         </label>
                       </div>
                       <div className="flex gap-3 pt-2">

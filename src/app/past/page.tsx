@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 async function getEvents() {
   try {
-    const result = await query("SELECT * FROM events WHERE is_past = true ORDER BY date DESC");
+    const result = await query("SELECT * FROM events WHERE is_past = true AND (hide_from_past IS NULL OR hide_from_past = false) ORDER BY date DESC");
     return { events: mapEventsFromDB(result.rows || []) };
   } catch (error) {
     console.error('Error fetching events:', error);

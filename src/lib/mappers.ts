@@ -39,6 +39,7 @@ export function mapEventFromDB(dbEvent: any): any {
     features: Array.isArray(dbEvent.features) ? dbEvent.features : [],
     isPast: dbEvent.is_past || false,
     isPinned: dbEvent.is_pinned || false,
+    hideFromPast: dbEvent.hide_from_past || false,
     ticketUrl: dbEvent.ticket_url || '#',
     ticketLink: dbEvent.ticket_link || dbEvent.ticket_url || '#',
     gallery: Array.isArray(dbEvent.gallery) ? dbEvent.gallery : [],
