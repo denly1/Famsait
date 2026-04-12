@@ -159,6 +159,7 @@ export default function AdminDashboard() {
     id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "",
     ageLimit: "18+", price: "", currency: "₽", image: "", description: "",
     lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#",
+    isDouble: false, day2Date: "", day2Time: "", day2Venue: "", day2Address: "", day2TicketUrl: "",
   });
   const [toast, setToast] = useState<string | null>(null);
   const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
@@ -236,12 +237,12 @@ export default function AdminDashboard() {
   };
   const openNewEvent = () => {
     setEditingEvent(null);
-    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#" });
+    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#", isDouble: false, day2Date: "", day2Time: "", day2Venue: "", day2Address: "", day2TicketUrl: "" });
     setShowEventForm(true);
   };
   const openEditEvent = (ev: EventData) => {
     setEditingEvent(ev);
-    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, hideFromPast: ev.hideFromPast || false, ticketUrl: ev.ticketUrl || "#" });
+    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, hideFromPast: ev.hideFromPast || false, ticketUrl: ev.ticketUrl || "#", isDouble: (ev as any).isDouble || false, day2Date: (ev as any).day2Date || "", day2Time: (ev as any).day2Time || "", day2Venue: (ev as any).day2Venue || "", day2Address: (ev as any).day2Address || "", day2TicketUrl: (ev as any).day2TicketUrl || "" });
     setShowEventForm(true);
   };
   const saveEvent = async () => {
@@ -720,7 +721,23 @@ export default function AdminDashboard() {
                           <input type="checkbox" checked={eventForm.hideFromPast} onChange={e => setEventForm({...eventForm, hideFromPast: e.target.checked})} className="rounded border-border" />
                           <span className="flex items-center gap-1.5">🙈 Не показывать в разделе «Прошедшие»</span>
                         </label>
+                        <label className="flex items-center gap-2.5 text-sm cursor-pointer">
+                          <input type="checkbox" checked={eventForm.isDouble} onChange={e => setEventForm({...eventForm, isDouble: e.target.checked})} className="rounded border-border accent-primary" />
+                          <span className="flex items-center gap-1.5">📅 Сдвоенное мероприятие (2 дня)</span>
+                        </label>
                       </div>
+                      {eventForm.isDouble && (
+                        <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+                          <p className="text-[10px] font-bold tracking-widest text-primary uppercase">DAY 2 — второй день</p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <AdminInput label="Дата (день 2)" value={eventForm.day2Date} onChange={v => setEventForm({...eventForm, day2Date: v})} placeholder="19.04.2026" />
+                            <AdminInput label="Время (день 2)" value={eventForm.day2Time} onChange={v => setEventForm({...eventForm, day2Time: v})} placeholder="20:00 – 04:00" />
+                            <AdminInput label="Площадка (день 2)" value={eventForm.day2Venue} onChange={v => setEventForm({...eventForm, day2Venue: v})} />
+                            <AdminInput label="Адрес (день 2)" value={eventForm.day2Address} onChange={v => setEventForm({...eventForm, day2Address: v})} />
+                          </div>
+                          <AdminInput label="Ссылка на билеты (день 2)" value={eventForm.day2TicketUrl} onChange={v => setEventForm({...eventForm, day2TicketUrl: v})} placeholder="https://..." />
+                        </div>
+                      )}
                       <div className="flex gap-3 pt-2">
                         <button onClick={saveEvent} className="flex-1 py-3 btn-gradient rounded-xl text-sm font-semibold"><span className="relative z-10">СОХРАНИТЬ</span></button>
                         <button onClick={() => setShowEventForm(false)} className="flex-1 py-3 rounded-xl text-sm font-semibold border border-border hover:bg-white/[0.03] transition-colors">ОТМЕНА</button>
@@ -791,7 +808,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="flex items-center gap-2 flex-shrink-0">
                             <button
-                              onClick={() => { setEditingEvent(ev); setEventForm({ ...ev, price: String(ev.price ?? ""), lineup: Array.isArray(ev.lineup) ? ev.lineup.join(", ") : (ev.lineup || ""), features: Array.isArray(ev.features) ? ev.features.join(", ") : (ev.features || ""), ticketUrl: ev.ticketUrl || "" }); setShowEventForm(true); setTab("events"); }}
+                              onClick={() => { setEditingEvent(ev); setEventForm({ ...ev, price: String(ev.price ?? ""), lineup: Array.isArray(ev.lineup) ? ev.lineup.join(", ") : (ev.lineup || ""), features: Array.isArray(ev.features) ? ev.features.join(", ") : (ev.features || ""), ticketUrl: ev.ticketUrl || "", isDouble: (ev as any).isDouble || false, day2Date: (ev as any).day2Date || "", day2Time: (ev as any).day2Time || "", day2Venue: (ev as any).day2Venue || "", day2Address: (ev as any).day2Address || "", day2TicketUrl: (ev as any).day2TicketUrl || "" }); setShowEventForm(true); setTab("events"); }}
                               className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-text-muted transition-colors"
                             >
                               Изменить

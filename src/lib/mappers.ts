@@ -43,6 +43,12 @@ export function mapEventFromDB(dbEvent: any): any {
     ticketUrl: dbEvent.ticket_url || '#',
     ticketLink: dbEvent.ticket_link || dbEvent.ticket_url || '#',
     gallery: Array.isArray(dbEvent.gallery) ? dbEvent.gallery : [],
+    isDouble: dbEvent.is_double || false,
+    day2Date: dbEvent.day2_date || '',
+    day2Time: dbEvent.day2_time || '',
+    day2Venue: dbEvent.day2_venue || '',
+    day2Address: dbEvent.day2_address || '',
+    day2TicketUrl: dbEvent.day2_ticket_url || '',
   };
 }
 

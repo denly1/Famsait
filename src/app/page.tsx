@@ -131,33 +131,88 @@ export default async function HomePage() {
         <section className="relative pt-44 sm:pt-56 md:pt-60 pb-6 sm:pb-10 lg:pb-14 overflow-hidden">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <ScrollReveal>
+              {/* Poster */}
               <div className="relative rounded-3xl overflow-hidden group">
-                {/* Image — full poster, no crop */}
                 <div className="relative w-full">
                   <EventImage src={nextEvent.image} alt={nextEvent.title} className="w-full h-auto block group-hover:scale-[1.02] transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 </div>
-
-                {/* Compact overlay content at bottom */}
+                {/* Overlay: tags + title only */}
                 <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
-                  {/* Tags */}
                   <div className="flex items-center gap-2 mb-3">
                     <span className="px-3 py-1 bg-primary/80 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">
                       БЛИЖАЙШЕЕ МЕРОПРИЯТИЕ
                     </span>
+                    {(nextEvent as any).isDouble && (
+                      <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">
+                        2 ДНЯ
+                      </span>
+                    )}
                     {nextEvent.ageLimit && (
                       <span className="px-2.5 py-1 bg-white/15 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white">
                         {nextEvent.ageLimit}
                       </span>
                     )}
                   </div>
-
-                  {/* Title */}
-                  <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] text-white mb-2 sm:mb-3 drop-shadow-lg" style={{ fontFamily: "var(--font-heading)" }}>
+                  <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.05] text-white drop-shadow-lg" style={{ fontFamily: "var(--font-heading)" }}>
                     {nextEvent.title}
                   </h2>
+                </div>
+              </div>
 
-                  {/* Info row */}
+              {/* Info block below poster */}
+              {(nextEvent as any).isDouble ? (
+                /* === DOUBLE EVENT: 2 columns === */
+                <div className="mt-5 sm:mt-7">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-4">
+                    {/* DAY 1 */}
+                    <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-4 sm:p-5">
+                      <p className="text-[10px] font-bold tracking-widest text-primary uppercase mb-2">DAY 1</p>
+                      <p className="text-base sm:text-xl font-black text-white leading-tight mb-1">{nextEvent.date}</p>
+                      {nextEvent.time && <p className="text-xs sm:text-sm text-white/60 mb-2">{nextEvent.time}</p>}
+                      <p className="text-sm sm:text-base font-bold text-white uppercase">{nextEvent.venue}</p>
+                      {nextEvent.address && <p className="text-xs text-white/50 mt-0.5">{nextEvent.address}</p>}
+                    </div>
+                    {/* DAY 2 */}
+                    <div className="bg-white/[0.04] border border-white/10 rounded-2xl p-4 sm:p-5">
+                      <p className="text-[10px] font-bold tracking-widest text-primary uppercase mb-2">DAY 2</p>
+                      <p className="text-base sm:text-xl font-black text-white leading-tight mb-1">{(nextEvent as any).day2Date}</p>
+                      {(nextEvent as any).day2Time && <p className="text-xs sm:text-sm text-white/60 mb-2">{(nextEvent as any).day2Time}</p>}
+                      <p className="text-sm sm:text-base font-bold text-white uppercase">{(nextEvent as any).day2Venue}</p>
+                      {(nextEvent as any).day2Address && <p className="text-xs text-white/50 mt-0.5">{(nextEvent as any).day2Address}</p>}
+                    </div>
+                  </div>
+                  {/* Buttons 2-day */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link
+                      href={nextEvent.ticketLink || nextEvent.ticketUrl || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-3.5 bg-white text-black rounded-xl text-xs sm:text-sm font-black tracking-wide text-center hover:bg-white/90 transition-all active:scale-95"
+                    >
+                      DAY 1
+                    </Link>
+                    <Link
+                      href={(nextEvent as any).day2TicketUrl || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-3.5 bg-white/10 border border-white/30 text-white rounded-xl text-xs sm:text-sm font-black tracking-wide text-center hover:bg-white/20 transition-all active:scale-95"
+                    >
+                      DAY 2
+                    </Link>
+                  </div>
+                  <div className="mt-3">
+                    <Link
+                      href={`/events/${nextEvent.id}`}
+                      className="block w-full py-3 bg-transparent border border-white/15 text-white/60 rounded-xl text-xs font-semibold tracking-wide text-center hover:bg-white/5 transition-all"
+                    >
+                      ПОДРОБНЕЕ
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                /* === SINGLE EVENT === */
+                <div className="mt-5 sm:mt-7">
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-white/80 mb-4">
                     <span className="flex items-center gap-1.5 font-semibold">
                       <svg className="w-3.5 h-3.5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25" /></svg>
@@ -175,8 +230,6 @@ export default async function HomePage() {
                       <span className="font-black text-sm sm:text-base text-white">от {nextEvent.price}{nextEvent.currency}</span>
                     )}
                   </div>
-
-                  {/* Buttons */}
                   <div className="flex gap-3">
                     <Link
                       href={nextEvent.ticketLink || nextEvent.ticketUrl || "#"}
@@ -194,7 +247,7 @@ export default async function HomePage() {
                     </Link>
                   </div>
                 </div>
-              </div>
+              )}
             </ScrollReveal>
           </div>
         </section>

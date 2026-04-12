@@ -26,8 +26,9 @@ export async function POST(request: NextRequest) {
       `INSERT INTO events (
         id, title, subtitle, date, time, venue, address, age_limit, 
         price, currency, image, description, lineup, features, is_past, 
-        ticket_url, ticket_link, is_pinned, hide_from_past
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+        ticket_url, ticket_link, is_pinned, hide_from_past,
+        is_double, day2_date, day2_time, day2_venue, day2_address, day2_ticket_url
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
       RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
@@ -35,7 +36,9 @@ export async function POST(request: NextRequest) {
         data.price || 0, data.currency || "₽", data.image || "",
         data.description || "", data.lineup || [], data.features || [],
         data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
-        data.isPinned || false, data.hideFromPast || false
+        data.isPinned || false, data.hideFromPast || false,
+        data.isDouble || false, data.day2Date || "", data.day2Time || "",
+        data.day2Venue || "", data.day2Address || "", data.day2TicketUrl || ""
       ]
     );
     
@@ -61,7 +64,8 @@ export async function PUT(request: NextRequest) {
         address = $7, age_limit = $8, price = $9, currency = $10, 
         image = $11, description = $12, lineup = $13, features = $14, 
         is_past = $15, ticket_url = $16, ticket_link = $17, is_pinned = $18,
-        hide_from_past = $19, updated_at = NOW()
+        hide_from_past = $19, is_double = $20, day2_date = $21, day2_time = $22,
+        day2_venue = $23, day2_address = $24, day2_ticket_url = $25, updated_at = NOW()
       WHERE id = $1 RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
@@ -69,7 +73,9 @@ export async function PUT(request: NextRequest) {
         data.price || 0, data.currency || "₽", data.image || "",
         data.description || "", data.lineup || [], data.features || [],
         data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
-        data.isPinned || false, data.hideFromPast || false
+        data.isPinned || false, data.hideFromPast || false,
+        data.isDouble || false, data.day2Date || "", data.day2Time || "",
+        data.day2Venue || "", data.day2Address || "", data.day2TicketUrl || ""
       ]
     );
     
