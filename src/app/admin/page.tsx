@@ -248,7 +248,7 @@ export default function AdminDashboard() {
     const autoId = editingEvent ? eventForm.id : (eventForm.id || generateSlug(eventForm.title));
     const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean), isPinned: eventForm.isPinned || false, hideFromPast: eventForm.hideFromPast || false };
     const res = await fetch("/api/admin/events", { method: editingEvent ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { showToast("Ошибка сохранения"); }
+    if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { const errData = await res.json().catch(() => ({})); showToast("Ошибка: " + (errData.error || res.status)); }
   };
   const removeEvent = async (id: string) => { if (!confirm("Удалить событие?")) return; const res = await fetch("/api/admin/events", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); if (res.ok) { showToast("Событие удалено"); fetchData(); } };
 
