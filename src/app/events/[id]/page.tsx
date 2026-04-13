@@ -144,37 +144,102 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
         )}
 
         {/* ── Below fold: description, lineup, features ── */}
-        {event.description && (
-          <div className="mb-5">
-            <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
-            <p className="text-white/85 text-base leading-relaxed whitespace-pre-line">{event.description}</p>
-          </div>
-        )}
-
-        {event.lineup.length > 0 && (
-          <div className="mb-5">
-            <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
-            <div className="flex flex-wrap gap-2">
-              {event.lineup.map((artist: string) => (
-                <span key={artist} className="px-3 py-1.5 rounded-xl border border-white/15 text-sm font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>
-                  {artist}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {event.features.length > 0 && (
-          <div className="mb-5">
-            <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
-            <div className="flex flex-wrap gap-2">
-              {event.features.map((feature: string) => (
-                <span key={feature} className="px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">
-                  {feature}
-                </span>
-              ))}
-            </div>
-          </div>
+        {(event as any).isDouble ? (
+          /* === DOUBLE: show DAY 1 / DAY 2 sections separately === */
+          <>
+            {(event.description || event.lineup.length > 0 || event.features.length > 0) && (
+              <div className="mb-5 pb-5 border-b border-white/10">
+                <p className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3" style={{ fontFamily: "var(--font-mono)" }}>DAY 1</p>
+                {event.description && (
+                  <div className="mb-4">
+                    <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
+                    <p className="text-white/85 text-base leading-relaxed whitespace-pre-line">{event.description}</p>
+                  </div>
+                )}
+                {event.lineup.length > 0 && (
+                  <div className="mb-4">
+                    <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
+                    <div className="flex flex-wrap gap-2">
+                      {event.lineup.map((artist: string) => (
+                        <span key={artist} className="px-3 py-1.5 rounded-xl border border-white/15 text-sm font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>{artist}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {event.features.length > 0 && (
+                  <div>
+                    <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
+                    <div className="flex flex-wrap gap-2">
+                      {event.features.map((f: string) => (
+                        <span key={f} className="px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">{f}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            {((event as any).day2Description || ((event as any).day2Lineup?.length > 0) || ((event as any).day2Features?.length > 0)) && (
+              <div className="mb-5">
+                <p className="text-[10px] font-bold tracking-widest text-primary uppercase mb-3" style={{ fontFamily: "var(--font-mono)" }}>DAY 2</p>
+                {(event as any).day2Description && (
+                  <div className="mb-4">
+                    <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
+                    <p className="text-white/85 text-base leading-relaxed whitespace-pre-line">{(event as any).day2Description}</p>
+                  </div>
+                )}
+                {(event as any).day2Lineup?.length > 0 && (
+                  <div className="mb-4">
+                    <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
+                    <div className="flex flex-wrap gap-2">
+                      {(event as any).day2Lineup.map((artist: string) => (
+                        <span key={artist} className="px-3 py-1.5 rounded-xl border border-white/15 text-sm font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>{artist}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {(event as any).day2Features?.length > 0 && (
+                  <div>
+                    <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
+                    <div className="flex flex-wrap gap-2">
+                      {(event as any).day2Features.map((f: string) => (
+                        <span key={f} className="px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">{f}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
+        ) : (
+          /* === SINGLE EVENT === */
+          <>
+            {event.description && (
+              <div className="mb-5">
+                <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ОПИСАНИЕ</div>
+                <p className="text-white/85 text-base leading-relaxed whitespace-pre-line">{event.description}</p>
+              </div>
+            )}
+            {event.lineup.length > 0 && (
+              <div className="mb-5">
+                <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ЛАЙНАП</div>
+                <div className="flex flex-wrap gap-2">
+                  {event.lineup.map((artist: string) => (
+                    <span key={artist} className="px-3 py-1.5 rounded-xl border border-white/15 text-sm font-bold text-white" style={{ fontFamily: "var(--font-heading)" }}>{artist}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {event.features.length > 0 && (
+              <div className="mb-5">
+                <div className="text-xs tracking-widest text-white/60 uppercase font-bold mb-2" style={{ fontFamily: "var(--font-mono)" }}>ФИШКИ</div>
+                <div className="flex flex-wrap gap-2">
+                  {event.features.map((feature: string) => (
+                    <span key={feature} className="px-3 py-1.5 rounded-xl border border-primary/30 bg-primary/5 text-primary text-sm font-bold">{feature}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

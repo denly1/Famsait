@@ -53,6 +53,15 @@ interface EventData {
   isPinned: boolean;
   hideFromPast: boolean;
   ticketUrl?: string;
+  isDouble?: boolean;
+  day2Date?: string;
+  day2Time?: string;
+  day2Venue?: string;
+  day2Address?: string;
+  day2TicketUrl?: string;
+  day2Description?: string;
+  day2Lineup?: string[];
+  day2Features?: string[];
 }
 
 interface Message {
@@ -160,6 +169,7 @@ export default function AdminDashboard() {
     ageLimit: "18+", price: "", currency: "₽", image: "", description: "",
     lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#",
     isDouble: false, day2Date: "", day2Time: "", day2Venue: "", day2Address: "", day2TicketUrl: "",
+    day2Description: "", day2Lineup: "", day2Features: "",
   });
   const [toast, setToast] = useState<string | null>(null);
   const [faqItems, setFaqItems] = useState<FAQItem[]>([]);
@@ -202,6 +212,13 @@ export default function AdminDashboard() {
         description: e.description || "", lineup: Array.isArray(e.lineup) ? e.lineup : [],
         features: Array.isArray(e.features) ? e.features : [],
         isPast: e.is_past ?? e.isPast ?? false, isPinned: e.is_pinned ?? e.isPinned ?? false, hideFromPast: e.hide_from_past ?? e.hideFromPast ?? false, ticketUrl: e.ticket_url || e.ticketUrl || "#",
+        isDouble: e.is_double ?? e.isDouble ?? false,
+        day2Date: e.day2_date || e.day2Date || "", day2Time: e.day2_time || e.day2Time || "",
+        day2Venue: e.day2_venue || e.day2Venue || "", day2Address: e.day2_address || e.day2Address || "",
+        day2TicketUrl: e.day2_ticket_url || e.day2TicketUrl || "",
+        day2Description: e.day2_description || e.day2Description || "",
+        day2Lineup: Array.isArray(e.day2_lineup) ? e.day2_lineup : (Array.isArray(e.day2Lineup) ? e.day2Lineup : []),
+        day2Features: Array.isArray(e.day2_features) ? e.day2_features : (Array.isArray(e.day2Features) ? e.day2Features : []),
       })));
       const rawMsgs = await mRes.json();
       setMessages((Array.isArray(rawMsgs) ? rawMsgs : []).map((m: any) => ({
@@ -237,17 +254,17 @@ export default function AdminDashboard() {
   };
   const openNewEvent = () => {
     setEditingEvent(null);
-    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#", isDouble: false, day2Date: "", day2Time: "", day2Venue: "", day2Address: "", day2TicketUrl: "" });
+    setEventForm({ id: "", title: "", subtitle: "", date: "", time: "", venue: "", address: "", ageLimit: "18+", price: "", currency: "₽", image: "", description: "", lineup: "", features: "", isPast: false, isPinned: false, hideFromPast: false, ticketUrl: "#", isDouble: false, day2Date: "", day2Time: "", day2Venue: "", day2Address: "", day2TicketUrl: "", day2Description: "", day2Lineup: "", day2Features: "" });
     setShowEventForm(true);
   };
   const openEditEvent = (ev: EventData) => {
     setEditingEvent(ev);
-    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, hideFromPast: ev.hideFromPast || false, ticketUrl: ev.ticketUrl || "#", isDouble: (ev as any).isDouble || false, day2Date: (ev as any).day2Date || "", day2Time: (ev as any).day2Time || "", day2Venue: (ev as any).day2Venue || "", day2Address: (ev as any).day2Address || "", day2TicketUrl: (ev as any).day2TicketUrl || "" });
+    setEventForm({ ...ev, price: String(ev.price || ""), lineup: ev.lineup.join(", "), features: ev.features.join(", "), isPinned: ev.isPinned || false, hideFromPast: ev.hideFromPast || false, ticketUrl: ev.ticketUrl || "#", isDouble: ev.isDouble || false, day2Date: ev.day2Date || "", day2Time: ev.day2Time || "", day2Venue: ev.day2Venue || "", day2Address: ev.day2Address || "", day2TicketUrl: ev.day2TicketUrl || "", day2Description: ev.day2Description || "", day2Lineup: Array.isArray(ev.day2Lineup) ? ev.day2Lineup.join(", ") : "", day2Features: Array.isArray(ev.day2Features) ? ev.day2Features.join(", ") : "" });
     setShowEventForm(true);
   };
   const saveEvent = async () => {
     const autoId = editingEvent ? eventForm.id : (eventForm.id || generateSlug(eventForm.title));
-    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean), isPinned: eventForm.isPinned || false, hideFromPast: eventForm.hideFromPast || false };
+    const payload = { ...eventForm, id: autoId, price: Number(eventForm.price) || 0, lineup: eventForm.lineup.split(",").map(s => s.trim()).filter(Boolean), features: eventForm.features.split(",").map(s => s.trim()).filter(Boolean), isPinned: eventForm.isPinned || false, hideFromPast: eventForm.hideFromPast || false, day2Lineup: eventForm.day2Lineup.split(",").map(s => s.trim()).filter(Boolean), day2Features: eventForm.day2Features.split(",").map(s => s.trim()).filter(Boolean) };
     const res = await fetch("/api/admin/events", { method: editingEvent ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) { showToast(editingEvent ? "Событие обновлено" : "Событие создано"); setShowEventForm(false); fetchData(); } else { const errData = await res.json().catch(() => ({})); showToast("Ошибка: " + (errData.error || res.status)); }
   };
@@ -736,6 +753,12 @@ export default function AdminDashboard() {
                             <AdminInput label="Адрес (день 2)" value={eventForm.day2Address} onChange={v => setEventForm({...eventForm, day2Address: v})} />
                           </div>
                           <AdminInput label="Ссылка на билеты (день 2)" value={eventForm.day2TicketUrl} onChange={v => setEventForm({...eventForm, day2TicketUrl: v})} placeholder="https://..." />
+                          <div className="flex flex-col gap-1">
+                            <label className="text-xs text-text-muted font-medium">Описание (день 2)</label>
+                            <textarea value={eventForm.day2Description} onChange={e => setEventForm({...eventForm, day2Description: e.target.value})} rows={3} className="w-full bg-bg-dark border border-border rounded-xl px-3 py-2 text-sm text-white resize-none focus:outline-none focus:border-primary/50" placeholder="Описание второго дня..." />
+                          </div>
+                          <AdminInput label="Лайнап DAY 2 (через запятую)" value={eventForm.day2Lineup} onChange={v => setEventForm({...eventForm, day2Lineup: v})} placeholder="DJ NAME, ARTIST" />
+                          <AdminInput label="Фишки DAY 2 (через запятую)" value={eventForm.day2Features} onChange={v => setEventForm({...eventForm, day2Features: v})} placeholder="OPEN AIR, PHOTO ZONE" />
                         </div>
                       )}
                       <div className="flex gap-3 pt-2">
@@ -808,7 +831,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="flex items-center gap-2 flex-shrink-0">
                             <button
-                              onClick={() => { setEditingEvent(ev); setEventForm({ ...ev, price: String(ev.price ?? ""), lineup: Array.isArray(ev.lineup) ? ev.lineup.join(", ") : (ev.lineup || ""), features: Array.isArray(ev.features) ? ev.features.join(", ") : (ev.features || ""), ticketUrl: ev.ticketUrl || "", isDouble: (ev as any).isDouble || false, day2Date: (ev as any).day2Date || "", day2Time: (ev as any).day2Time || "", day2Venue: (ev as any).day2Venue || "", day2Address: (ev as any).day2Address || "", day2TicketUrl: (ev as any).day2TicketUrl || "" }); setShowEventForm(true); setTab("events"); }}
+                              onClick={() => { setEditingEvent(ev); setEventForm({ ...ev, price: String(ev.price ?? ""), lineup: Array.isArray(ev.lineup) ? ev.lineup.join(", ") : (ev.lineup || ""), features: Array.isArray(ev.features) ? ev.features.join(", ") : (ev.features || ""), ticketUrl: ev.ticketUrl || "", isDouble: ev.isDouble || false, day2Date: ev.day2Date || "", day2Time: ev.day2Time || "", day2Venue: ev.day2Venue || "", day2Address: ev.day2Address || "", day2TicketUrl: ev.day2TicketUrl || "", day2Description: ev.day2Description || "", day2Lineup: Array.isArray(ev.day2Lineup) ? ev.day2Lineup.join(", ") : "", day2Features: Array.isArray(ev.day2Features) ? ev.day2Features.join(", ") : "" }); setShowEventForm(true); setTab("events"); }}
                               className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-text-muted transition-colors"
                             >
                               Изменить

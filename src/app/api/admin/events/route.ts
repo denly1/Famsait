@@ -27,8 +27,9 @@ export async function POST(request: NextRequest) {
         id, title, subtitle, date, time, venue, address, age_limit, 
         price, currency, image, description, lineup, features, is_past, 
         ticket_url, ticket_link, is_pinned, hide_from_past,
-        is_double, day2_date, day2_time, day2_venue, day2_address, day2_ticket_url
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+        is_double, day2_date, day2_time, day2_venue, day2_address, day2_ticket_url,
+        day2_description, day2_lineup, day2_features
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
       RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
@@ -38,7 +39,8 @@ export async function POST(request: NextRequest) {
         data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
         data.isPinned || false, data.hideFromPast || false,
         data.isDouble || false, data.day2Date || "", data.day2Time || "",
-        data.day2Venue || "", data.day2Address || "", data.day2TicketUrl || ""
+        data.day2Venue || "", data.day2Address || "", data.day2TicketUrl || "",
+        data.day2Description || "", data.day2Lineup || [], data.day2Features || []
       ]
     );
     
@@ -65,7 +67,8 @@ export async function PUT(request: NextRequest) {
         image = $11, description = $12, lineup = $13, features = $14, 
         is_past = $15, ticket_url = $16, ticket_link = $17, is_pinned = $18,
         hide_from_past = $19, is_double = $20, day2_date = $21, day2_time = $22,
-        day2_venue = $23, day2_address = $24, day2_ticket_url = $25, updated_at = NOW()
+        day2_venue = $23, day2_address = $24, day2_ticket_url = $25,
+        day2_description = $26, day2_lineup = $27, day2_features = $28, updated_at = NOW()
       WHERE id = $1 RETURNING *`,
       [
         data.id, data.title, data.subtitle || "", data.date, data.time || "",
@@ -75,7 +78,8 @@ export async function PUT(request: NextRequest) {
         data.isPast || false, data.ticketUrl || "#", data.ticketLink || "",
         data.isPinned || false, data.hideFromPast || false,
         data.isDouble || false, data.day2Date || "", data.day2Time || "",
-        data.day2Venue || "", data.day2Address || "", data.day2TicketUrl || ""
+        data.day2Venue || "", data.day2Address || "", data.day2TicketUrl || "",
+        data.day2Description || "", data.day2Lineup || [], data.day2Features || []
       ]
     );
     

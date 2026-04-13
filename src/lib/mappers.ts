@@ -49,6 +49,9 @@ export function mapEventFromDB(dbEvent: any): any {
     day2Venue: dbEvent.day2_venue || '',
     day2Address: dbEvent.day2_address || '',
     day2TicketUrl: dbEvent.day2_ticket_url || '',
+    day2Description: dbEvent.day2_description || '',
+    day2Lineup: Array.isArray(dbEvent.day2_lineup) ? dbEvent.day2_lineup : [],
+    day2Features: Array.isArray(dbEvent.day2_features) ? dbEvent.day2_features : [],
   };
 }
 
