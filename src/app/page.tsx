@@ -141,7 +141,7 @@ export default async function HomePage() {
                 <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="px-3 py-1 bg-primary/80 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">
-                      БЛИЖАЙШЕЕ МЕРОПРИЯТИЕ
+                      {(nextEvent as any).isDouble ? "БЛИЖАЙШИЕ МЕРОПРИЯТИЯ" : "БЛИЖАЙШЕЕ МЕРОПРИЯТИЕ"}
                     </span>
                     {(nextEvent as any).isDouble && (
                       <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-lg text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">
