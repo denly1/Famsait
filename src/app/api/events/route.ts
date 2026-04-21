@@ -8,9 +8,11 @@ export async function GET(request: NextRequest) {
     try {
       await query(`
         UPDATE events SET is_past = true, updated_at = NOW()
-        WHERE is_past = false 
-        AND date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$'
-        AND TO_DATE(date, 'DD.MM.YYYY') < CURRENT_DATE
+        WHERE is_past = false AND (
+          (is_double = true AND day2_date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(day2_date, 'DD.MM.YYYY') < CURRENT_DATE)
+          OR
+          ((is_double IS NOT TRUE OR day2_date !~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$') AND date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(date, 'DD.MM.YYYY') < CURRENT_DATE)
+        )
       `);
     } catch {}
 

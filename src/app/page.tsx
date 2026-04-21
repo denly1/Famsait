@@ -19,7 +19,13 @@ async function getEvents() {
   try {
     // Автоматически переносим прошедшие события
     try {
-      await query(`UPDATE events SET is_past = true, updated_at = NOW() WHERE is_past = false AND date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(date, 'DD.MM.YYYY') < CURRENT_DATE`);
+      await query(`UPDATE events SET is_past = true, updated_at = NOW() WHERE is_past = false AND (
+        (is_double = true AND day2_date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(day2_date, 'DD.MM.YYYY') < CURRENT_DATE)
+        OR
+        ((is_double IS NOT TRUE OR day2_date !~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$') AND date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(date, 'DD.MM.YYYY') < CURRENT_DATE)
+      )`);
+      // Возвращаем обратно сдвоенные события, у которых второй день ещё впереди
+      await query(`UPDATE events SET is_past = false, updated_at = NOW() WHERE is_past = true AND is_double = true AND day2_date ~ '^[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}$' AND TO_DATE(day2_date, 'DD.MM.YYYY') >= CURRENT_DATE`);
     } catch {}
     const result = await query("SELECT *, is_pinned FROM events ORDER BY date DESC");
     return { events: mapEventsFromDB(result.rows || []) };
