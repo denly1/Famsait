@@ -236,18 +236,18 @@ export default async function HomePage() {
                       <span className="font-black text-sm sm:text-base text-white">от {nextEvent.price}{nextEvent.currency}</span>
                     )}
                   </div>
-                  <div className="flex gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <Link
                       href={nextEvent.ticketLink || nextEvent.ticketUrl || "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-6 sm:px-8 py-3 bg-white text-black rounded-xl text-xs sm:text-sm font-black tracking-wide hover:bg-white/90 transition-all active:scale-95"
+                      className="py-3.5 bg-white text-black rounded-xl text-xs sm:text-sm font-black tracking-wide text-center hover:bg-white/90 transition-all active:scale-95"
                     >
                       КУПИТЬ БИЛЕТ
                     </Link>
                     <Link
                       href={`/events/${nextEvent.id}`}
-                      className="px-6 sm:px-8 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-xl text-xs sm:text-sm font-black tracking-wide hover:bg-white/20 transition-all active:scale-95"
+                      className="py-3.5 bg-white/10 backdrop-blur-sm border border-white/30 text-white rounded-xl text-xs sm:text-sm font-black tracking-wide text-center hover:bg-white/20 transition-all active:scale-95"
                     >
                       ПОДРОБНЕЕ
                     </Link>
